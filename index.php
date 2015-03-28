@@ -8,11 +8,12 @@
     <link rel="stylesheet" type="text/css" href="css/main.css"> 
     <link rel="stylesheet" type="text/css" href="css/responsive.css"> 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.21.3/js/jquery.tablesorter.min.js"></script>
     <script type="text/javascript" src="js/functions.js"></script>
     <title>PILLAR INPUT FORM</title>
   </head>
   <body>
-    <form action="functions.php" method="post">
+    <form action="" method="post" id="single-entry">
       <legend><span class="number">1</span> Add Entry</legend>
 
       <label for="pillar">Pillar:</label>
@@ -45,14 +46,14 @@
       <label for="notes">Notes:</label>
       <input type="textarea" id="notes" name="user_notes">
 
-      <button type="submit" id="entry-button">Add Entry</button>
+      <button type="submit">Add Entry</button>
 
     </form>
     <div id="lastEntry"></div>
 
     <div>
-      <table>
-        <THEAD id="day">
+      <table id="entryTable" class="tablesorter">
+        <THEAD>
           <tr>
             <th scope="col">ID</th>
             <th scope="col">PILLAR</th>
@@ -63,7 +64,7 @@
             <th scope="col">TIMESTAMP</th>
           </tr>
         </THEAD>
-        <TBODY>
+        <TBODY id="day">
         </TBODY>
       </table>
     </div>
@@ -137,12 +138,11 @@
       $(document).ready(function(){
         
 
-        var url = "functions3.php";
-        var data = { page: "index" };
+        var url = "functions.php";
+        var data = { page: "lastEntry" };
         
         //Print Last Entry
         $.getJSON(url,data,function(response){
-          console.log(response);
           $("#lastEntry").append("Last Entry: <br>")
           $("#lastEntry").append(response.id + "<br>");
           $("#lastEntry").append(response.pillar + "<br>");
@@ -164,11 +164,43 @@
             $(row).append("<td>" + item.quality + "</td>");
             $(row).append("<td>" + item.notes +  "</td>");
             $(row).append("<td>" + item.entry_utc_timestamp +  "</td>");
+            $("#day").append(row);
           });
+          $("#entryTable").tablesorter(); 
         });
 
-        
+        //Update Table with new Entry 
+        $( "#single-entry" ).on( "submit", function( event ) {
+          event.preventDefault();
+          var url = "functions.php";
+          var data= $(this).serialize();
+          var page = "&page=newEntry";
+          var data = data + page;
+          $("#date").val("2014-03-12T13T09");
+          $.ajax({
+            type: "POST",
+            url: url,
+            data: data,
+            dataType: "json",
+            success: function(response) {
+              console.log(response);
+              var row = $("<tr/>");
+              $(row).append("<td>" + response.id + "</td>");
+              $(row).append("<td>" + response.pillar + "</td>");
+              $(row).append("<td>" + response.event_date + "</td>");
+              $(row).append("<td>" + response.duration + "</td>");
+              $(row).append("<td>" + response.quality + "</td>");
+              $(row).append("<td>" + response.notes +  "</td>");
+              $(row).append("<td>" + response.entry_utc_timestamp +  "</td>");
+              $("#day").append(row);
+              $("#entryTable").tablesorter();
+
+            }
+          });//http://stackoverflow.com/questions/15173965/serializing-and-submitting-a-form-with-jquery-post-and-php
+        }); 
       }); // With Guidance from http://codereview.stackexchange.com/questions/38816/jquery-dynamic-elements-like-tr-and-td-add-to-html-table
     </script>
   </body>
 </html>
+
+
