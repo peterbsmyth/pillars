@@ -11,3 +11,9 @@ function getUrlParameter(sParam)
         }
     }
 } // From: http://stackoverflow.com/questions/19491336/get-url-parameter-jquery 
+
+function addDays(date, days) {
+    var result = new Date(date);
+    result.setDate(date.getDate() + days);
+    return result;
+} // From: http://stackoverflow.com/questions/563406/add-days-to-datetime
