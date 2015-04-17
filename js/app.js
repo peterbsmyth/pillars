@@ -1,5 +1,5 @@
-$("#dayTable").hide();
-$("#dayTable").tablesorter();
+// $("#dayTable").hide();
+// $("#dayTable").tablesorter();
 var url = "functions.php";
 var data = { page: "lastEntry" };
 
@@ -21,23 +21,24 @@ var updateRows = function (rowJSON){
   $("#entryTable").trigger("update");
 }
 
-//Print rows to table
-var data = {page : "day" };
+//Print rows to entry table
+var data = {page : "today" };
 $.getJSON(url,data,function(response){
   console.log(response);
   response.forEach(function(item){
     var row = $("<tr/>").attr("id", item.id);
 
-    var $td= $("<td>").html("<a href='#'>edit</a>"); //use BootStrap pencil glyphicon
-
+    var $tdEdit= $("<td>").html("<a href='#'>edit</a>"); //use BootStrap pencil glyphicon
+    var $tdPillar = $("<td>").html(item.pillar).addClass("pillar");
     var $tdDuration = $("<td>").html(item.duration).addClass("duration");
-    $($td).addClass("edit");
-    $(row).append($td);
+    var $tdQuality = $("<td>").html(item.quality).addClass("quality");
+    $($tdEdit).addClass("edit");
+    $(row).append($tdEdit);
     $(row).append("<td>" + item.id + "</td>");
-    $(row).append("<td>" + item.pillar + "</td>");
+    $(row).append($tdPillar);
     $(row).append("<td>" + item.event_date + "</td>");
     $(row).append($tdDuration);
-    $(row).append("<td>" + item.quality + "</td>");
+    $(row).append($tdQuality);
     $(row).append("<td>" + item.notes +  "</td>");
     $(row).append("<td>" + item.entry_utc_timestamp +  "</td>");
     $("#day").append(row);
@@ -45,45 +46,54 @@ $.getJSON(url,data,function(response){
   $("#entryTable").tablesorter({debug:false});
 });
 
-// var new1DayValue;
-// $("#newDayValue").change(function() {
-//   new1DayValue = $( this ).val();
-// });
+//Print rows to day table
+var data = {page: "days"}
+$.getJSON(url,data,function(response){
+  console.log(response);
+  response.forEach(function(item){
+    var row = $("<tr/>").attr("id", item.id);
 
-// $("<td>").click(function(){
-//   console.log(new1DayValue);
-// });
-
-function addDays(date, days) {
-    var result = new Date(date);
-    result.setDate(date.getDate() + days);
-    return result;
-} // From: http://stackoverflow.com/questions/563406/add-days-to-datetime
+    var $tdEdit= $("<td>").html("<a href='#'>edit</a>"); //use BootStrap pencil glyphicon
+    var $tdPillar = $("<td>").html(item.pillar).addClass("pillar");
+    var $tdQuality = $("<td>").html(item.quality).addClass("quality");
+    $($tdEdit).addClass("edit");
+    $(row).append($tdEdit);
+    $(row).append("<td>" + item.id + "</td>");
+    $(row).append("<td>" + item.event_date + "</td>");
+    $(row).append($tdQuality);
+    $(row).append("<td>" + item.notes +  "</td>");
+    $("#dayBody").append(row);
+  });
+  $("#dayTable").tablesorter();
+});
 
 // Change Day View
 $( "#newDay" ).on( "submit", function( event ) {
   event.preventDefault();
   var value = $("#newDayValue").val();
-  var data= $(this).serialize();
-  data = data + "&newday_user_date2=" + value;
+  var day1 = new Date(value).toJSON();
+  var day2 = new Date(value);
+  var day2 = day2.setDate(day2.getDate() + 1);
+  day2 = new Date(day2).toJSON();
   var page = "&page=newDay";
-  var data = data + page;
-  $.getJSON(url,data,function(response){
-    $("#dayTable").show();
-    $("#selectDayBody").children().remove();
-    // console.log(response);
-    response.forEach(function(item){
-      var row = $("<tr/>").attr("role","row");
-      $(row).append("<td>" + item.id + "</td>");
-      $(row).append("<td>" + item.pillar + "</td>");
-      $(row).append("<td>" + item.event_date + "</td>");
-      $(row).append("<td>" + item.duration + "</td>");
-      $(row).append("<td>" + item.quality + "</td>");
-      $(row).append("<td>" + item.notes +  "</td>");
-      $(row).append("<td>" + item.entry_utc_timestamp +  "</td>");
-      $("#selectDayBody").append(row);
-      $("#dayTable").trigger("update");
-    });
+  var data = "user_newday_user_date1=" + day1.substring(0,10) + "&user_newday_user_date2=" + day2.substring(0,10) + page;
+  $.getJSON("functions.php",data,function(response){
+    console.log(response);
+  //   $("#dayTable").show();
+  //   $("#selectDayBody").children().remove();
+  //   console.log(response);
+  //   response.forEach(function(item){
+  //     var row = $("<tr/>").attr("role","row");
+  //     $(row).append("<td>" + item.id + "</td>");
+  //     $(row).append("<td>" + item.pillar + "</td>");
+  //     $(row).append("<td>" + item.event_date + "</td>");
+  //     $(row).append("<td>" + item.duration + "</td>");
+  //     $(row).append("<td>" + item.quality + "</td>");
+  //     $(row).append("<td>" + item.notes +  "</td>");
+  //     $(row).append("<td>" + item.entry_utc_timestamp +  "</td>");
+  //     $("#selectDayBody").append(row);
+  //     $("#dayTable").trigger("update");
+  //   });
   });
 });
 
@@ -131,77 +141,48 @@ $("#addDay").on( "submit", function( event ) {
   // console.log(data);
 });
 
-//
-
-//Update Notes
-$("#updateNotes").on("submit", function(event){
-  event.preventDefault();
-  var data = $(this).serialize();
-  var page = "&page=updateNotes";
-  var data = data + page;
-  // console.log(data);
-  $.ajax({
-    type: "POST",
-    url: "functions.php",
-    data: data,
-    dataType: "json",
-    success: function(response) {
-      updateRows(response);
-    }
-  });
-});
-
-//Update Pillar
-$("#updatePillar").on("submit", function(event){
-  event.preventDefault();
-  var data = $(this).serialize();
-  var page = "&page=updatePillar";
-  var data = data + page;
-  // console.log(data);
-  $.ajax({
-    type: "POST",
-    url: "functions.php",
-    data: data,
-    dataType: "json",
-    success: function(response) {
-      updateRows(response);
-    }
-  });
-});
 
 //Update Duration
-$("#updateDuration").on("submit", function(event){
-  event.preventDefault();
-  var data = $(this).serialize();
-  var page = "&page=updateDuration";
-  var data = data + page;
-  console.log(data);
-  $.ajax({
-    type: "POST",
-    url: "functions.php",
-    data: data,
-    dataType: "json",
-    success: function(response) {
-      updateRows(response);
-    }
-  });
-});
+// $("#updateDuration").on("submit", function(event){
+//   event.preventDefault();
+//   var data = $(this).serialize();
+//   var page = "&page=updateDuration";
+//   var data = data + page;
+//   console.log(data);
+//   $.ajax({
+//     type: "POST",
+//     url: "functions.php",
+//     data: data,
+//     dataType: "json",
+//     success: function(response) {
+//       updateRows(response);
+//     }
+//   });
+// });
 
 //Edit duration
 $("table").on('click', ".edit", function() {
   $(this).parent().toggleClass("editMode");
   var hasClass = $(this).parent().hasClass("editMode");
   if (hasClass){
-    var getContents = $(this).siblings(".duration").html();
-    console.log(getContents);
-    var addInput = $("<input>").attr("value",getContents).addClass("form-control input-sm").attr("type","text");
-    $(this).siblings(".duration").empty().append(addInput);
+    var getPillar = $(this).siblings(".pillar").html();
+    var getDuration = $(this).siblings(".duration").html();
+    var getQuality = $(this).siblings(".quality").html();
+    // console.log(getPillar);
+    var addPillar = $("<input>").attr("value",getPillar).addClass("form-control input-sm").attr("type","text");
+    var addDuration = $("<input>").attr("value",getDuration).addClass("form-control input-sm").attr("type","text");
+    // $("#pillar");
+
+    var pilli = $("#pillar");
+    $(this).siblings(".pillar").empty().append($(pilli).addClass("input-sm"));
+    $(this).siblings(".duration").empty().append(addDuration);
+
   }
   else{
-    var getContents = $(this).siblings(".duration").children().val();
     var getID = $(this).parent().attr("id");
-    var duration = escape(getContents);
-    var data = "user_id=" + getID + "&user_duration=" + duration + "&page=updateDuration";
+    var getDuration = escape($(this).siblings(".duration").children().val());
+    var getPillar = $(this).siblings(".pillar").children().val();
+    var data = "user_id=" + getID + "&user_duration=" + getDuration + "&user_pillar=" + getPillar + "&page=updateEntry";
     console.log(data);
     $.ajax({
       type: "POST",
@@ -211,7 +192,8 @@ $("table").on('click', ".edit", function() {
       success: function(response) {
         console.log(response);
         $("#" + response.id).children(".duration").replaceWith("<td class='duration'>" + response.duration + "</td>");
-        // $(this).siblings(".duration").empty().append(response.duration);
+        $("#" + response.id).children(".pillar").replaceWith("<td class='pillar'>" + response.pillar + "</td>");
+        $("#entryTable").trigger("update");
       }
     });
   }

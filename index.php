@@ -52,62 +52,23 @@
           </div>
 
 
-          <!-- UPDATE NOTES -->
-          <form method="POST" class="form-inline" id="updateNotes">
-            <legend><span class="number">2</span>Update Notes</legend>
-            <div class="form-group">
-              <label for="updateNotes_id">ID:</label>
-              <input id ="updateNotes_id" type="text" name="user_id" class="form-control">
-            </div>
-            <div class="form-group ">
-              <label for="updateNotes_notes">Notes:</label>
-              <input id ="updateNotes_notes" type="text" name="user_notes" class="form-control">
-            </div>
-      <!--       <input type="date" name="newday_user_date2"> -->
-            <button type="submit" class="btn btn-success">Sumbit</button>
-          </form>
+          
 
-          <!-- UPDATE PILLAR -->
-          <form method="POST" id="updatePillar" class="form-inline">
-            <legend><span class="number">3</span>Update Pillar</legend>
-
-            <div class="form-group">
-              <label for="updatePillar_id">ID:</label>
-              <input id ="updatePillar_id" type="text" name="user_id" class="form-control">
-            </div>
-
-            <div class="form-group">
-              <label for="pillar">Pillar:</label>
-              <select id="updatePillar_pillar" name="user_pillar" class="form-control">
-                <option value="ZAZEN">ZAZEN</option>
-                <option value="WORK">WORK</option>
-                <option value="SOCIAL">SOCIAL</option>
-                <option value="LEARN">LEARN</option>
-                <option value="BIKE">BIKE</option>
-                <option value="EAT WELL">EAT WELL</option>
-                <option value="SLACK">SLACK</option>
-              </select>
-            </div>
-            <!--       <input type="date" name="newday_user_date2"> -->
-            <button type="submit" class="btn btn-success">Sumbit</button>
-          </form>
-
-          <!-- UPDATE DURATION -->
-          <form method="POST" id="updateDuration" class="form-inline">
-            <legend><span class="number">3</span>Update Duration</legend>
-
-            <div class="form-group">
-              <label for="updatePillar_id">ID:</label>
-              <input id ="updatePillar_id" type="text" name="user_id" class="form-control">
-            </div>
-
-            <div class="form-group">
-              <label for="duration">Duration:</label>
-              <input type="text" id="duration" name="user_duration" placeholder="HH:MM" class="form-control">
-            </div>
-            <!--       <input type="date" name="newday_user_date2"> -->
-            <button type="submit" class="btn btn-success">Sumbit</button>
-          </form>
+          <div class="table-responsive">
+            <table id="dayTable" class="table table-hover tablesorter">
+              <THEAD>
+                <tr>
+                  <th scope="col">Edit</th>
+                  <th scope="col">ID</th>
+                  <th scope="col">DATE</th>
+                  <th scope="col">QUALITY</th>
+                  <th scope="col">NOTES</th>
+                </tr>
+              </THEAD>
+              <TBODY id="dayBody">
+              </TBODY>
+            </table>
+          </div>
 
           <!-- ADD DAY -->
           <form method="post" id="addDay" class="form">
@@ -137,10 +98,9 @@
               <input type="textarea" id="day_notes" name="user_notes" class="form-control">
             </div>
 
-            <button type="submit" class="btn btn-success">Add Entry</button>
+            <button type="submit" class="btn btn-success form-control">Add Entry</button>
 
           </form>
-
 
           <!-- NEW DAY -->
           <form method="POST" id="newDay" class="form-inline">

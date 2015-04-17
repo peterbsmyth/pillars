@@ -2,6 +2,8 @@
 //Variables
 $page = $_GET['page'];
 $test = $_GET['id'];
+$day1 = $_GET['newday_user_date1'];
+$day2 = $_GET['newday_user_date2'];
 
 $postPage = $_POST['page'];
 $pillar = $_POST['user_pillar'];
@@ -10,8 +12,6 @@ $duration = $_POST['user_duration'];
 $quality = $_POST['user_quality'];
 $notes = $_POST['user_notes'];
 $id = $_POST['user_id'];
-$day1 = $_GET['newday_user_date1'];
-$day2 = $_GET['newday_user_date2'];
 
 //Functions
 function getLastEntryJSON(){
@@ -31,11 +31,11 @@ function getLastEntryJSON(){
 }
 
 
-function getDayJSON(){
+function getTodayJSON(){
   require_once 'db/connect.php';
 
   try {
-     $result = $db->prepare("Select * FROM pillars_log WHERE event_date between '2015/04/13' and '2015/04/14';");
+     $result = $db->prepare("Select * FROM pillars_log WHERE event_date between '2015/04/16' and '2015/04/16 23:59:59';");
      $result->execute();
   } catch (Exception $e){
     echo $e->getMessage();
@@ -45,7 +45,28 @@ function getDayJSON(){
 
   $rows = array();
 
-  while($r = $result->fetch(PDO::FETCH_ASSOC)) { 
+  while($r = $result->fetch(PDO::FETCH_ASSOC)) {
+    $rows[] = $r;
+  }
+
+  echo json_encode($rows);
+}
+
+function getDayJSON(){
+  require_once 'db/connect.php';
+
+  try {
+     $result = $db->prepare("Select * FROM pillars_days;");
+     $result->execute();
+  } catch (Exception $e){
+    echo $e->getMessage();
+    die();
+  }
+
+
+  $rows = array();
+
+  while($r = $result->fetch(PDO::FETCH_ASSOC)) {
     $rows[] = $r;
   }
 
@@ -90,7 +111,7 @@ function newEntryJSON($pillar, $date, $duration, $quality, $notes){
   }
 
   $newEntry = $result->fetch(PDO::FETCH_ASSOC);
-  
+
   echo json_encode($newEntry);
 }
 
@@ -110,69 +131,25 @@ function newDay($day1,$day2){
 
   $rows = array();
 
-  
-  while($r = $result->fetch(PDO::FETCH_ASSOC)) { 
+
+  while($r = $result->fetch(PDO::FETCH_ASSOC)) {
     $rows[] = $r;
+    return json_encode($r);
   }
-  
+
   echo json_encode($rows);
 
 }
 
-
-function updateNotes($id, $notes){
+function updateEntry($id, $duration, $pillar){
   require_once('db/connect.php');
   try {
-     $result = $db->prepare("UPDATE pillars_log SET notes = ? WHERE id = ?");
-     $result->bindParam(1,$notes);
-     $result->bindParam(2,$id);
-     $result->execute();
-
-     $result1 = $db->prepare("SELECT * FROM pillars_log WHERE id = ?");
-     $result1->bindParam(1,$id);
-     $result1->execute();
-  } catch (Exception $e){
-    echo $e->getMessage();
-    die();
-
-  }
-
-  $updatedNote = $result1->fetch(PDO::FETCH_ASSOC);
-
-  echo json_encode($updatedNote);
-
-}
-
-function updatePillar($id, $pillar){
-  require_once('db/connect.php');
-  try {
-     $result = $db->prepare("UPDATE pillars_log SET pillar = ? WHERE id = ?");
-     $result->bindParam(1,$pillar);
-     $result->bindParam(2,$id);
-     $result->execute();
-
-     $result1 = $db->prepare("SELECT * FROM pillars_log WHERE id = ?");
-     $result1->bindParam(1,$id);
-     $result1->execute();
-  } catch (Exception $e){
-    echo $e->getMessage();
-    die();
-  }
-
-  $updatedPillar = $result1->fetch(PDO::FETCH_ASSOC);
-
-  echo json_encode($updatedPillar);
-
-}
-
-function updateDuration($id, $duration){
-  require_once('db/connect.php');
-  try {
-     $result = $db->prepare("UPDATE pillars_log SET duration = ? WHERE id = ?");
+     $result = $db->prepare("UPDATE pillars_log SET duration = ?, pillar = ? WHERE id = ?");
      $result->bindParam(1,$duration);
-     $result->bindParam(2,$id);
+     $result->bindParam(2,$pillar);
+     $result->bindParam(3,$id);
      $result->execute();
-  
+
      $result1 = $db->prepare("SELECT * FROM pillars_log WHERE id = ?");
      $result1->bindParam(1,$id);
      $result1->execute();
@@ -189,11 +166,13 @@ function updateDuration($id, $duration){
 
 //Content
 if($page == "lastEntry"){ getLastEntryJSON(); }
-if($page == "day"){ getDayJSON(); }
+if($page == "today"){ getTodayJSON(); }
+if($page == "days"){ getDayJSON(); }
 if($postPage == "newEntry"){ newEntryJSON($pillar, $date, $duration, $quality, $notes); }
 if($page == "newDay"){newDay($day1,$day2);}
 if($postPage == "addDay"){addDay($date,$quality,$notes);}
 if($postPage == "updateNotes") {updateNotes($id, $notes);}
 if($postPage == "updatePillar") {updatePillar($id, $pillar);}
 if($postPage == "updateDuration") {updateDuration($id, $duration);}
+if($postPage == "updateEntry") {updateEntry($id, $duration, $pillar);}
 ?>
