@@ -14,42 +14,40 @@ var buildTable = function(selectedDate){
 
   $.getJSON("functions.php",{content : "today", startDay: startDay,endDay: endDay},function(response){
     //empty current table
-    $("#dayTable TBODY").empty();
+    var $tableBody = $("#dayTable TBODY");
+    $tableBody.empty();
+
 
     //add new table
     response.forEach(function(item){
-      var row = $("<tr>").attr("id", item.id);
+      var $row = $("<tr>").attr("id", item.id);
 
-      var edit= $("<td>").html("<a href='#'>edit</a>").addClass("edit"); //use BootStrap pencil glyphicon
-      $(row).append(edit);
+      var $edit= $("<td>").html("<a href='#'>edit</a>").addClass("edit"); //use BootStrap pencil glyphicon
+      $row.append($edit);
 
-      var pillar = $("<td>").html(item.pillar).addClass("pillar");
-      $(row).append(pillar);
+      var $pillar = $("<td>").html(item.pillar).addClass("pillar");
+      $row.append($pillar);
 
-      var datetime = $("<td>").html(item.event_date).addClass("datetime");
-      $(row).append(datetime);
+      var $datetime = $("<td>").html(item.event_date).addClass("datetime");
+      $row.append($datetime);
 
-      var duration = $("<td>").html(item.duration).addClass("duration");
-      $(row).append(duration);
+      var $duration = $("<td>").html(item.duration).addClass("duration");
+      $row.append($duration);
 
-      var quality = $("<td>").html(item.quality).addClass("quality");
-      $(row).append(quality);
+      var $quality = $("<td>").html(item.quality).addClass("quality");
+      $row.append($quality);
 
-      var notes = $("<td>").html(item.notes).addClass("notes");
-      $(row).append(notes);
+      var $notes = $("<td>").html(item.notes).addClass("notes");
+      $row.append($notes);
 
-      $("#dayTable TBODY").append(row);
+      $tableBody.append($row);
+
     });
 
 
     $("#dayTable").trigger("update");
   });
 }
-
-$("#datePicker").on("change", function(){
-  //update Table
-  console.log($(this).val());
-});
 
 //Update Rows
 var updateRows = function (rowJSON){
@@ -68,32 +66,6 @@ var updateRows = function (rowJSON){
   $("#" + rowJSON.id).replaceWith(row);
   $("#entryTable").trigger("update");
 }
-
-// //Print rows to day table
-// var startToday = new Date(Date.now()).toJSONLocal();
-// console.log(startToday);
-// endToday = startToday + "T23:59:59";
-// var data = {content : "today", startToday: startToday,endToday: endToday};
-// $.getJSON(url,data,function(response){
-//   console.log(response);
-//   response.forEach(function(item){
-//     var row = $("<tr/>").attr("id", item.id);
-//
-//     var $tdEdit= $("<td>").html("<a href='#'>edit</a>").addClass("edit"); //use BootStrap pencil glyphicon
-//     var $tdPillar = $("<td>").html(item.pillar).addClass("pillar");
-//     var $tdDuration = $("<td>").html(item.duration).addClass("duration");
-//     var $tdQuality = $("<td>").html(item.quality).addClass("quality");
-//     $(row).append($tdEdit);
-//     // $(row).append("<td>" + item.id + "</td>");
-//     $(row).append($tdPillar);
-//     $(row).append("<td>" + item.event_date + "</td>");
-//     $(row).append($tdDuration);
-//     $(row).append($tdQuality);
-//     $(row).append("<td>" + item.notes +  "</td>");
-//     $("#dayTable TBODY").append(row);
-//   });
-//   $("#dayTable").tablesorter({debug:false});
-// });
 
 //Print rows to day table
 var data = {content: "days"}
@@ -249,6 +221,14 @@ $("table").on('click', ".edit", function() {
 });// Using Event Delegation...whats that? http://stackoverflow.com/questions/16893043/jquery-click-event-not-working-after-adding-class-using-jquery ALSO SEE: https://learn.jquery.com/events/event-delegation/
 
 // }); // With Guidance from http://codereview.stackexchange.com/questions/38816/jquery-dynamic-elements-like-tr-and-td-add-to-html-table
+
+$("body").on("change", "#datePicker", function(){
+  //update Table
+  console.log("Updating Table...");
+  var selectedDate = $(this).val();
+  buildTable(selectedDate);
+});
+
 
 //add tablesorter to dayTable
 $("#dayTable").tablesorter();
