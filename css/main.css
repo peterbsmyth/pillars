@@ -42,14 +42,19 @@ PAGE: INDEX
 	background-color: black;
 }
 
-.centering-div{
-	width: 300px;
+.centered{
 	margin: 0 auto;
 }
 
+
 #date-form{
 	padding: 10px 0;
+	width: 300px;
+}
 
+#summary-form{
+	padding: 10px 0;
+	width: 600px;
 }
 
 /**********************************
