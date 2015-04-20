@@ -122,14 +122,16 @@ function newEntryJSON($pillar, $date, $duration, $quality, $notes){
   echo json_encode($newEntry);
 }
 
-
-function updateEntry($id, $duration, $pillar){
+function updateEntry($id, $pillar, $date, $duration, $quality, $notes){
   require_once('db/connect.php');
   try {
-     $result = $db->prepare("UPDATE pillars_log SET duration = ?, pillar = ? WHERE id = ?");
-     $result->bindParam(1,$duration);
-     $result->bindParam(2,$pillar);
-     $result->bindParam(3,$id);
+     $result = $db->prepare("UPDATE pillars_log SET pillar = ?, event_date = ?, duration = ?, quality = ?, notes = ? WHERE id = ?");
+     $result->bindParam(1,$pillar);
+     $result->bindParam(2,$date);
+     $result->bindParam(3,$duration);
+     $result->bindParam(4,$quality);
+     $result->bindParam(5,$notes);
+     $result->bindParam(6,$id);
      $result->execute();
 
      $result1 = $db->prepare("SELECT * FROM pillars_log WHERE id = ?");
@@ -152,5 +154,5 @@ if($content == "today"){ getDayJSON($startDay,$endDay); }
 if($content == "summary"){ getSummaryJSON($startSummary,$endSummary); }
 if($postContent == "newEntry"){ newEntryJSON($pillar, $date, $duration, $quality, $notes); }
 if($postContent == "addDay"){addDay($date,$quality,$notes);}
-if($postContent == "updateEntry") {updateEntry($id, $duration, $pillar);}
+if($postContent == "updateEntry") {updateEntry($id, $pillar, $date, $duration, $quality, $notes);}
 ?>

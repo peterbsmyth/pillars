@@ -3,7 +3,6 @@
 var url = "functions.php";
 var data = { content: "lastEntry" };
 
-
 //Build Day Table given a date
 var buildTable = function(selectedDate){
 
@@ -97,33 +96,42 @@ var updateRows = function (rowJSON){
   $("#entryTable").trigger("update");
 }
 
-//Update Table with new Entry
+//Update Day Table with new Entry
 $( "#single-entry" ).on( "submit", function( event ) {
   event.preventDefault();
   $("#addEntryModal").modal('hide');
-  var url = "functions.php";
-  var data= $(this).serialize();
-  var content = "&content=newEntry";
-  var data = data + content;
+
+  //build data string
+  var data= $(this).serialize() + "&content=newEntry";
+
   $.ajax({
     type: "POST",
-    url: url,
+    url: "functions.php",
     data: data,
     dataType: "json",
     success: function(response) {
-      // console.log(response);
-      var row = $("<tr/>");
-      var $td= $("<td>").html("<a>edit</a>"); //use BootStrap pencil glyphicon
-      $(row).append($td);
-      $(row).append("<td>" + response.id + "</td>");
-      $(row).append("<td>" + response.pillar + "</td>");
-      $(row).append("<td>" + response.event_date + "</td>");
-      $(row).append("<td>" + response.duration + "</td>");
-      $(row).append("<td>" + response.quality + "</td>");
-      $(row).append("<td>" + response.notes +  "</td>");
-      $(row).append("<td>" + response.entry_utc_timestamp +  "</td>");
-      $("#day").append(row);
-      $("#entryTable").trigger("update");
+      var $row = $("<tr>").attr("id", response.id);
+
+      var $edit= $("<td>").html("<a href='#'>edit</a>").addClass("edit"); //use BootStrap pencil glyphicon
+      $row.append($edit);
+
+      var $pillar = $("<td>").html(response.pillar).addClass("pillar");
+      $row.append($pillar);
+
+      var $datetime = $("<td>").html(response.event_date).addClass("datetime");
+      $row.append($datetime);
+
+      var $duration = $("<td>").html(response.duration).addClass("duration");
+      $row.append($duration);
+
+      var $quality = $("<td>").html(response.quality).addClass("quality");
+      $row.append($quality);
+
+      var $notes = $("<td>").html(response.notes).addClass("notes");
+      $row.append($notes);
+
+      $("#dayTable TBODY").append($row);
+      $("#dayTable").trigger("update");
     }
   });//http://stackoverflow.com/questions/15173965/serializing-and-submitting-a-form-with-jquery-post-and-php
 });
@@ -161,27 +169,57 @@ $("#addDay").on( "submit", function( event ) {
 
 //Edit duration
 $("table").on('click', ".edit", function() {
-  $(this).parent().toggleClass("editMode");
-  var hasClass = $(this).parent().hasClass("editMode");
-  if (hasClass){
-    var getPillar = $(this).siblings(".pillar").html();
-    var getDuration = $(this).siblings(".duration").html();
-    var getQuality = $(this).siblings(".quality").html();
-    // console.log(getPillar);
-    var addPillar = $("<input>").attr("value",getPillar).addClass("form-control input-sm").attr("type","text");
-    var addDuration = $("<input>").attr("value",getDuration).addClass("form-control input-sm").attr("type","text");
-    // $("#pillar");
 
-    var pilli = $("#pillar");
-    $(this).siblings(".pillar").empty().append($(pilli).addClass("input-sm"));
-    $(this).siblings(".duration").empty().append(addDuration);
+  //Toggle Edit Mode
+  $(this).parent().toggleClass("editMode");
+
+  //Is edit mode active?
+  var hasEditMode = $(this).parent().hasClass("editMode");
+
+  //Turn on Edit Mode
+  if (hasEditMode){
+
+    var pillar = $(this).siblings(".pillar").html();
+    var datetime = $(this).siblings(".datetime").html();
+    datetime = datetime.replace(" ","T");//format for input
+    var duration = $(this).siblings(".duration").html();
+    var quality = $(this).siblings(".quality").html();
+    var notes = $(this).siblings(".notes").html();
+
+    var $pillarInput = $("#pillar").clone().addClass("form-control input-sm");
+    $pillarInput.children("option[value='" + pillar + "']").attr("selected","selected"); //set selected
+    var $datetimeInput = $("<input>").attr("value",datetime).addClass("form-control input-sm").attr("type","datetime-local");
+    var $durationInput = $("<input>").attr("value",duration).addClass("form-control input-sm").attr("type","text");
+    var $qualityInput = $("#quality").clone().addClass("form-control input-sm").css("display","initial");
+    $qualityInput.children("option[value='" + quality + "']").attr("selected","selected"); //set selected
+    var $notesInput = $("<input>").attr("value",notes).addClass("form-control input-sm").attr("type","text");
+
+    $(this).siblings(".pillar").empty().append($pillarInput);
+    $(this).siblings(".datetime").empty().append($datetimeInput);
+    $(this).siblings(".duration").empty().append($durationInput);
+    $(this).siblings(".quality").empty().append($qualityInput);
+    $(this).siblings(".notes").empty().append($notesInput);
 
   }
+  //Shut off Edit Mode
   else{
     var getID = $(this).parent().attr("id");
-    var getDuration = escape($(this).siblings(".duration").children().val());
     var getPillar = $(this).siblings(".pillar").children().val();
-    var data = "user_id=" + getID + "&user_duration=" + getDuration + "&user_pillar=" + getPillar + "&content=updateEntry";
+    var getDatetime = encodeURIComponent($(this).siblings(".datetime").children().val());
+    var getDuration = encodeURIComponent($(this).siblings(".duration").children().val());
+    var getQuality = $(this).siblings(".quality").children().val();
+    var getNotes = encodeURIComponent($(this).siblings(".notes").children().val());
+    console.log(getDuration);
+
+    //build data string
+    var data = "user_id=" + getID +
+               "&user_pillar=" + getPillar +
+               "&user_date=" + getDatetime +
+               "&user_duration=" + getDuration +
+               "&user_quality=" + getQuality +
+               "&user_notes=" + getNotes +
+               "&content=updateEntry";
+
     console.log(data);
     $.ajax({
       type: "POST",
@@ -190,9 +228,12 @@ $("table").on('click', ".edit", function() {
       dataType: "json",
       success: function(response) {
         console.log(response);
-        $("#" + response.id).children(".duration").replaceWith("<td class='duration'>" + response.duration + "</td>");
         $("#" + response.id).children(".pillar").replaceWith("<td class='pillar'>" + response.pillar + "</td>");
-        $("#entryTable").trigger("update");
+        $("#" + response.id).children(".datetime").replaceWith("<td class='datetime'>" + response.event_date + "</td>");
+        $("#" + response.id).children(".duration").replaceWith("<td class='duration'>" + response.duration + "</td>");
+        $("#" + response.id).children(".quality").replaceWith("<td class='quality'>" + response.quality + "</td>");
+        $("#" + response.id).children(".notes").replaceWith("<td class='notes'>" + response.notes + "</td>");
+        $("#dayTable").trigger("update");
       }
     });
   }
