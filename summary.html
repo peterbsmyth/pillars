@@ -44,7 +44,7 @@
               <label for="endSummaryPicker">End Date:</label>
               <input id="endSummaryPicker" type="date" class="form-control" name="endSummary">
               <a id="go" href="#" class="btn btn-success">Go</a>
-              <a href="#" class="btn btn-success">Add Entry</a>
+              <a data-toggle="modal" href="#addSummaryModal" class="btn btn-success">Add Entry</a>
           </div>
         </div>
       </div>
@@ -67,6 +67,66 @@
         </div>
       </div>
     </div>
+
+    <div class="modal fade" id="addSummaryModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Add Summary</h4>
+          </div>
+          <div class="modal-body">
+            <form class="form" method="post" id="summary-entry">
+
+
+              <div class="row">
+
+                <div class="col-sm-6">
+
+                  <div class="form-group">
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" name="user_date" class="form-control">
+                  </div>
+
+                </div>
+
+                <div class="col-sm-6">
+
+                  <div class="form-group">
+                    <label for="notes">Notes:</label>
+                    <input type="text" id="notes" name="user_notes" class="form-control">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Quality:</label>
+
+                    <label class="radio-inline"><input type="radio" id="yay" value="YAY" name="user_quality">Yay</label>
+
+                    <label class="radio-inline"><input type="radio" id="solid" value="SOLID" name="user_quality">Solid</label>
+
+                    <label class="radio-inline"><input type="radio" id="wrench" value="WRENCH" name="user_quality">Wrench</label>
+
+                    <label class="radio-inline"><input type="radio" id="null" value="NULL" name="user_quality" checked="checked">Null</label>
+                  </div>
+              </div>
+
+
+              <button type="submit" class="btn btn-success form-control">Add Summary</button>
+
+
+          </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <select id="quality" name="user_pillar" class="form-control">
+      <option value="YAY">YAY</option>
+      <option value="SOLID">SOLID</option>
+      <option value="WRENCH">WRENCH</option>
+    </select>
+
     <script type="text/javascript" src="js/app.js"></script>
     <script type="text/javascript" src="js/summary.js"></script>
   </body>

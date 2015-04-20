@@ -63,7 +63,7 @@ var buildSummary = function(startSummary, endSummary){
       var $edit= $("<td>").html("<a href='#'>edit</a>").addClass("edit"); //use BootStrap pencil glyphicon
       $row.append($edit);
 
-      var $date = $("<td>").html(item.event_date).addClass("datetime");
+      var $date = $("<td>").html(item.event_date).addClass("date");
       $row.append($date);
 
       var $quality = $("<td>").html(item.quality).addClass("quality");
@@ -96,7 +96,7 @@ var updateRows = function (rowJSON){
   $("#entryTable").trigger("update");
 }
 
-//Update Day Table with new Entry
+//Update dayTable with new Entry
 $( "#single-entry" ).on( "submit", function( event ) {
   event.preventDefault();
   $("#addEntryModal").modal('hide');
@@ -136,6 +136,40 @@ $( "#single-entry" ).on( "submit", function( event ) {
   });//http://stackoverflow.com/questions/15173965/serializing-and-submitting-a-form-with-jquery-post-and-php
 });
 
+//Update summaryTable with new Entry
+$( "#summary-entry" ).on( "submit", function( event ) {
+  event.preventDefault();
+  $("#addSummaryModal").modal('hide');
+
+  //build data string
+  var data= $(this).serialize() + "&content=newSummary";
+
+  $.ajax({
+    type: "POST",
+    url: "functions.php",
+    data: data,
+    dataType: "json",
+    success: function(response) {
+      var $row = $("<tr>").attr("id", response.id);
+
+      var $edit= $("<td>").html("<a href='#'>edit</a>").addClass("edit"); //use BootStrap pencil glyphicon
+      $row.append($edit);
+
+      var $date = $("<td>").html(response.event_date).addClass("date");
+      $row.append($date);
+
+      var $quality = $("<td>").html(response.quality).addClass("quality");
+      $row.append($quality);
+
+      var $notes = $("<td>").html(response.notes).addClass("notes");
+      $row.append($notes);
+
+      $("#summaryTable TBODY").append($row);
+      $("#summaryTable").trigger("update");
+    }
+  });//http://stackoverflow.com/questions/15173965/serializing-and-submitting-a-form-with-jquery-post-and-php
+});
+
 //Add Day
 $("#addDay").on( "submit", function( event ) {
   event.preventDefault();
@@ -167,8 +201,8 @@ $("#addDay").on( "submit", function( event ) {
 //   });
 // });
 
-//Edit duration
-$("table").on('click', ".edit", function() {
+//Edit Rows on DayTable
+$("#dayTable").on('click', ".edit", function() {
 
   //Toggle Edit Mode
   $(this).parent().toggleClass("editMode");
@@ -203,21 +237,20 @@ $("table").on('click', ".edit", function() {
   }
   //Shut off Edit Mode
   else{
-    var getID = $(this).parent().attr("id");
-    var getPillar = $(this).siblings(".pillar").children().val();
-    var getDatetime = encodeURIComponent($(this).siblings(".datetime").children().val());
-    var getDuration = encodeURIComponent($(this).siblings(".duration").children().val());
-    var getQuality = $(this).siblings(".quality").children().val();
-    var getNotes = encodeURIComponent($(this).siblings(".notes").children().val());
-    console.log(getDuration);
+    var id = $(this).parent().attr("id");
+    var pillar = $(this).siblings(".pillar").children().val();
+    var datetime = encodeURIComponent($(this).siblings(".datetime").children().val());
+    var duration = encodeURIComponent($(this).siblings(".duration").children().val());
+    var quality = $(this).siblings(".quality").children().val();
+    var notes = encodeURIComponent($(this).siblings(".notes").children().val());
 
     //build data string
-    var data = "user_id=" + getID +
-               "&user_pillar=" + getPillar +
-               "&user_date=" + getDatetime +
-               "&user_duration=" + getDuration +
-               "&user_quality=" + getQuality +
-               "&user_notes=" + getNotes +
+    var data = "user_id=" + id +
+               "&user_pillar=" + pillar +
+               "&user_date=" + datetime +
+               "&user_duration=" + duration +
+               "&user_quality=" + quality +
+               "&user_notes=" + notes +
                "&content=updateEntry";
 
     console.log(data);
@@ -234,6 +267,64 @@ $("table").on('click', ".edit", function() {
         $("#" + response.id).children(".quality").replaceWith("<td class='quality'>" + response.quality + "</td>");
         $("#" + response.id).children(".notes").replaceWith("<td class='notes'>" + response.notes + "</td>");
         $("#dayTable").trigger("update");
+      }
+    });
+  }
+});// Using Event Delegation...whats that? http://stackoverflow.com/questions/16893043/jquery-click-event-not-working-after-adding-class-using-jquery ALSO SEE: https://learn.jquery.com/events/event-delegation/
+
+
+//Edit Rows on summaryTable
+$("#summaryTable").on('click', ".edit", function() {
+
+  //Toggle Edit Mode
+  $(this).parent().toggleClass("editMode");
+
+  //Is edit mode active?
+  var hasEditMode = $(this).parent().hasClass("editMode");
+
+  //Turn on Edit Mode
+  if (hasEditMode){
+
+    var date = $(this).siblings(".date").html();
+    var quality = $(this).siblings(".quality").html();
+    var notes = $(this).siblings(".notes").html();
+
+    var $dateInput = $("<input>").attr("value",date).addClass("form-control input-sm").attr("type","date");
+    var $qualityInput = $("#quality").clone().addClass("form-control input-sm").css("display","initial");
+    $qualityInput.children("option[value='" + quality + "']").attr("selected","selected"); //set selected
+    var $notesInput = $("<input>").attr("value",notes).addClass("form-control input-sm").attr("type","text");
+
+    $(this).siblings(".date").empty().append($dateInput);
+    $(this).siblings(".quality").empty().append($qualityInput);
+    $(this).siblings(".notes").empty().append($notesInput);
+
+  }
+  //Shut off Edit Mode
+  else{
+    var id = $(this).parent().attr("id");
+    var date = encodeURIComponent($(this).siblings(".date").children().val());
+    var quality = $(this).siblings(".quality").children().val();
+    var notes = encodeURIComponent($(this).siblings(".notes").children().val());
+
+    //build data string
+    var data = "user_id=" + id +
+               "&user_date=" + date +
+               "&user_quality=" + quality +
+               "&user_notes=" + notes +
+               "&content=updateSummary";
+
+    console.log(data);
+    $.ajax({
+      type: "POST",
+      url: "functions.php",
+      data: data,
+      dataType: "json",
+      success: function(response) {
+        console.log(response);
+        $("#" + response.id).children(".date").replaceWith("<td class='date'>" + response.event_date + "</td>");
+        $("#" + response.id).children(".quality").replaceWith("<td class='quality'>" + response.quality + "</td>");
+        $("#" + response.id).children(".notes").replaceWith("<td class='notes'>" + response.notes + "</td>");
+        $("#summaryTable").trigger("update");
       }
     });
   }

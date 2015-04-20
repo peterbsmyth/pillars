@@ -81,7 +81,7 @@ function getSummaryJSON($startSummary, $endSummary){
   echo json_encode($rows);
 }
 
-function addDay($date,$quality,$notes){
+function newSummary($date,$quality,$notes){
   require_once 'db/connect.php';
 
   try {
@@ -90,12 +90,17 @@ function addDay($date,$quality,$notes){
    $result->bindParam(2, $quality);
    $result->bindParam(3, $notes);
    $result->execute();
+
+   $result = $db->prepare("SELECT * FROM personal.pillars_days ORDER BY id DESC LIMIT 1;");
+   $result->execute();
   } catch (Exception $e){
     echo $e->getMessage();
     die();
   }
 
-  echo json_encode($date);
+  $newSummary = $result->fetch(PDO::FETCH_ASSOC);
+
+  echo json_encode($newSummary);
 }
 
 function newEntryJSON($pillar, $date, $duration, $quality, $notes){
@@ -148,11 +153,36 @@ function updateEntry($id, $pillar, $date, $duration, $quality, $notes){
 
 }
 
+function updateSummary($id, $date, $quality, $notes){
+  require_once('db/connect.php');
+  try {
+     $result = $db->prepare("UPDATE pillars_days SET event_date = ?, quality = ?, notes = ? WHERE id = ?");
+     $result->bindParam(1,$date);
+     $result->bindParam(2,$quality);
+     $result->bindParam(3,$notes);
+     $result->bindParam(4,$id);
+     $result->execute();
+
+     $result1 = $db->prepare("SELECT * FROM pillars_days WHERE id = ?");
+     $result1->bindParam(1,$id);
+     $result1->execute();
+  } catch (Exception $e){
+    echo $e->getMessage();
+    die();
+  }
+
+  $updatedDuration = $result1->fetch(PDO::FETCH_ASSOC);
+
+  echo json_encode($updatedDuration);
+
+}
+
 //Content
 //if($content == "lastEntry"){ getLastEntryJSON(); }
 if($content == "today"){ getDayJSON($startDay,$endDay); }
 if($content == "summary"){ getSummaryJSON($startSummary,$endSummary); }
 if($postContent == "newEntry"){ newEntryJSON($pillar, $date, $duration, $quality, $notes); }
-if($postContent == "addDay"){addDay($date,$quality,$notes);}
+if($postContent == "newSummary"){newSummary($date,$quality,$notes);}
 if($postContent == "updateEntry") {updateEntry($id, $pillar, $date, $duration, $quality, $notes);}
+if($postContent == "updateSummary") {updateSummary($id, $date, $quality, $notes);}
 ?>
