@@ -1,13 +1,13 @@
 <?php
 //Variables
-$page = $_GET['page'];
+$content = $_GET['content'];
 $test = $_GET['id'];
 $day1 = $_GET['newday_user_date1'];
 $day2 = $_GET['newday_user_date2'];
-$startToday = $_GET['startToday'];
-$endToday = $_GET['endToday'];
+$startDay = $_GET['startDay'];
+$endDay = $_GET['endDay'];
 
-$postPage = $_POST['page'];
+$postContent = $_POST['content'];
 $pillar = $_POST['user_pillar'];
 $date = $_POST['user_date'];
 $duration = $_POST['user_duration'];
@@ -33,13 +33,13 @@ function getLastEntryJSON(){
 }
 
 
-function getTodayJSON($startToday, $endToday){
+function getDayJSON($startDay, $endDay){
   require_once 'db/connect.php';
 
   try {
      $result = $db->prepare("Select * FROM pillars_log WHERE event_date between ? and ?;");
-     $result->bindParam(1, $startToday);
-     $result->bindParam(2, $endToday);
+     $result->bindParam(1, $startDay);
+     $result->bindParam(2, $endDay);
      $result->execute();
   } catch (Exception $e){
     echo $e->getMessage();
@@ -56,16 +56,16 @@ function getTodayJSON($startToday, $endToday){
   echo json_encode($rows);
 }
 
-function getDayJSON(){
-  require_once 'db/connect.php';
-
-  try {
-     $result = $db->prepare("Select * FROM pillars_days;");
-     $result->execute();
-  } catch (Exception $e){
-    echo $e->getMessage();
-    die();
-  }
+// function getDayJSON(){
+//   require_once 'db/connect.php';
+//
+//   try {
+//      $result = $db->prepare("Select * FROM pillars_days;");
+//      $result->execute();
+//   } catch (Exception $e){
+//     echo $e->getMessage();
+//     die();
+//   }
 
 
   $rows = array();
@@ -169,14 +169,14 @@ function updateEntry($id, $duration, $pillar){
 }
 
 //Content
-if($page == "lastEntry"){ getLastEntryJSON(); }
-if($page == "today"){ getTodayJSON($startToday,$endToday); }
-if($page == "days"){ getDayJSON(); }
-if($postPage == "newEntry"){ newEntryJSON($pillar, $date, $duration, $quality, $notes); }
-if($page == "newDay"){newDay($day1,$day2);}
-if($postPage == "addDay"){addDay($date,$quality,$notes);}
-if($postPage == "updateNotes") {updateNotes($id, $notes);}
-if($postPage == "updatePillar") {updatePillar($id, $pillar);}
-if($postPage == "updateDuration") {updateDuration($id, $duration);}
-if($postPage == "updateEntry") {updateEntry($id, $duration, $pillar);}
+if($content == "lastEntry"){ getLastEntryJSON(); }
+if($content == "today"){ getDayJSON($startDay,$endDay); }
+if($content == "days"){ getDayJSON(); }
+if($postContent == "newEntry"){ newEntryJSON($pillar, $date, $duration, $quality, $notes); }
+if($content == "newDay"){newDay($day1,$day2);}
+if($postContent == "addDay"){addDay($date,$quality,$notes);}
+if($postContent == "updateNotes") {updateNotes($id, $notes);}
+if($postContent == "updatePillar") {updatePillar($id, $pillar);}
+if($postContent == "updateDuration") {updateDuration($id, $duration);}
+if($postContent == "updateEntry") {updateEntry($id, $duration, $pillar);}
 ?>
