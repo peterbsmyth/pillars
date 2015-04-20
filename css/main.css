@@ -7,13 +7,22 @@ GENERAL
 }
 
 body {
+	padding: 1% 1% 0;
 	font: 1em/1.5 Helvetica, Arial, sans-serif;
 }
 
 /**********************************
 HEADER
 **********************************/
+header h1{
+	padding: 0;
+	margin: 0;
+	color:black;
+}
 
+header{
+	border-bottom: 2px solid black;
+}
 
 
 /**********************************
@@ -25,8 +34,23 @@ FOOTER
 /**********************************
 PAGE: INDEX
 **********************************/
+.blue{
+	background-color: blue;
+}
 
+.black{
+	background-color: black;
+}
 
+.centering-div{
+	width: 300px;
+	margin: 0 auto;
+}
+
+#date-form{
+	padding: 10px 0;
+
+}
 
 /**********************************
 COLORS

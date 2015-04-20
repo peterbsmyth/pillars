@@ -3,6 +3,15 @@
 var url = "functions.php";
 var data = { page: "lastEntry" };
 
+
+//Set Default Date to Today
+$('#datePicker').val(new Date().toDateInputValue());
+
+$("#datePicker").on("change", function(){
+  //update Table
+  console.log($(this).val());
+});
+
 //Update Rows
 var updateRows = function (rowJSON){
   var row = $("<tr/>").attr("id",rowJSON.id);
@@ -22,7 +31,10 @@ var updateRows = function (rowJSON){
 }
 
 //Print rows to entry table
-var data = {page : "today" };
+var startToday = new Date(Date.now()).toJSONLocal();
+console.log(startToday);
+endToday = startToday + "T23:59:59";
+var data = {page : "today", startToday: startToday,endToday: endToday};
 $.getJSON(url,data,function(response){
   console.log(response);
   response.forEach(function(item){
@@ -34,14 +46,13 @@ $.getJSON(url,data,function(response){
     var $tdQuality = $("<td>").html(item.quality).addClass("quality");
     $($tdEdit).addClass("edit");
     $(row).append($tdEdit);
-    $(row).append("<td>" + item.id + "</td>");
+    // $(row).append("<td>" + item.id + "</td>");
     $(row).append($tdPillar);
     $(row).append("<td>" + item.event_date + "</td>");
     $(row).append($tdDuration);
     $(row).append($tdQuality);
     $(row).append("<td>" + item.notes +  "</td>");
-    $(row).append("<td>" + item.entry_utc_timestamp +  "</td>");
-    $("#day").append(row);
+    $("#dayTable TBODY").append(row);
   });
   $("#entryTable").tablesorter({debug:false});
 });

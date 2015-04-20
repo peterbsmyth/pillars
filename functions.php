@@ -4,6 +4,8 @@ $page = $_GET['page'];
 $test = $_GET['id'];
 $day1 = $_GET['newday_user_date1'];
 $day2 = $_GET['newday_user_date2'];
+$startToday = $_GET['startToday'];
+$endToday = $_GET['endToday'];
 
 $postPage = $_POST['page'];
 $pillar = $_POST['user_pillar'];
@@ -31,11 +33,13 @@ function getLastEntryJSON(){
 }
 
 
-function getTodayJSON(){
+function getTodayJSON($startToday, $endToday){
   require_once 'db/connect.php';
 
   try {
-     $result = $db->prepare("Select * FROM pillars_log WHERE event_date between '2015/04/16' and '2015/04/16 23:59:59';");
+     $result = $db->prepare("Select * FROM pillars_log WHERE event_date between ? and ?;");
+     $result->bindParam(1, $startToday);
+     $result->bindParam(2, $endToday);
      $result->execute();
   } catch (Exception $e){
     echo $e->getMessage();
@@ -166,7 +170,7 @@ function updateEntry($id, $duration, $pillar){
 
 //Content
 if($page == "lastEntry"){ getLastEntryJSON(); }
-if($page == "today"){ getTodayJSON(); }
+if($page == "today"){ getTodayJSON($startToday,$endToday); }
 if($page == "days"){ getDayJSON(); }
 if($postPage == "newEntry"){ newEntryJSON($pillar, $date, $duration, $quality, $notes); }
 if($page == "newDay"){newDay($day1,$day2);}
