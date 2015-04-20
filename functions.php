@@ -18,23 +18,6 @@ $notes = $_POST['user_notes'];
 $id = $_POST['user_id'];
 
 //Functions
-// function getLastEntryJSON(){
-//   require_once 'db/connect.php';
-//
-//   try{
-//     $result = $db->prepare("SELECT * FROM personal.pillars_log ORDER BY id DESC LIMIT 1;");
-//     $result->execute();
-//   } catch (Exception $e){
-//     echo $e->getMessage();
-//     die();
-//   }
-//
-//   $send = $result->fetch(PDO::FETCH_ASSOC);
-//
-//   echo json_encode($send);
-// }
-
-
 function getDayJSON($startDay, $endDay){
   require_once 'db/connect.php';
 

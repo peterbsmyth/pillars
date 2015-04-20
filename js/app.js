@@ -1,8 +1,3 @@
-// $("#dayTable").hide();
-// $("#dayTable").tablesorter();
-var url = "functions.php";
-var data = { content: "lastEntry" };
-
 //Build Day Table given a date
 var buildTable = function(selectedDate){
 
@@ -78,23 +73,23 @@ var buildSummary = function(startSummary, endSummary){
   });
 }
 
-//Update Rows
-var updateRows = function (rowJSON){
-  var row = $("<tr/>").attr("id",rowJSON.id);
-  // var $td= $("<td>").html("<a>edit</a>"); //use BootStrap pencil glyphicon
-  var $td= $("<td>").append("<a>").html("edit");
-  $(row).append($td);
-  $(row).append("<td>" + rowJSON.id + "</td>");
-  $(row).append("<td>" + rowJSON.pillar + "</td>");
-  $(row).append("<td>" + rowJSON.event_date + "</td>");
-  $(row).append("<td>" + rowJSON.duration + "</td>");
-  $(row).append("<td>" + rowJSON.quality + "</td>");
-  $(row).append("<td>" + rowJSON.notes +  "</td>");
-  $(row).append("<td>" + rowJSON.entry_utc_timestamp +  "</td>");
-
-  $("#" + rowJSON.id).replaceWith(row);
-  $("#entryTable").trigger("update");
-}
+// //Update Rows
+// var updateRows = function (rowJSON){
+//   var row = $("<tr/>").attr("id",rowJSON.id);
+//   // var $td= $("<td>").html("<a>edit</a>"); //use BootStrap pencil glyphicon
+//   var $td= $("<td>").append("<a>").html("edit");
+//   $(row).append($td);
+//   $(row).append("<td>" + rowJSON.id + "</td>");
+//   $(row).append("<td>" + rowJSON.pillar + "</td>");
+//   $(row).append("<td>" + rowJSON.event_date + "</td>");
+//   $(row).append("<td>" + rowJSON.duration + "</td>");
+//   $(row).append("<td>" + rowJSON.quality + "</td>");
+//   $(row).append("<td>" + rowJSON.notes +  "</td>");
+//   $(row).append("<td>" + rowJSON.entry_utc_timestamp +  "</td>");
+//
+//   $("#" + rowJSON.id).replaceWith(row);
+//   $("#entryTable").trigger("update");
+// }
 
 //Update dayTable with new Entry
 $( "#single-entry" ).on( "submit", function( event ) {
@@ -170,36 +165,6 @@ $( "#summary-entry" ).on( "submit", function( event ) {
   });//http://stackoverflow.com/questions/15173965/serializing-and-submitting-a-form-with-jquery-post-and-php
 });
 
-//Add Day
-$("#addDay").on( "submit", function( event ) {
-  event.preventDefault();
-  var data = $(this).serialize();
-  var content = "&content=addDay";
-  var data = data + content;
-  $.post("functions.php",data,function(response){
-    // console.log(response);
-  });
-  // console.log(data);
-});
-
-
-//Update Duration
-// $("#updateDuration").on("submit", function(event){
-//   event.preventDefault();
-//   var data = $(this).serialize();
-//   var content = "&content=updateDuration";
-//   var data = data + content;
-//   console.log(data);
-//   $.ajax({
-//     type: "POST",
-//     url: "functions.php",
-//     data: data,
-//     dataType: "json",
-//     success: function(response) {
-//       updateRows(response);
-//     }
-//   });
-// });
 
 //Edit Rows on DayTable
 $("#dayTable").on('click', ".edit", function() {
