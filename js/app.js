@@ -1,11 +1,50 @@
 // $("#dayTable").hide();
 // $("#dayTable").tablesorter();
 var url = "functions.php";
-var data = { page: "lastEntry" };
+var data = { content: "lastEntry" };
 
 
-//Set Default Date to Today
-$('#datePicker').val(new Date().toDateInputValue());
+//Build Table given a date
+var buildTable = function(selectedDate){
+
+  //Build Data String
+  var startDay = selectedDate;
+  var endDay = startDay + "T23:59:59";
+  var data = {content : "today", startDay: startDay,endDay: endDay};
+
+  $.getJSON("functions.php",{content : "today", startDay: startDay,endDay: endDay},function(response){
+    //empty current table
+    $("#dayTable TBODY").empty();
+
+    //add new table
+    response.forEach(function(item){
+      var row = $("<tr>").attr("id", item.id);
+
+      var edit= $("<td>").html("<a href='#'>edit</a>").addClass("edit"); //use BootStrap pencil glyphicon
+      $(row).append(edit);
+
+      var pillar = $("<td>").html(item.pillar).addClass("pillar");
+      $(row).append(pillar);
+
+      var datetime = $("<td>").html(item.event_date).addClass("datetime");
+      $(row).append(datetime);
+
+      var duration = $("<td>").html(item.duration).addClass("duration");
+      $(row).append(duration);
+
+      var quality = $("<td>").html(item.quality).addClass("quality");
+      $(row).append(quality);
+
+      var notes = $("<td>").html(item.notes).addClass("notes");
+      $(row).append(notes);
+
+      $("#dayTable TBODY").append(row);
+    });
+
+
+    $("#dayTable").trigger("update");
+  });
+}
 
 $("#datePicker").on("change", function(){
   //update Table
@@ -30,35 +69,34 @@ var updateRows = function (rowJSON){
   $("#entryTable").trigger("update");
 }
 
-//Print rows to entry table
-var startToday = new Date(Date.now()).toJSONLocal();
-console.log(startToday);
-endToday = startToday + "T23:59:59";
-var data = {page : "today", startToday: startToday,endToday: endToday};
-$.getJSON(url,data,function(response){
-  console.log(response);
-  response.forEach(function(item){
-    var row = $("<tr/>").attr("id", item.id);
-
-    var $tdEdit= $("<td>").html("<a href='#'>edit</a>"); //use BootStrap pencil glyphicon
-    var $tdPillar = $("<td>").html(item.pillar).addClass("pillar");
-    var $tdDuration = $("<td>").html(item.duration).addClass("duration");
-    var $tdQuality = $("<td>").html(item.quality).addClass("quality");
-    $($tdEdit).addClass("edit");
-    $(row).append($tdEdit);
-    // $(row).append("<td>" + item.id + "</td>");
-    $(row).append($tdPillar);
-    $(row).append("<td>" + item.event_date + "</td>");
-    $(row).append($tdDuration);
-    $(row).append($tdQuality);
-    $(row).append("<td>" + item.notes +  "</td>");
-    $("#dayTable TBODY").append(row);
-  });
-  $("#entryTable").tablesorter({debug:false});
-});
+// //Print rows to day table
+// var startToday = new Date(Date.now()).toJSONLocal();
+// console.log(startToday);
+// endToday = startToday + "T23:59:59";
+// var data = {content : "today", startToday: startToday,endToday: endToday};
+// $.getJSON(url,data,function(response){
+//   console.log(response);
+//   response.forEach(function(item){
+//     var row = $("<tr/>").attr("id", item.id);
+//
+//     var $tdEdit= $("<td>").html("<a href='#'>edit</a>").addClass("edit"); //use BootStrap pencil glyphicon
+//     var $tdPillar = $("<td>").html(item.pillar).addClass("pillar");
+//     var $tdDuration = $("<td>").html(item.duration).addClass("duration");
+//     var $tdQuality = $("<td>").html(item.quality).addClass("quality");
+//     $(row).append($tdEdit);
+//     // $(row).append("<td>" + item.id + "</td>");
+//     $(row).append($tdPillar);
+//     $(row).append("<td>" + item.event_date + "</td>");
+//     $(row).append($tdDuration);
+//     $(row).append($tdQuality);
+//     $(row).append("<td>" + item.notes +  "</td>");
+//     $("#dayTable TBODY").append(row);
+//   });
+//   $("#dayTable").tablesorter({debug:false});
+// });
 
 //Print rows to day table
-var data = {page: "days"}
+var data = {content: "days"}
 $.getJSON(url,data,function(response){
   console.log(response);
   response.forEach(function(item){
@@ -86,8 +124,8 @@ $( "#newDay" ).on( "submit", function( event ) {
   var day2 = new Date(value);
   var day2 = day2.setDate(day2.getDate() + 1);
   day2 = new Date(day2).toJSON();
-  var page = "&page=newDay";
-  var data = "user_newday_user_date1=" + day1.substring(0,10) + "&user_newday_user_date2=" + day2.substring(0,10) + page;
+  var content = "&content=newDay";
+  var data = "user_newday_user_date1=" + day1.substring(0,10) + "&user_newday_user_date2=" + day2.substring(0,10) + content;
   $.getJSON("functions.php",data,function(response){
     console.log(response);
   //   $("#dayTable").show();
@@ -115,8 +153,8 @@ $( "#single-entry" ).on( "submit", function( event ) {
   $("#addEntryModal").modal('hide');
   var url = "functions.php";
   var data= $(this).serialize();
-  var page = "&page=newEntry";
-  var data = data + page;
+  var content = "&content=newEntry";
+  var data = data + content;
   $.ajax({
     type: "POST",
     url: url,
@@ -144,8 +182,8 @@ $( "#single-entry" ).on( "submit", function( event ) {
 $("#addDay").on( "submit", function( event ) {
   event.preventDefault();
   var data = $(this).serialize();
-  var page = "&page=addDay";
-  var data = data + page;
+  var content = "&content=addDay";
+  var data = data + content;
   $.post("functions.php",data,function(response){
     // console.log(response);
   });
@@ -157,8 +195,8 @@ $("#addDay").on( "submit", function( event ) {
 // $("#updateDuration").on("submit", function(event){
 //   event.preventDefault();
 //   var data = $(this).serialize();
-//   var page = "&page=updateDuration";
-//   var data = data + page;
+//   var content = "&content=updateDuration";
+//   var data = data + content;
 //   console.log(data);
 //   $.ajax({
 //     type: "POST",
@@ -193,7 +231,7 @@ $("table").on('click', ".edit", function() {
     var getID = $(this).parent().attr("id");
     var getDuration = escape($(this).siblings(".duration").children().val());
     var getPillar = $(this).siblings(".pillar").children().val();
-    var data = "user_id=" + getID + "&user_duration=" + getDuration + "&user_pillar=" + getPillar + "&page=updateEntry";
+    var data = "user_id=" + getID + "&user_duration=" + getDuration + "&user_pillar=" + getPillar + "&content=updateEntry";
     console.log(data);
     $.ajax({
       type: "POST",
@@ -211,3 +249,13 @@ $("table").on('click', ".edit", function() {
 });// Using Event Delegation...whats that? http://stackoverflow.com/questions/16893043/jquery-click-event-not-working-after-adding-class-using-jquery ALSO SEE: https://learn.jquery.com/events/event-delegation/
 
 // }); // With Guidance from http://codereview.stackexchange.com/questions/38816/jquery-dynamic-elements-like-tr-and-td-add-to-html-table
+
+//add tablesorter to dayTable
+$("#dayTable").tablesorter();
+
+//Set Default Date to Today
+$('#datePicker').val(new Date().toDateInputValue());
+
+//Initialize Day Table with Today's Data
+var startToday = new Date(Date.now()).toJSONLocal();
+buildTable(startToday);
