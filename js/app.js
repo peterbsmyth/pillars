@@ -4,7 +4,7 @@ var url = "functions.php";
 var data = { content: "lastEntry" };
 
 
-//Build Table given a date
+//Build Day Table given a date
 var buildTable = function(selectedDate){
 
   //Build Data String
@@ -16,7 +16,6 @@ var buildTable = function(selectedDate){
     //empty current table
     var $tableBody = $("#dayTable TBODY");
     $tableBody.empty();
-
 
     //add new table
     response.forEach(function(item){
@@ -41,11 +40,42 @@ var buildTable = function(selectedDate){
       $row.append($notes);
 
       $tableBody.append($row);
-
     });
-
-
     $("#dayTable").trigger("update");
+  });
+}
+
+//Build Summary Table given a date
+var buildSummary = function(startSummary, endSummary){
+
+  //Build Data String
+  var startSummary = startSummary;
+  var endSummary = endSummary;
+
+  $.getJSON("functions.php",{content : "summary", startSummary: startSummary, endSummary: endSummary},function(response){
+    //empty current table
+    var $tableBody = $("#summaryTable TBODY");
+    $tableBody.empty();
+
+    //add new table
+    response.forEach(function(item){
+      var $row = $("<tr>").attr("id", item.id);
+
+      var $edit= $("<td>").html("<a href='#'>edit</a>").addClass("edit"); //use BootStrap pencil glyphicon
+      $row.append($edit);
+
+      var $date = $("<td>").html(item.event_date).addClass("datetime");
+      $row.append($date);
+
+      var $quality = $("<td>").html(item.quality).addClass("quality");
+      $row.append($quality);
+
+      var $notes = $("<td>").html(item.notes).addClass("notes");
+      $row.append($notes);
+
+      $tableBody.append($row);
+    });
+    $("#summaryTable").trigger("update");
   });
 }
 
@@ -221,21 +251,3 @@ $("table").on('click', ".edit", function() {
 });// Using Event Delegation...whats that? http://stackoverflow.com/questions/16893043/jquery-click-event-not-working-after-adding-class-using-jquery ALSO SEE: https://learn.jquery.com/events/event-delegation/
 
 // }); // With Guidance from http://codereview.stackexchange.com/questions/38816/jquery-dynamic-elements-like-tr-and-td-add-to-html-table
-
-$("body").on("change", "#datePicker", function(){
-  //update Table
-  console.log("Updating Table...");
-  var selectedDate = $(this).val();
-  buildTable(selectedDate);
-});
-
-
-//add tablesorter to dayTable
-$("#dayTable").tablesorter();
-
-//Set Default Date to Today
-$('#datePicker').val(new Date().toDateInputValue());
-
-//Initialize Day Table with Today's Data
-var startToday = new Date(Date.now()).toJSONLocal();
-buildTable(startToday);
