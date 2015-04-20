@@ -97,58 +97,6 @@ var updateRows = function (rowJSON){
   $("#entryTable").trigger("update");
 }
 
-//Print rows to day table
-var data = {content: "days"}
-$.getJSON(url,data,function(response){
-  console.log(response);
-  response.forEach(function(item){
-    var row = $("<tr/>").attr("id", item.id);
-
-    var $tdEdit= $("<td>").html("<a href='#'>edit</a>"); //use BootStrap pencil glyphicon
-    var $tdPillar = $("<td>").html(item.pillar).addClass("pillar");
-    var $tdQuality = $("<td>").html(item.quality).addClass("quality");
-    $($tdEdit).addClass("edit");
-    $(row).append($tdEdit);
-    $(row).append("<td>" + item.id + "</td>");
-    $(row).append("<td>" + item.event_date + "</td>");
-    $(row).append($tdQuality);
-    $(row).append("<td>" + item.notes +  "</td>");
-    $("#dayBody").append(row);
-  });
-  $("#dayTable").tablesorter();
-});
-
-// Change Day View
-$( "#newDay" ).on( "submit", function( event ) {
-  event.preventDefault();
-  var value = $("#newDayValue").val();
-  var day1 = new Date(value).toJSON();
-  var day2 = new Date(value);
-  var day2 = day2.setDate(day2.getDate() + 1);
-  day2 = new Date(day2).toJSON();
-  var content = "&content=newDay";
-  var data = "user_newday_user_date1=" + day1.substring(0,10) + "&user_newday_user_date2=" + day2.substring(0,10) + content;
-  $.getJSON("functions.php",data,function(response){
-    console.log(response);
-  //   $("#dayTable").show();
-  //   $("#selectDayBody").children().remove();
-  //   console.log(response);
-  //   response.forEach(function(item){
-  //     var row = $("<tr/>").attr("role","row");
-  //     $(row).append("<td>" + item.id + "</td>");
-  //     $(row).append("<td>" + item.pillar + "</td>");
-  //     $(row).append("<td>" + item.event_date + "</td>");
-  //     $(row).append("<td>" + item.duration + "</td>");
-  //     $(row).append("<td>" + item.quality + "</td>");
-  //     $(row).append("<td>" + item.notes +  "</td>");
-  //     $(row).append("<td>" + item.entry_utc_timestamp +  "</td>");
-  //     $("#selectDayBody").append(row);
-  //     $("#dayTable").trigger("update");
-  //   });
-  });
-});
-
-
 //Update Table with new Entry
 $( "#single-entry" ).on( "submit", function( event ) {
   event.preventDefault();
