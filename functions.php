@@ -1,12 +1,12 @@
 <?php
 //Variables
+
+//GET
 $content = $_GET['content'];
-$test = $_GET['id'];
-$day1 = $_GET['newday_user_date1'];
-$day2 = $_GET['newday_user_date2'];
 $startDay = $_GET['startDay'];
 $endDay = $_GET['endDay'];
 
+//POST
 $postContent = $_POST['content'];
 $pillar = $_POST['user_pillar'];
 $date = $_POST['user_date'];
@@ -16,21 +16,21 @@ $notes = $_POST['user_notes'];
 $id = $_POST['user_id'];
 
 //Functions
-function getLastEntryJSON(){
-  require_once 'db/connect.php';
-
-  try{
-    $result = $db->prepare("SELECT * FROM personal.pillars_log ORDER BY id DESC LIMIT 1;");
-    $result->execute();
-  } catch (Exception $e){
-    echo $e->getMessage();
-    die();
-  }
-
-  $send = $result->fetch(PDO::FETCH_ASSOC);
-
-  echo json_encode($send);
-}
+// function getLastEntryJSON(){
+//   require_once 'db/connect.php';
+//
+//   try{
+//     $result = $db->prepare("SELECT * FROM personal.pillars_log ORDER BY id DESC LIMIT 1;");
+//     $result->execute();
+//   } catch (Exception $e){
+//     echo $e->getMessage();
+//     die();
+//   }
+//
+//   $send = $result->fetch(PDO::FETCH_ASSOC);
+//
+//   echo json_encode($send);
+// }
 
 
 function getDayJSON($startDay, $endDay){
@@ -55,28 +55,6 @@ function getDayJSON($startDay, $endDay){
 
   echo json_encode($rows);
 }
-
-// function getDayJSON(){
-//   require_once 'db/connect.php';
-//
-//   try {
-//      $result = $db->prepare("Select * FROM pillars_days;");
-//      $result->execute();
-//   } catch (Exception $e){
-//     echo $e->getMessage();
-//     die();
-//   }
-
-
-  $rows = array();
-
-  while($r = $result->fetch(PDO::FETCH_ASSOC)) {
-    $rows[] = $r;
-  }
-
-  echo json_encode($rows);
-}
-
 
 function addDay($date,$quality,$notes){
   require_once 'db/connect.php';
@@ -120,31 +98,6 @@ function newEntryJSON($pillar, $date, $duration, $quality, $notes){
 }
 
 
-function newDay($day1,$day2){
-  require_once('db/connect.php');
-  try {
-     $result = $db->prepare("Select * FROM pillars_log WHERE event_date between ? and ?;");
-     $result->bindParam(1,$day1);
-     $result->bindParam(2,$day2);
-     $result->execute();
-  } catch (Exception $e){
-    echo $e->getMessage();
-    die();
-  }
-
-
-  $rows = array();
-
-
-  while($r = $result->fetch(PDO::FETCH_ASSOC)) {
-    $rows[] = $r;
-    return json_encode($r);
-  }
-
-  echo json_encode($rows);
-
-}
-
 function updateEntry($id, $duration, $pillar){
   require_once('db/connect.php');
   try {
@@ -169,14 +122,9 @@ function updateEntry($id, $duration, $pillar){
 }
 
 //Content
-if($content == "lastEntry"){ getLastEntryJSON(); }
+//if($content == "lastEntry"){ getLastEntryJSON(); }
 if($content == "today"){ getDayJSON($startDay,$endDay); }
-if($content == "days"){ getDayJSON(); }
 if($postContent == "newEntry"){ newEntryJSON($pillar, $date, $duration, $quality, $notes); }
-if($content == "newDay"){newDay($day1,$day2);}
 if($postContent == "addDay"){addDay($date,$quality,$notes);}
-if($postContent == "updateNotes") {updateNotes($id, $notes);}
-if($postContent == "updatePillar") {updatePillar($id, $pillar);}
-if($postContent == "updateDuration") {updateDuration($id, $duration);}
 if($postContent == "updateEntry") {updateEntry($id, $duration, $pillar);}
 ?>
