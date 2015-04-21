@@ -160,10 +160,30 @@ function updateSummary($id, $date, $quality, $notes){
 
 }
 
+function getPillarsLogJSON(){
+  require_once('db/connect.php');
+  try{
+    $result = $db->prepare("SELECT * FROM pillars_log;");
+    $result->execute();
+  } catch (Exception $e){
+    echo $e->getMessage();
+    die();
+  }
+
+  $rows = array();
+
+  while($r = $result->fetch(PDO::FETCH_ASSOC)) {
+    $rows[] = $r;
+  }
+
+  echo json_encode($rows);
+}
+
 //Content
 //if($content == "lastEntry"){ getLastEntryJSON(); }
 if($content == "today"){ getDayJSON($startDay,$endDay); }
 if($content == "summary"){ getSummaryJSON($startSummary,$endSummary); }
+if($content == "pillarsLog"){ getPillarsLogJSON(); }
 if($postContent == "newEntry"){ newEntryJSON($pillar, $date, $duration, $quality, $notes); }
 if($postContent == "newSummary"){newSummary($date,$quality,$notes);}
 if($postContent == "updateEntry") {updateEntry($id, $pillar, $date, $duration, $quality, $notes);}
