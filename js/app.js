@@ -15,7 +15,8 @@ var buildTable = function(selectedDate){
     response.forEach(function(item){
       var $row = $("<tr>").attr("id", item.id);
 
-      var $edit= $("<td>").html("<a href='#'>edit</a>").addClass("edit"); //use BootStrap pencil glyphicon
+      var $edit= $("<td>").addClass("edit"); //use BootStrap pencil glyphicon
+      $("<a href='#'></a>").addClass("glyphicon glyphicon-pencil").appendTo($edit);
       $row.append($edit);
 
       var $pillar = $("<td>").html(item.pillar).addClass("pillar");
@@ -55,7 +56,8 @@ var buildSummary = function(startSummary, endSummary){
     response.forEach(function(item){
       var $row = $("<tr>").attr("id", item.id);
 
-      var $edit= $("<td>").html("<a href='#'>edit</a>").addClass("edit"); //use BootStrap pencil glyphicon
+      var $edit= $("<td>").addClass("edit"); //use BootStrap pencil glyphicon
+      $("<a href='#'></a>").addClass("glyphicon glyphicon-pencil").appendTo($edit);
       $row.append($edit);
 
       var $date = $("<td>").html(item.event_date).addClass("date");
@@ -107,7 +109,8 @@ $( "#single-entry" ).on( "submit", function( event ) {
     success: function(response) {
       var $row = $("<tr>").attr("id", response.id);
 
-      var $edit= $("<td>").html("<a href='#'>edit</a>").addClass("edit"); //use BootStrap pencil glyphicon
+      var $edit= $("<td>").addClass("edit"); //use BootStrap pencil glyphicon
+      $("<a href='#'></a>").addClass("glyphicon glyphicon-pencil").appendTo($edit);
       $row.append($edit);
 
       var $pillar = $("<td>").html(response.pillar).addClass("pillar");
@@ -147,7 +150,8 @@ $( "#summary-entry" ).on( "submit", function( event ) {
     success: function(response) {
       var $row = $("<tr>").attr("id", response.id);
 
-      var $edit= $("<td>").html("<a href='#'>edit</a>").addClass("edit"); //use BootStrap pencil glyphicon
+      var $edit= $("<td>").addClass("edit"); //use BootStrap pencil glyphicon
+      $("<a href='#'></a>").addClass("glyphicon glyphicon-pencil").appendTo($edit);
       $row.append($edit);
 
       var $date = $("<td>").html(response.event_date).addClass("date");
@@ -177,6 +181,7 @@ $("#dayTable").on('click', ".edit", function() {
 
   //Turn on Edit Mode
   if (hasEditMode){
+    $(this).children().toggleClass("glyphicon-pencil glyphicon-ok");
 
     var pillar = $(this).siblings(".pillar").html();
     var datetime = $(this).siblings(".datetime").html();
@@ -202,6 +207,8 @@ $("#dayTable").on('click', ".edit", function() {
   }
   //Shut off Edit Mode
   else{
+    $(this).children().toggleClass("glyphicon-pencil glyphicon-ok");
+
     var id = $(this).parent().attr("id");
     var pillar = $(this).siblings(".pillar").children().val();
     var datetime = encodeURIComponent($(this).siblings(".datetime").children().val());
@@ -249,6 +256,7 @@ $("#summaryTable").on('click', ".edit", function() {
 
   //Turn on Edit Mode
   if (hasEditMode){
+    $(this).children().toggleClass("glyphicon-pencil glyphicon-ok");
 
     var date = $(this).siblings(".date").html();
     var quality = $(this).siblings(".quality").html();
@@ -266,6 +274,8 @@ $("#summaryTable").on('click', ".edit", function() {
   }
   //Shut off Edit Mode
   else{
+    $(this).children().toggleClass("glyphicon-pencil glyphicon-ok");
+
     var id = $(this).parent().attr("id");
     var date = encodeURIComponent($(this).siblings(".date").children().val());
     var quality = $(this).siblings(".quality").children().val();
