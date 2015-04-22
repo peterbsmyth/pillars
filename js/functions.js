@@ -32,3 +32,9 @@ Date.prototype.toDateInputValue = (function() {
     local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
     return local.toJSON().slice(0,10);
 });// From: http://stackoverflow.com/questions/6982692/html5-input-type-date-default-value-to-today
+
+Date.prototype.toHoursDotMinutes = function(){
+  var minutes = this.getMinutes()/60;
+  var hours = this.getHours();
+  return hours+minutes;
+}

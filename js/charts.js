@@ -13,6 +13,13 @@ var durationToMinutes = function(duration){
   return hours + minutes;
 }
 
+var setTitle = function(selectedDate){
+  var startDay = selectedDate;
+  var endDay = makeUTCDate(startDay);
+  endDay = addDays(endDay,6).toJSONLocal();
+  return "Pillars For " + selectedDate + " : " + endDay;
+}
+
 var buildChart = function(selectedDate){
   //Build Data String
   var startDay = selectedDate;
@@ -111,19 +118,17 @@ var buildChart = function(selectedDate){
       // BEGIN D3 /////////
       /////////////////////
 
-      // dates = [dates[30],dates[31],dates[32],dates[33],dates[34],dates[35],dates[36]];
+      //Convert each duration to hours.minutes format
+      dates.forEach(function(item){
+        for(var key in item.duration){
+          item.duration[key] = item.duration[key].toHoursDotMinutes();
+        }
+      });
 
       //Conventional D3 Margin
       var margin = {top: 20, right: 30, bottom: 30, left: 40},
                   width = 970 - margin.left - margin.right,
                   height = 530 - margin.top - margin.bottom;
-
-      //Boilerplate chart append
-      var chart = d3.select(".chart")
-                  .attr("width", width + margin.left + margin.right)
-                  .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
       //Set minimum and maximum date for input domain
       // var minDate = new Date("2015-03-16");
@@ -135,6 +140,10 @@ var buildChart = function(selectedDate){
                     .domain([minDate,d3.time.day.utc.offset(maxDate,1)])
                     .range([0,width]);
 
+      var yScale = d3.scale.linear()
+                    .domain([0,24])
+                    .range([0,height]);
+
       var xAxis = d3.svg.axis()
                     .orient("top")
                     .ticks(d3.time.days.utc,1) //I don't understand how this works. *Magically* displays domain days
@@ -142,9 +151,7 @@ var buildChart = function(selectedDate){
                     .tickFormat(d3.time.format('%a, %m/%d'))
                     .scale(xScale);
 
-      var yScale = d3.scale.linear()
-                    .domain([0,24])
-                    .range([0,height]);
+
 
       var yAxis = d3.svg.axis()
                     .orient("left")
@@ -153,24 +160,79 @@ var buildChart = function(selectedDate){
 
       var barWidth = width / dates.length;
 
-      var bar = chart.selectAll("g")
-                      .data(dates)
-                      .enter().append("rect")
-                        .attr("class","bar")
-                        .attr("x",function(d){ return xScale(d.date); })
-                        .attr("y",function(d){ return 0; })
-                        .attr("width",barWidth -1)
-                        .attr("height", function(d){ return yScale(d.events); });
+      var color = d3.scale.ordinal()
+                  .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]); //http://bl.ocks.org/mbostock/3886208
 
+      //set domain of color to be duratin names
+      color.domain(d3.keys(dates[0].duration));
+
+      //calculate y positions for data
+      dates.forEach(function(d) {
+        var y0 = 0;
+        d.duration.pillars = color.domain().map(function(name) { return {name: name, y0: y0, y1: y0 += +d.duration[name]}; });
+        d.total = d.duration.pillars[d.duration.pillars.length - 1].y1;
+      });
+
+      //Boilerplate chart append
+      var chart = d3.select(".chart")
+                  .attr("width", width + margin.left + margin.right)
+                  .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      //Append x axis
       chart.append("g")
             .attr("class", "x axis")   // give it a class so it can be used to select only xaxis labels  below
-            .attr("transform", "translate(0,0)")
+            .attr("transform", "translate(0,-1)")
             .call(xAxis);
 
+      //Append y axis
       chart.append("g")
-            .attr("class", "y axis")   // give it a class so it can be used to select only xaxis labels  below
-            .attr("transform", "translate(0,0)")
-            .call(yAxis);
+            .attr("class", "y axis")   // give it a class so it can be used to select only yaxis labels  below
+            .attr("transform", "translate(-1,0)")
+            .call(yAxis)
+            .append("text")
+              .attr("transform", "rotate(-90)")
+              .attr("y", 6)
+              .attr("x",-455)
+              .attr("dy", ".71em")
+              .style("text-anchor", "end")
+              .text("Hours");
+
+      var dateBar = chart.selectAll(".dateBar")
+        .data(dates)
+      .enter().append("g")
+        .attr("class", "g")
+        .attr("transform", function(d) { return "translate(" + xScale(d.date) + ",0)"; });
+      dateBar.selectAll("rect")
+          .data(function(d) { return d.duration.pillars; })
+        .enter().append("rect")
+          .attr("width", barWidth-1)
+          .attr("y", function(d) { return yScale(d.y0); })
+          .attr("height", function(d) { return yScale(d.y1) - yScale(d.y0); })
+          .style("fill", function(d) { return color(d.name); });
+
+      var legend = chart.selectAll(".legend")
+        .data(color.domain())
+      .enter().append("g")
+        .attr("class", "legend")
+        .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+      legend.append("rect")
+          .attr("x", width - 18)
+          .attr("y", 350)
+          .attr("width", 18)
+          .attr("height", 18)
+          .style("fill", color);
+
+      legend.append("text")
+          .attr("x", width - 24)
+          .attr("y", 359)
+          .attr("dy", ".35em")
+          .style("text-anchor", "end")
+          .text(function(d) { return d; });
+
+
     },
     error: function(XHR, textStatus, errorThrown){
       console.log("error");
@@ -188,5 +250,6 @@ $("body").on("change", "#datePicker", function(){
   console.log("Updating Chart...");
   $("svg").empty();
   var selectedDate = $(this).val();
+  $("#chart-title").text(setTitle(selectedDate));
   buildChart(selectedDate);
 });

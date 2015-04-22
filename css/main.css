@@ -70,6 +70,22 @@ PAGE: CHART
 	margin: 0 auto;
 }
 
+.axis text {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+#chart-form{
+	padding: 10px 0;
+	width: 204px;
+}
+
 /**********************************
 COLORS
 **********************************/
