@@ -160,10 +160,12 @@ function updateSummary($id, $date, $quality, $notes){
 
 }
 
-function getPillarsLogJSON(){
+function getPillarsLogJSON($startDay,$endDay){
   require_once('db/connect.php');
   try{
-    $result = $db->prepare("SELECT * FROM pillars_log;");
+    $result = $db->prepare("SELECT * FROM pillars_log WHERE event_date between ? and ?;");
+    $result->bindParam(1,$startDay);
+    $result->bindParam(2,$endDay);
     $result->execute();
   } catch (Exception $e){
     echo $e->getMessage();
@@ -183,7 +185,7 @@ function getPillarsLogJSON(){
 //if($content == "lastEntry"){ getLastEntryJSON(); }
 if($content == "today"){ getDayJSON($startDay,$endDay); }
 if($content == "summary"){ getSummaryJSON($startSummary,$endSummary); }
-if($content == "pillarsLog"){ getPillarsLogJSON(); }
+if($content == "pillarsLog"){ getPillarsLogJSON($startDay, $endDay); }
 if($postContent == "newEntry"){ newEntryJSON($pillar, $date, $duration, $quality, $notes); }
 if($postContent == "newSummary"){newSummary($date,$quality,$notes);}
 if($postContent == "updateEntry") {updateEntry($id, $pillar, $date, $duration, $quality, $notes);}
