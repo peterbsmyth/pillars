@@ -32,3 +32,24 @@ Date.prototype.toDateInputValue = (function() {
     local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
     return local.toJSON().slice(0,10);
 });// From: http://stackoverflow.com/questions/6982692/html5-input-type-date-default-value-to-today
+
+Date.prototype.toDatetimeInputValue = (function() {
+    var local = new Date(this);
+    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+    return local.toJSON().slice(0,19);
+});
+
+var makeUTCDate = function(dateString){
+  var d = new Date(dateString);
+  return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(),  d.getUTCHours(), d.getUTCMinutes());
+}
+
+var addMinutes = function(date, minutes) {
+    return new Date(date.getTime() + minutes*60000);
+}
+
+var durationToMinutes = function(duration){
+  var hours = parseInt(duration.substr(0,2),10) * 60;
+  var minutes = parseInt(duration.substr(3,2),10);
+  return hours + minutes;
+}
