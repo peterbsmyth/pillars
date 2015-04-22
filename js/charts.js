@@ -19,7 +19,7 @@ $.ajax({
   data: {content: "pillarsLog"},
   dataType: "json",
   success: function(response){
-    console.log(response);
+    // console.log(response);
     var curDate = response[0].event_date.substr(0,10);
     var count = 0;
     var zazenHours = makeUTCDate("1990-09-13T00:00:00");
@@ -97,11 +97,13 @@ $.ajax({
       }
     });
 
-    console.log(dates);
+    // console.log(dates);
 
     /////////////////////
     // BEGIN D3 /////////
     /////////////////////
+
+    dates = [dates[30],dates[31],dates[32],dates[33],dates[34],dates[35],dates[36]];
 
     //Conventional D3 Margin
     var margin = {top: 20, right: 30, bottom: 30, left: 40},
@@ -116,16 +118,20 @@ $.ajax({
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     //Set minimum and maximum date for input domain
-    var minDate = new Date("2015-02-16");
-    var maxDate = new Date("2015-02-22");
+    // var minDate = new Date("2015-03-16");
+    // var maxDate = new Date("2015-03-22");
+    var minDate = dates[0].date;
+    var maxDate = dates[6].date;
 
-    var xScale = d3.time.scale()
-                  .domain([minDate,d3.time.day.offset(maxDate,1)])
+    var xScale = d3.time.scale.utc()
+                  .domain([minDate,d3.time.day.utc.offset(maxDate,1)])
                   .range([0,width]);
 
     var xAxis = d3.svg.axis()
                   .orient("top")
-                  .ticks(7)
+                  .ticks(d3.time.days.utc,1) //I don't understand how this works. *Magically* displays domain days
+                  // .ticks(d3.time.days,1) //I don't understand how this works. *Magically* displays domain days
+                  .tickFormat(d3.time.format('%a, %m/%d'))
                   .scale(xScale);
 
     var yScale = d3.scale.linear()
@@ -137,6 +143,17 @@ $.ajax({
                   .ticks(24)
                   .scale(yScale);
 
+    var barWidth = width / 7;
+
+    var bar = chart.selectAll("g")
+                    .data(dates)
+                    .enter().append("rect")
+                      .attr("class","bar")
+                      .attr("x",function(d){ return xScale(d.date); })
+                      .attr("y",function(d){ return 0; })
+                      .attr("width",barWidth -1)
+                      .attr("height", function(d){ return yScale(d.events); });
+
     chart.append("g")
           .attr("class", "x axis")   // give it a class so it can be used to select only xaxis labels  below
           .attr("transform", "translate(0,0)")
@@ -146,7 +163,6 @@ $.ajax({
           .attr("class", "y axis")   // give it a class so it can be used to select only xaxis labels  below
           .attr("transform", "translate(0,0)")
           .call(yAxis);
-
   },
   error: function(XHR, textStatus, errorThrown){
     console.log("error");
