@@ -58,3 +58,4 @@ var durationToMinutes = function(duration){
   var hours = parseInt(duration.substr(0,2),10) * 60;
   var minutes = parseInt(duration.substr(3,2),10);
   return hours + minutes;
+}
