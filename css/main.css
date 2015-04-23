@@ -69,6 +69,28 @@ PAGE: INDEX
 	width: 8%;
 }
 
+.tablesorter-header {
+	background-image: url(bg.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+
+.tablesorter-headerAsc {
+	background-image: url(asc.gif);
+	ackground-repeat: no-repeat;
+	background-position: center right;
+}
+.tablesorter-headerDesc {
+	background-image: url(desc.gif);
+	ackground-repeat: no-repeat;
+	background-position: center right;
+}
+
+.sorter-false{
+	background:none;
+}
+
 /**********************************
 PAGE: SUMMARY
 **********************************/

@@ -7,7 +7,9 @@ $("body").on("click", "#go", function(){
 });
 
 //add tablesorter to summaryTable
-$("#summaryTable").tablesorter();
+$("#summaryTable").tablesorter({
+  headers: { 0: { sorter: false}}
+});
 
 //Set Default End Date to Today
 $('#endSummaryPicker, #date').val(new Date().toDateInputValue());

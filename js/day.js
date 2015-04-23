@@ -7,7 +7,9 @@ $("body").on("change", "#datePicker", function(){
 
 
 //add tablesorter to dayTable
-$("#dayTable").tablesorter();
+$("#dayTable").tablesorter({
+  headers: { 0: { sorter: false}}
+});
 
 //Set Default Date to Today
 $('#datePicker').val(new Date().toDateInputValue());
@@ -32,11 +34,7 @@ $("body").on("click","#add-entry",function(){
     //set duration to null
     $("#duration").val("");
   }
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> chart_v0.2
   //else (if no tr)
   else{
     //set default date to today's date at 12am
