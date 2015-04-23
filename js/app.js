@@ -17,7 +17,7 @@ var durationToMinutes = function(duration){
   return hours + minutes;
 }
 
-//Build Day Table given a date
+//Build dayTable given a date
 var buildTable = function(selectedDate){
 
   //Build Data String
@@ -42,7 +42,7 @@ var buildTable = function(selectedDate){
       var $pillar = $("<td>").html(item.pillar).addClass("pillar");
       $row.append($pillar);
 
-      var $datetime = $("<td>").html(item.event_date).addClass("datetime");
+      var $datetime = $("<td>").html(datetimeFormat(item.event_date)).addClass("datetime");
       $row.append($datetime);
 
       var $duration = $("<td>").html(item.duration).addClass("duration");
@@ -60,7 +60,7 @@ var buildTable = function(selectedDate){
   });
 }
 
-//Build Summary Table given a date
+//Build summaryTable given a date
 var buildSummary = function(startSummary, endSummary){
 
   //Build Data String
@@ -81,7 +81,7 @@ var buildSummary = function(startSummary, endSummary){
       $("<a href='#'></a>").addClass("cancel glyphicon glyphicon-remove").hide().appendTo($edit);
       $row.append($edit);
 
-      var $date = $("<td>").html(item.event_date).addClass("date");
+      var $date = $("<td>").html(item.event_date.toDateFormat()).addClass("date");
       $row.append($date);
 
       var $quality = $("<td>").html(item.quality).addClass("quality");
@@ -120,7 +120,7 @@ $( "#single-entry" ).on( "submit", function( event ) {
       var $pillar = $("<td>").html(response.pillar).addClass("pillar");
       $row.append($pillar);
 
-      var $datetime = $("<td>").html(response.event_date).addClass("datetime");
+      var $datetime = $("<td>").html(datetimeFormat(response.event_date)).addClass("datetime");
       $row.append($datetime);
 
       var $duration = $("<td>").html(response.duration).addClass("duration");
@@ -159,7 +159,7 @@ $( "#summary-entry" ).on( "submit", function( event ) {
       $("<a href='#'></a>").addClass("cancel glyphicon glyphicon-remove").hide().appendTo($edit);
       $row.append($edit);
 
-      var $date = $("<td>").html(response.event_date).addClass("date");
+      var $date = $("<td>").html(response.event_date.toDateFormat()).addClass("date");
       $row.append($date);
 
       var $quality = $("<td>").html(response.quality).addClass("quality");
@@ -194,7 +194,7 @@ $("#dayTable").on('click', ".okay", function() {
     //select td html
     pillar = $editRow.children(".pillar").html();
     datetime = $editRow.children(".datetime").html();
-    datetime = datetime.replace(" ","T");//format for input
+    datetime = new Date(datetime).toDatetimeInputValue();//format for input
     duration = $editRow.children(".duration").html();
     quality = $editRow.children(".quality").html();
     notes = $editRow.children(".notes").html();
@@ -250,7 +250,7 @@ $("#dayTable").on('click', ".okay", function() {
       success: function(response) {
         //replace inputs with new tds
         $("#" + response.id).children(".pillar").replaceWith("<td class='pillar'>" + response.pillar + "</td>");
-        $("#" + response.id).children(".datetime").replaceWith("<td class='datetime'>" + response.event_date + "</td>");
+        $("#" + response.id).children(".datetime").replaceWith("<td class='datetime'>" + datetimeFormat(response.event_date) + "</td>");
         $("#" + response.id).children(".duration").replaceWith("<td class='duration'>" + response.duration + "</td>");
         $("#" + response.id).children(".quality").replaceWith("<td class='quality'>" + response.quality + "</td>");
         $("#" + response.id).children(".notes").replaceWith("<td class='notes'>" + response.notes + "</td>");
@@ -274,7 +274,7 @@ $("#dayTable").on('click', ".cancel", function() {
 
   //inputs back to original tds
   $editRow.children(".pillar").replaceWith("<td class='pillar'>" + pillar + "</td>");
-  $editRow.children(".datetime").replaceWith("<td class='datetime'>" + datetime + "</td>");
+  $editRow.children(".datetime").replaceWith("<td class='datetime'>" + datetimeFormat(datetime) + "</td>");
   $editRow.children(".duration").replaceWith("<td class='duration'>" + duration + "</td>");
   $editRow.children(".quality").replaceWith("<td class='quality'>" + quality + "</td>");
   $editRow.children(".notes").replaceWith("<td class='notes'>" + notes + "</td>");
@@ -299,6 +299,7 @@ $("#summaryTable").on('click', ".okay", function() {
 
     //select td html
     date = $editRow.children(".date").html();
+    date = new Date(date).toDateInputValue();
     quality = $editRow.children(".quality").html();
     notes = $editRow.children(".notes").html();
 
@@ -342,7 +343,7 @@ $("#summaryTable").on('click', ".okay", function() {
       dataType: "json",
       success: function(response) {
         console.log(response);
-        $("#" + response.id).children(".date").replaceWith("<td class='date'>" + response.event_date + "</td>");
+        $("#" + response.id).children(".date").replaceWith("<td class='date'>" + response.event_date.toDateFormat() + "</td>");
         $("#" + response.id).children(".quality").replaceWith("<td class='quality'>" + response.quality + "</td>");
         $("#" + response.id).children(".notes").replaceWith("<td class='notes'>" + response.notes + "</td>");
         $("#summaryTable").trigger("update");
@@ -364,7 +365,7 @@ $("#summaryTable").on('click', ".cancel", function() {
   $(this).hide();
 
   //inputs back to original tds
-  $editRow.children(".date").replaceWith("<td class='date'>" + date + "</td>");
+  $editRow.children(".date").replaceWith("<td class='date'>" + date.toDateFormat() + "</td>");
   $editRow.children(".quality").replaceWith("<td class='quality'>" + quality + "</td>");
   $editRow.children(".notes").replaceWith("<td class='notes'>" + notes + "</td>");
 });

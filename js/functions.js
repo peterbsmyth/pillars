@@ -59,3 +59,35 @@ var durationToMinutes = function(duration){
   var minutes = parseInt(duration.substr(3,2),10);
   return hours + minutes;
 }
+
+var datetimeFormat = function(datetimestring){
+  //Expects string formatted "YYYY-MM-DDTHH:MM:SS"
+  var x = datetimestring;
+  var y, mm, dd, yyyy, hh, mi;
+  y= x.substr(5,2) + "/" + x.substr(8,2) + "/" + x.substr(0,4) + " ";
+  hh = parseInt(x.substr(11,2),10);
+  mi = x.substr(14,2);
+  debugger;
+  if (hh > 12){
+    hh -= 12;
+    y += hh + ":" + mi + " PM";
+    return y;
+  }
+  else if (hh == 00){
+    y += 12 + ":" + mi + " AM";
+    return y;
+  }
+  else if (hh == 12){
+    y += hh + ":" + mi + " PM";
+    return y;
+  }
+  else {
+    y += hh + ":" + mi + " AM";
+    return y;
+  }
+}
+
+String.prototype.toDateFormat = function(){
+  //Expects string formatted "YYYY-MM-DD"
+  return this.substr(5,2) + "/" + this.substr(8,2) + "/" + this.substr(0,4);
+}
