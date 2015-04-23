@@ -1,3 +1,9 @@
+//for initializing chart with Previous Week's Data
+var today = new Date(Date.now());
+today.setDate(today.getDate() - 6);
+var startChart = today.toJSONLocal();
+
+
 var makeUTCDate = function(dateString){
   var d = new Date(dateString);
   return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(),  d.getUTCHours(), d.getUTCMinutes());
@@ -244,7 +250,12 @@ var buildChart = function(selectedDate){
 }
 
 
+//initialize chart
+buildChart(startChart);
+$('#datePicker').val(today.toDateInputValue());
 
+
+//change chart
 $("body").on("change", "#datePicker", function(){
   //update Table
   console.log("Updating Chart...");

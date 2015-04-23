@@ -16,7 +16,7 @@ var startSummary = new Date();
 startSummary.setDate(startSummary.getDate() - 6);
 $('#startSummaryPicker').val(startSummary.toDateInputValue());
 
-//Initialize Day Table with Today's Data
+//Initialize summaryTable with Previous Week's Data
 var today = new Date(Date.now());
 var endSummary = today.toJSONLocal();
 today.setDate(today.getDate() - 6);
