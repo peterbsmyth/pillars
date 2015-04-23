@@ -67,7 +67,6 @@ var datetimeFormat = function(datetimestring){
   y= x.substr(5,2) + "/" + x.substr(8,2) + "/" + x.substr(0,4) + " ";
   hh = parseInt(x.substr(11,2),10);
   mi = x.substr(14,2);
-  debugger;
   if (hh > 12){
     hh -= 12;
     y += hh + ":" + mi + " PM";

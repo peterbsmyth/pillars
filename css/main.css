@@ -61,6 +61,25 @@ PAGE: INDEX
 	display: none;
 }
 
+#iNotesCol{
+	width: 50%;
+}
+
+#iQualityCol{
+	width: 8%;
+}
+
+/**********************************
+PAGE: SUMMARY
+**********************************/
+#sNotesCol{
+	width: 75%;
+}
+
+#sQualityCol{
+	width: 8%;
+}
+
 /**********************************
 PAGE: CHART
 **********************************/
