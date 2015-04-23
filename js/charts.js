@@ -127,7 +127,7 @@ var buildChart = function(selectedDate){
       //Convert each duration to hours.minutes format
       dates.forEach(function(item){
         for(var key in item.duration){
-          item.duration[key] = item.duration[key].toHoursDotMinutes();
+          item.duration[key+"hDM"] = item.duration[key].toHoursDotMinutes();
         }
       });
 
@@ -137,8 +137,6 @@ var buildChart = function(selectedDate){
                   height = 530 - margin.top - margin.bottom;
 
       //Set minimum and maximum date for input domain
-      // var minDate = new Date("2015-03-16");
-      // var maxDate = new Date("2015-03-22");
       var minDate = dates[0].date;
       var maxDate = dates[dates.length-1].date;
 
@@ -157,8 +155,6 @@ var buildChart = function(selectedDate){
                     .tickFormat(d3.time.format('%a, %m/%d'))
                     .scale(xScale);
 
-
-
       var yAxis = d3.svg.axis()
                     .orient("left")
                     .ticks(24)
@@ -169,13 +165,21 @@ var buildChart = function(selectedDate){
       var color = d3.scale.ordinal()
                   .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]); //http://bl.ocks.org/mbostock/3886208
 
-      //set domain of color to be duratin names
-      color.domain(d3.keys(dates[0].duration));
+      var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .offset([-10, 0])
+            .html(function(d) {
+              return "<strong>Pillar:</strong> <span>" + d.name + "</span><br><strong>Duration:</strong>" + "<span>" + d.duration.toDurationFormat() + "</span>";
+            })
+
+      //set domain of color to be duration names that do not contain hDM
+      // key.indexOf("hDM") returns -1 if "hDM" is not in string
+      color.domain(d3.keys(dates[0].duration).filter(function(key) {  return key.indexOf("hDM") === -1; }));
 
       //calculate y positions for data
       dates.forEach(function(d) {
         var y0 = 0;
-        d.duration.pillars = color.domain().map(function(name) { return {name: name, y0: y0, y1: y0 += +d.duration[name]}; });
+        d.duration.pillars = color.domain().map(function(name) { return {name: name, y0: y0, y1: y0 += +d.duration[name+ "hDM"], duration: d.duration[name]}; });
         d.total = d.duration.pillars[d.duration.pillars.length - 1].y1;
       });
 
@@ -205,24 +209,30 @@ var buildChart = function(selectedDate){
               .style("text-anchor", "end")
               .text("Hours");
 
+      chart.call(tip);
+
       var dateBar = chart.selectAll(".dateBar")
         .data(dates)
       .enter().append("g")
         .attr("class", "g")
-        .attr("transform", function(d) { return "translate(" + xScale(d.date) + ",0)"; });
+        .attr("transform", function(d) { return "translate(" + xScale(d.date) + ",0)"; })
       dateBar.selectAll("rect")
           .data(function(d) { return d.duration.pillars; })
         .enter().append("rect")
           .attr("width", barWidth-1)
           .attr("y", function(d) { return yScale(d.y0); })
           .attr("height", function(d) { return yScale(d.y1) - yScale(d.y0); })
-          .style("fill", function(d) { return color(d.name); });
+          .style("fill", function(d) { return color(d.name); })
+          .on('mouseover', tip.show)
+          .on('mouseout', tip.hide);
 
       var legend = chart.selectAll(".legend")
         .data(color.domain())
       .enter().append("g")
         .attr("class", "legend")
         .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+
 
       legend.append("rect")
           .attr("x", width - 18)
@@ -237,6 +247,17 @@ var buildChart = function(selectedDate){
           .attr("dy", ".35em")
           .style("text-anchor", "end")
           .text(function(d) { return d; });
+
+
+
+      // d3.select(".chart")
+      // 	.append("svg:circle")
+      // 	.attr("stroke", "black")
+      // 	.attr("fill", "aliceblue")
+      // 	.attr("r", 50)
+      // 	.attr("cx", 52)
+      // 	.attr("cy", 52)
+      //
 
 
     },

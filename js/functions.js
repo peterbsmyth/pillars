@@ -45,6 +45,12 @@ Date.prototype.toHoursDotMinutes = function(){
   return hours+minutes;
 }
 
+Date.prototype.toDurationFormat = function(){
+  var hours = this.getHours();
+  var minutes = this.getMinutes();
+  return hours + ":" + minutes;
+}
+
 var makeUTCDate = function(dateString){
   var d = new Date(dateString);
   return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(),  d.getUTCHours(), d.getUTCMinutes());

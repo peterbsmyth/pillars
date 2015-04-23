@@ -32,7 +32,11 @@ $("body").on("click","#add-entry",function(){
     //set duration to null
     $("#duration").val("");
   }
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> chart_v0.2
   //else (if no tr)
   else{
     //set default date to today's date at 12am
