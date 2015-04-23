@@ -131,6 +131,15 @@ PAGE: CHART
 	fill: blue;
 }
 
+#leftPicker, #centerPicker, #rightPicker, #chart-title{
+	display: inline-block;
+}
+
+#pillarsPicker{
+	width: 500px;
+	margin: 0 auto;
+}
+
 /**********************************
 COLORS
 **********************************/

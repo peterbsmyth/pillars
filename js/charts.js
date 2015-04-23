@@ -1,6 +1,6 @@
 //for initializing chart with Previous Week's Data
 var today = new Date(Date.now());
-today.setDate(today.getDate() - 1);
+today.setDate(today.getDate() - 6);
 var startChart = today.toJSONLocal();
 
 
@@ -23,7 +23,7 @@ var setTitle = function(selectedDate){
   var startDay = selectedDate;
   var endDay = makeUTCDate(startDay);
   endDay = addDays(endDay,6).toJSONLocal();
-  return "Pillars For " + selectedDate + " : " + endDay;
+  return "Pillars For " + selectedDate.toDateFormat() + " - " + endDay.toDateFormat();
 }
 
 var buildChart = function(selectedDate){
@@ -290,14 +290,40 @@ var buildChart = function(selectedDate){
 //initialize chart
 buildChart(startChart);
 $('#datePicker').val(today.toDateInputValue());
+$("#chart-title").text(setTitle(today.toDateInputValue()));
 
-
-//change chart
-$("body").on("change", "#datePicker", function(){
-  //update Table
-  console.log("Updating Chart...");
+//Display chart starting last week
+$("#back7").on("click",function(){
+  today.setDate(today.getDate() - 7);
+  var newDate = today.toJSONLocal();
   $("svg").empty();
-  var selectedDate = $(this).val();
-  $("#chart-title").text(setTitle(selectedDate));
-  buildChart(selectedDate);
+  $("#chart-title").text(setTitle(newDate));
+  buildChart(newDate);
+});
+
+//Display chart starting yesterday
+$("#back1").on("click",function(){
+  today.setDate(today.getDate() - 1);
+  var newDate = today.toJSONLocal();
+  $("svg").empty();
+  $("#chart-title").text(setTitle(newDate));
+  buildChart(newDate);
+});
+
+//Display chart starting tomorrow
+$("#forward1").on("click",function(){
+  today.setDate(today.getDate() + 1);
+  var newDate = today.toJSONLocal();
+  $("svg").empty();
+  $("#chart-title").text(setTitle(newDate));
+  buildChart(newDate);
+});
+
+//Display chart starting next week
+$("#forward7").on("click",function(){
+  today.setDate(today.getDate() + 1);
+  var newDate = today.toJSONLocal();
+  $("svg").empty();
+  $("#chart-title").text(setTitle(newDate));
+  buildChart(newDate);
 });
