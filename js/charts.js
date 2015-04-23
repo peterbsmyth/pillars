@@ -24,7 +24,7 @@ var buildChart = function(selectedDate){
     data: data,
     dataType: "json",
     success: function(response){
-      console.log(response);
+
       //set variables for first item
       var curDate = response[0].event_date.substr(0,10);
       var count = 0;
@@ -128,8 +128,6 @@ var buildChart = function(selectedDate){
         }
       });
 
-      // console.log(dates);
-
       /////////////////////
       // BEGIN D3 /////////
       /////////////////////
@@ -150,9 +148,20 @@ var buildChart = function(selectedDate){
       var minDate = dates[0].date;
       var maxDate = dates[dates.length-1].date;
 
-      var xScale = d3.time.scale.utc()
-                    .domain([minDate,d3.time.day.utc.offset(maxDate,1)])
-                    .range([0,width]);
+
+      var xScale;
+
+      if (dates.length < 7){
+        xScale = d3.time.scale.utc()
+                      .domain([minDate,d3.time.day.utc.offset(maxDate,1 + ( 7 - dates.length))])
+                      .range([0,width]);
+      }
+      else{
+        xScale = d3.time.scale.utc()
+                      .domain([minDate,d3.time.day.utc.offset(maxDate,1)])
+                      .range([0,width]);
+      }
+
 
       var yScale = d3.scale.linear()
                     .domain([0,24])
@@ -171,6 +180,12 @@ var buildChart = function(selectedDate){
                     .scale(yScale);
 
       var barWidth = width / dates.length;
+
+      if (dates.length < 7){
+        barWidth = width / (dates.length + (7-dates.length));
+      }
+
+
 
       var color = d3.scale.ordinal()
                   .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]); //http://bl.ocks.org/mbostock/3886208
@@ -305,7 +320,7 @@ $("#forward1").on("click",function(){
 
 //Display chart starting next week
 $("#forward7").on("click",function(){
-  today.setDate(today.getDate() + 1);
+  today.setDate(today.getDate() + 7);
   var newDate = today.toJSONLocal();
   $("svg").empty();
   $("#chart-title").text(setTitle(newDate));
