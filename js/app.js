@@ -1,22 +1,6 @@
 //variables for dayTable + summaryTable tds
 var pillar, datetime, duration, quality, notes;
 
-//Helper Functions
-var makeUTCDate = function(dateString){
-  var d = new Date(dateString);
-  return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(),  d.getUTCHours(), d.getUTCMinutes());
-}
-
-var addMinutes = function(date, minutes) {
-    return new Date(date.getTime() + minutes*60000);
-}
-
-var durationToMinutes = function(duration){
-  var hours = parseInt(duration.substr(0,2),10) * 60;
-  var minutes = parseInt(duration.substr(3,2),10);
-  return hours + minutes;
-}
-
 //Build dayTable given a date
 var buildTable = function(selectedDate){
 

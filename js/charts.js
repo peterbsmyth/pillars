@@ -3,22 +3,6 @@ var today = new Date(Date.now());
 today.setDate(today.getDate() - 6);
 var startChart = today.toJSONLocal();
 
-
-var makeUTCDate = function(dateString){
-  var d = new Date(dateString);
-  return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(),  d.getUTCHours(), d.getUTCMinutes());
-}
-
-var addMinutes = function(date, minutes) {
-    return new Date(date.getTime() + minutes*60000);
-}
-
-var durationToMinutes = function(duration){
-  var hours = parseInt(duration.substr(0,2),10) * 60;
-  var minutes = parseInt(duration.substr(3,2),10);
-  return hours + minutes;
-}
-
 var setTitle = function(selectedDate){
   var startDay = selectedDate;
   var endDay = makeUTCDate(startDay);
