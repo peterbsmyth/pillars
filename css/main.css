@@ -140,6 +140,10 @@ PAGE: CHART
 	margin: 0 auto;
 }
 
+#back1{
+	transform:rotateZ(180deg);
+}
+
 /**********************************
 COLORS
 **********************************/
