@@ -61,14 +61,6 @@ PAGE: INDEX
 	display: none;
 }
 
-#iNotesCol{
-	width: 50%;
-}
-
-#iQualityCol{
-	width: 8%;
-}
-
 .tablesorter-header {
 	background-image: url(bg.gif);
 	background-repeat: no-repeat;
@@ -91,15 +83,39 @@ PAGE: INDEX
 	background:none;
 }
 
+#iEditCol{
+	width: 5%;
+}
+
+#iPillarCol{
+	width: 10%;
+}
+
+#iDatetimeCol{
+	width: 17%;
+}
+
+#iDurationCol{
+	width: 15%;
+}
+
+#iQualityCol{
+	width: 11%;
+}
+
+#iNotesCol{
+	width: 42%;
+}
+
 /**********************************
 PAGE: SUMMARY
 **********************************/
 #sNotesCol{
-	width: 75%;
+	width: 65%;
 }
 
 #sQualityCol{
-	width: 8%;
+	width: 18%;
 }
 
 /**********************************
