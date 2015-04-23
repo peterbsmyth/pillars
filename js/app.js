@@ -1,3 +1,6 @@
+//variables for dayTable + summaryTable tds
+var pillar, datetime, duration, quality, notes;
+
 //Helper Functions
 var makeUTCDate = function(dateString){
   var d = new Date(dateString);
@@ -32,7 +35,8 @@ var buildTable = function(selectedDate){
       var $row = $("<tr>").attr("id", item.id);
 
       var $edit= $("<td>").addClass("edit"); //use BootStrap pencil glyphicon
-      $("<a href='#'></a>").addClass("glyphicon glyphicon-pencil").appendTo($edit);
+      $("<a href='#'></a>").addClass("okay glyphicon glyphicon-pencil").appendTo($edit);
+      $("<a href='#'></a>").addClass("cancel glyphicon glyphicon-remove").hide().appendTo($edit);
       $row.append($edit);
 
       var $pillar = $("<td>").html(item.pillar).addClass("pillar");
@@ -73,7 +77,8 @@ var buildSummary = function(startSummary, endSummary){
       var $row = $("<tr>").attr("id", item.id);
 
       var $edit= $("<td>").addClass("edit"); //use BootStrap pencil glyphicon
-      $("<a href='#'></a>").addClass("glyphicon glyphicon-pencil").appendTo($edit);
+      $("<a href='#'></a>").addClass("okay glyphicon glyphicon-pencil").appendTo($edit);
+      $("<a href='#'></a>").addClass("cancel glyphicon glyphicon-remove").hide().appendTo($edit);
       $row.append($edit);
 
       var $date = $("<td>").html(item.event_date).addClass("date");
@@ -90,24 +95,6 @@ var buildSummary = function(startSummary, endSummary){
     $("#summaryTable").trigger("update");
   });
 }
-
-// //Update Rows
-// var updateRows = function (rowJSON){
-//   var row = $("<tr/>").attr("id",rowJSON.id);
-//   // var $td= $("<td>").html("<a>edit</a>"); //use BootStrap pencil glyphicon
-//   var $td= $("<td>").append("<a>").html("edit");
-//   $(row).append($td);
-//   $(row).append("<td>" + rowJSON.id + "</td>");
-//   $(row).append("<td>" + rowJSON.pillar + "</td>");
-//   $(row).append("<td>" + rowJSON.event_date + "</td>");
-//   $(row).append("<td>" + rowJSON.duration + "</td>");
-//   $(row).append("<td>" + rowJSON.quality + "</td>");
-//   $(row).append("<td>" + rowJSON.notes +  "</td>");
-//   $(row).append("<td>" + rowJSON.entry_utc_timestamp +  "</td>");
-//
-//   $("#" + rowJSON.id).replaceWith(row);
-//   $("#entryTable").trigger("update");
-// }
 
 //Update dayTable with new Entry
 $( "#single-entry" ).on( "submit", function( event ) {
@@ -126,7 +113,8 @@ $( "#single-entry" ).on( "submit", function( event ) {
       var $row = $("<tr>").attr("id", response.id);
 
       var $edit= $("<td>").addClass("edit"); //use BootStrap pencil glyphicon
-      $("<a href='#'></a>").addClass("glyphicon glyphicon-pencil").appendTo($edit);
+      $("<a href='#'></a>").addClass("okay glyphicon glyphicon-pencil").appendTo($edit);
+      $("<a href='#'></a>").addClass("cancel glyphicon glyphicon-remove").hide().appendTo($edit);
       $row.append($edit);
 
       var $pillar = $("<td>").html(response.pillar).addClass("pillar");
@@ -167,7 +155,8 @@ $( "#summary-entry" ).on( "submit", function( event ) {
       var $row = $("<tr>").attr("id", response.id);
 
       var $edit= $("<td>").addClass("edit"); //use BootStrap pencil glyphicon
-      $("<a href='#'></a>").addClass("glyphicon glyphicon-pencil").appendTo($edit);
+      $("<a href='#'></a>").addClass("okay glyphicon glyphicon-pencil").appendTo($edit);
+      $("<a href='#'></a>").addClass("cancel glyphicon glyphicon-remove").hide().appendTo($edit);
       $row.append($edit);
 
       var $date = $("<td>").html(response.event_date).addClass("date");
@@ -185,27 +174,32 @@ $( "#summary-entry" ).on( "submit", function( event ) {
   });//http://stackoverflow.com/questions/15173965/serializing-and-submitting-a-form-with-jquery-post-and-php
 });
 
-
 //Edit Rows on DayTable
-$("#dayTable").on('click', ".edit", function() {
+$("#dayTable").on('click', ".okay", function() {
+  var $editRow = $(this).closest("tr");
 
   //Toggle Edit Mode
-  $(this).parent().toggleClass("editMode");
+  $editRow.toggleClass("editMode");
 
   //Is edit mode active?
-  var hasEditMode = $(this).parent().hasClass("editMode");
+  var hasEditMode = $editRow.hasClass("editMode");
 
   //Turn on Edit Mode
   if (hasEditMode){
-    $(this).children().toggleClass("glyphicon-pencil glyphicon-ok");
+    //toggle pencil and okay icons
+    //show cancel icon
+    $editRow.find("a").first().toggleClass("glyphicon-pencil glyphicon-ok");
+    $editRow.find("a").last().show();
 
-    var pillar = $(this).siblings(".pillar").html();
-    var datetime = $(this).siblings(".datetime").html();
+    //select td html
+    pillar = $editRow.children(".pillar").html();
+    datetime = $editRow.children(".datetime").html();
     datetime = datetime.replace(" ","T");//format for input
-    var duration = $(this).siblings(".duration").html();
-    var quality = $(this).siblings(".quality").html();
-    var notes = $(this).siblings(".notes").html();
+    duration = $editRow.children(".duration").html();
+    quality = $editRow.children(".quality").html();
+    notes = $editRow.children(".notes").html();
 
+    //build inputs using td html
     var $pillarInput = $("#pillar").clone().addClass("form-control input-sm");
     $pillarInput.children("option[value='" + pillar + "']").attr("selected","selected"); //set selected
     var $datetimeInput = $("<input>").attr("value",datetime).addClass("form-control input-sm").attr("type","datetime-local");
@@ -214,32 +208,38 @@ $("#dayTable").on('click', ".edit", function() {
     $qualityInput.children("option[value='" + quality + "']").attr("selected","selected"); //set selected
     var $notesInput = $("<input>").attr("value",notes).addClass("form-control input-sm").attr("type","text");
 
-    $(this).siblings(".pillar").empty().append($pillarInput);
-    $(this).siblings(".datetime").empty().append($datetimeInput);
-    $(this).siblings(".duration").empty().append($durationInput);
-    $(this).siblings(".quality").empty().append($qualityInput);
-    $(this).siblings(".notes").empty().append($notesInput);
+    //empty tds and add inputs
+    $editRow.children(".pillar").empty().append($pillarInput);
+    $editRow.children(".datetime").empty().append($datetimeInput);
+    $editRow.children(".duration").empty().append($durationInput);
+    $editRow.children(".quality").empty().append($qualityInput);
+    $editRow.children(".notes").empty().append($notesInput);
 
   }
-  //Shut off Edit Mode
+
+  //Accept Edit Mode Changes
   else{
-    $(this).children().toggleClass("glyphicon-pencil glyphicon-ok");
+    //input values
+    var idI = $editRow.attr("id");
+    var pillarI = $editRow.children(".pillar").children().val();
+    var datetimeI = encodeURIComponent($editRow.children(".datetime").children().val());
+    var durationI = encodeURIComponent($editRow.children(".duration").children().val());
+    var qualityI = $editRow.children(".quality").children().val();
+    var notesI = encodeURIComponent($editRow.children(".notes").children().val());
 
-    var id = $(this).parent().attr("id");
-    var pillar = $(this).siblings(".pillar").children().val();
-    var datetime = encodeURIComponent($(this).siblings(".datetime").children().val());
-    var duration = encodeURIComponent($(this).siblings(".duration").children().val());
-    var quality = $(this).siblings(".quality").children().val();
-    var notes = encodeURIComponent($(this).siblings(".notes").children().val());
-
-    //build data string
-    var data = "user_id=" + id +
-               "&user_pillar=" + pillar +
-               "&user_date=" + datetime +
-               "&user_duration=" + duration +
-               "&user_quality=" + quality +
-               "&user_notes=" + notes +
+    //POST data string
+    var data = "user_id=" + idI +
+               "&user_pillar=" + pillarI +
+               "&user_date=" + datetimeI +
+               "&user_duration=" + durationI +
+               "&user_quality=" + qualityI +
+               "&user_notes=" + notesI +
                "&content=updateEntry";
+
+    //toggle pencil and okay icons
+    //hide cancel icon
+    $editRow.find("a").first().toggleClass("glyphicon-pencil glyphicon-ok");
+    $editRow.find("a").last().hide();
 
     console.log(data);
     $.ajax({
@@ -248,7 +248,7 @@ $("#dayTable").on('click', ".edit", function() {
       data: data,
       dataType: "json",
       success: function(response) {
-        console.log(response);
+        //replace inputs with new tds
         $("#" + response.id).children(".pillar").replaceWith("<td class='pillar'>" + response.pillar + "</td>");
         $("#" + response.id).children(".datetime").replaceWith("<td class='datetime'>" + response.event_date + "</td>");
         $("#" + response.id).children(".duration").replaceWith("<td class='duration'>" + response.duration + "</td>");
@@ -260,49 +260,79 @@ $("#dayTable").on('click', ".edit", function() {
   }
 });// Using Event Delegation...whats that? http://stackoverflow.com/questions/16893043/jquery-click-event-not-working-after-adding-class-using-jquery ALSO SEE: https://learn.jquery.com/events/event-delegation/
 
-
-//Edit Rows on summaryTable
-$("#summaryTable").on('click', ".edit", function() {
+//Cancel DayTable Edit
+$("#dayTable").on('click', ".cancel", function() {
+  //remove edit mode
+  var $editRow = $(this).closest("tr");
 
   //Toggle Edit Mode
-  $(this).parent().toggleClass("editMode");
+  //Toggle Pencil / Okay icons
+  //hide cancel button
+  $editRow.toggleClass("editMode");
+  $(this).siblings().toggleClass("glyphicon-pencil glyphicon-ok");
+  $(this).hide();
+
+  //inputs back to original tds
+  $editRow.children(".pillar").replaceWith("<td class='pillar'>" + pillar + "</td>");
+  $editRow.children(".datetime").replaceWith("<td class='datetime'>" + datetime + "</td>");
+  $editRow.children(".duration").replaceWith("<td class='duration'>" + duration + "</td>");
+  $editRow.children(".quality").replaceWith("<td class='quality'>" + quality + "</td>");
+  $editRow.children(".notes").replaceWith("<td class='notes'>" + notes + "</td>");
+});
+
+//Edit Rows on summaryTable
+$("#summaryTable").on('click', ".okay", function() {
+  var $editRow = $(this).closest("tr");
+
+  //Toggle Edit Mode
+  $editRow.toggleClass("editMode");
 
   //Is edit mode active?
-  var hasEditMode = $(this).parent().hasClass("editMode");
+  var hasEditMode = $editRow.hasClass("editMode");
 
   //Turn on Edit Mode
   if (hasEditMode){
-    $(this).children().toggleClass("glyphicon-pencil glyphicon-ok");
+    //toggle pencil and okay icons
+    //show cancel icon
+    $editRow.find("a").first().toggleClass("glyphicon-pencil glyphicon-ok");
+    $editRow.find("a").last().show();
 
-    var date = $(this).siblings(".date").html();
-    var quality = $(this).siblings(".quality").html();
-    var notes = $(this).siblings(".notes").html();
+    //select td html
+    date = $editRow.children(".date").html();
+    quality = $editRow.children(".quality").html();
+    notes = $editRow.children(".notes").html();
 
+    //build inputs using td html
     var $dateInput = $("<input>").attr("value",date).addClass("form-control input-sm").attr("type","date");
     var $qualityInput = $("#quality").clone().addClass("form-control input-sm").css("display","initial");
     $qualityInput.children("option[value='" + quality + "']").attr("selected","selected"); //set selected
     var $notesInput = $("<input>").attr("value",notes).addClass("form-control input-sm").attr("type","text");
 
-    $(this).siblings(".date").empty().append($dateInput);
-    $(this).siblings(".quality").empty().append($qualityInput);
-    $(this).siblings(".notes").empty().append($notesInput);
+    //empty tds and add inputs
+    $editRow.children(".date").empty().append($dateInput);
+    $editRow.children(".quality").empty().append($qualityInput);
+    $editRow.children(".notes").empty().append($notesInput);
 
   }
-  //Shut off Edit Mode
+  //Accept Edit Mode Changes
   else{
-    $(this).children().toggleClass("glyphicon-pencil glyphicon-ok");
-
-    var id = $(this).parent().attr("id");
-    var date = encodeURIComponent($(this).siblings(".date").children().val());
-    var quality = $(this).siblings(".quality").children().val();
-    var notes = encodeURIComponent($(this).siblings(".notes").children().val());
+    //input values
+    var idI = $editRow.attr("id");
+    var dateI = encodeURIComponent($editRow.children(".date").children().val());
+    var qualityI = $editRow.children(".quality").children().val();
+    var notesI = encodeURIComponent($editRow.children(".notes").children().val());
 
     //build data string
-    var data = "user_id=" + id +
-               "&user_date=" + date +
-               "&user_quality=" + quality +
-               "&user_notes=" + notes +
+    var data = "user_id=" + idI +
+               "&user_date=" + dateI +
+               "&user_quality=" + qualityI +
+               "&user_notes=" + notesI +
                "&content=updateSummary";
+
+    //toggle pencil and okay icons
+    //hide cancel icon
+    $editRow.find("a").first().toggleClass("glyphicon-pencil glyphicon-ok");
+    $editRow.find("a").last().hide();
 
     console.log(data);
     $.ajax({
@@ -321,4 +351,25 @@ $("#summaryTable").on('click', ".edit", function() {
   }
 });// Using Event Delegation...whats that? http://stackoverflow.com/questions/16893043/jquery-click-event-not-working-after-adding-class-using-jquery ALSO SEE: https://learn.jquery.com/events/event-delegation/
 
-// }); // With Guidance from http://codereview.stackexchange.com/questions/38816/jquery-dynamic-elements-like-tr-and-td-add-to-html-table
+//Cancel DayTable Edit
+$("#summaryTable").on('click', ".cancel", function() {
+  //remove edit mode
+  var $editRow = $(this).closest("tr");
+
+  //Toggle Edit Mode
+  //Toggle Pencil / Okay icons
+  //hide cancel button
+  $editRow.toggleClass("editMode");
+  $(this).siblings().toggleClass("glyphicon-pencil glyphicon-ok");
+  $(this).hide();
+
+  //inputs back to original tds
+  $editRow.children(".date").replaceWith("<td class='date'>" + date + "</td>");
+  $editRow.children(".quality").replaceWith("<td class='quality'>" + quality + "</td>");
+  $editRow.children(".notes").replaceWith("<td class='notes'>" + notes + "</td>");
+});
+
+
+
+
+// With Guidance from http://codereview.stackexchange.com/questions/38816/jquery-dynamic-elements-like-tr-and-td-add-to-html-table

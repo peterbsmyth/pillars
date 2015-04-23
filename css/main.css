@@ -89,7 +89,9 @@ PAGE: CHART
 /**********************************
 COLORS
 **********************************/
-
+a.glyphicon-remove:hover, .glyphicon-remove{
+	color: red;
+}
 
 
 /**********************************
