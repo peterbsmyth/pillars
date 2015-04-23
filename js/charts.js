@@ -1,6 +1,6 @@
 //for initializing chart with Previous Week's Data
 var today = new Date(Date.now());
-today.setDate(today.getDate() - 6);
+today.setDate(today.getDate() - 1);
 var startChart = today.toJSONLocal();
 
 
@@ -41,6 +41,7 @@ var buildChart = function(selectedDate){
     dataType: "json",
     success: function(response){
       console.log(response);
+      //set variables for first item
       var curDate = response[0].event_date.substr(0,10);
       var count = 0;
       var zazenHours = makeUTCDate("1990-09-13T00:00:00");
@@ -52,8 +53,11 @@ var buildChart = function(selectedDate){
       var slackHours = makeUTCDate("1990-09-13T00:00:00");
       var dates = [];
       response.forEach(function(item){
+        //if item is current day
         if (item.event_date.substr(0,10) === curDate){
+          //add 1 to the event counter
           count++;
+          //add duration to the
           if(item.pillar === "ZAZEN"){
             zazenHours = addMinutes(zazenHours,durationToMinutes(item.duration));
           }
@@ -77,6 +81,7 @@ var buildChart = function(selectedDate){
           }
 
         }
+        //if item isn't the current day
         else {
           dates.push({
             date: makeUTCDate(curDate),
@@ -100,6 +105,27 @@ var buildChart = function(selectedDate){
           bikeHours = makeUTCDate("1990-09-13T00:00:00");
           eatwellHours = makeUTCDate("1990-09-13T00:00:00");
           slackHours = makeUTCDate("1990-09-13T00:00:00");
+          if(item.pillar === "ZAZEN"){
+            zazenHours = addMinutes(zazenHours,durationToMinutes(item.duration));
+          }
+          else if(item.pillar === "WORK"){
+            workHours = addMinutes(workHours,durationToMinutes(item.duration));
+          }
+          else if(item.pillar === "SOCIAL"){
+            socialHours = addMinutes(socialHours,durationToMinutes(item.duration));
+          }
+          else if(item.pillar === "LEARN"){
+            learnHours = addMinutes(learnHours,durationToMinutes(item.duration));
+          }
+          else if(item.pillar === "BIKE"){
+            bikeHours = addMinutes(bikeHours,durationToMinutes(item.duration));
+          }
+          else if(item.pillar === "EAT WELL"){
+            eatwellHours = addMinutes(eatwellHours,durationToMinutes(item.duration));
+          }
+          else if(item.pillar === "SLACK"){
+            slackHours = addMinutes(slackHours,durationToMinutes(item.duration));
+          }
         }
       });
 
@@ -215,13 +241,15 @@ var buildChart = function(selectedDate){
         .data(dates)
       .enter().append("g")
         .attr("class", "g")
-        .attr("transform", function(d) { return "translate(" + xScale(d.date) + ",0)"; })
+        .attr("transform", function(d) { return "translate(" + xScale(d.date) + ",0)"; });
+
       dateBar.selectAll("rect")
           .data(function(d) { return d.duration.pillars; })
         .enter().append("rect")
           .attr("width", barWidth-1)
           .attr("y", function(d) { return yScale(d.y0); })
-          .attr("height", function(d) { return yScale(d.y1) - yScale(d.y0); })
+          .attr("height", function(d) {
+            return yScale(d.y1) - yScale(d.y0); })
           .style("fill", function(d) { return color(d.name); })
           .on('mouseover', tip.show)
           .on('mouseout', tip.hide);
@@ -247,18 +275,6 @@ var buildChart = function(selectedDate){
           .attr("dy", ".35em")
           .style("text-anchor", "end")
           .text(function(d) { return d; });
-
-
-
-      // d3.select(".chart")
-      // 	.append("svg:circle")
-      // 	.attr("stroke", "black")
-      // 	.attr("fill", "aliceblue")
-      // 	.attr("r", 50)
-      // 	.attr("cx", 52)
-      // 	.attr("cy", 52)
-      //
-
 
     },
     error: function(XHR, textStatus, errorThrown){
