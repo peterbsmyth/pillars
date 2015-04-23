@@ -16,12 +16,28 @@ $('#datePicker').val(new Date().toDateInputValue());
 var startToday = new Date(Date.now()).toJSONLocal();
 buildTable(startToday);
 
+//Set default date for entry form
 $("body").on("click","#add-entry",function(){
-  var lastDatetime = $("#dayTable TBODY tr").last().children("td[class='datetime']").text();
-  var lastDuration = $("#dayTable TBODY tr").last().children("td[class='duration']").text();
-  var newDatetime = new Date(lastDatetime);
 
-  newDatetime = addMinutes(newDatetime,durationToMinutes(lastDuration));
+  //if there is a tr
+  if ($("#dayTable TBODY").children().is("tr")){
+    //set default date input to previous date+duration
+    var lastDatetime = $("#dayTable TBODY tr").last().children("td[class='datetime']").text();
+    var lastDuration = $("#dayTable TBODY tr").last().children("td[class='duration']").text();
+    var newDatetime = new Date(lastDatetime);
 
-  $("#date").val(newDatetime.toDatetimeInputValue());
+    newDatetime = addMinutes(newDatetime,durationToMinutes(lastDuration));
+
+    $("#date").val(newDatetime.toDatetimeInputValue());
+    //set duration to null
+    $("#duration").val("");
+  }
+
+  //else (if no tr)
+  else{
+    //set default date to today's date at 12am
+    $("#date").val($("#datePicker").val()+"T00:00:00");
+  }
+
+
 });
