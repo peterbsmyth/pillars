@@ -10,7 +10,7 @@ $("body").on("click", "#go", function(){
 $("#summaryTable").tablesorter();
 
 //Set Default End Date to Today
-$('#endSummaryPicker').val(new Date().toDateInputValue());
+$('#endSummaryPicker, #date').val(new Date().toDateInputValue());
 
 var startSummary = new Date();
 startSummary.setDate(startSummary.getDate() - 6);
