@@ -51,6 +51,12 @@ Date.prototype.toDurationFormat = function(){
   return hours + ":" + minutes;
 }
 
+Date.prototype.toChartDurationFormat = function(){
+  var hours = this.getHours();
+  var minutes = this.getMinutes();
+  return hours + " Hrs" + " " + minutes + " Mins";
+}
+
 var makeUTCDate = function(dateString){
   var d = new Date(dateString);
   return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(),  d.getUTCHours(), d.getUTCMinutes());

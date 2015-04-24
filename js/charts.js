@@ -250,8 +250,31 @@ var buildChart = function(selectedDate){
           .attr("height", function(d) {
             return yScale(d.y1) - yScale(d.y0); })
           .style("fill", function(d) { return color(d.name); })
-          .on('mouseover', tip.show)
-          .on('mouseout', tip.hide);
+          .on('mouseover', function(d){
+            console.log(d);
+            // debugger;
+            d3.select(this)
+            .style("fill", "orange");
+            chart.append("text")
+            .attr("id", "tooltip")
+            .attr("x", 450)
+            .attr("y", height)
+            .attr("text-anchor", "middle")
+            .attr("font-family", "sans-serif")
+            .attr("font-size", "15px")
+            .attr("font-weight", "bold")
+            .attr("fill", "black")
+            .text("Pillar: " + d.name + " Duration: " + d.duration.toChartDurationFormat());
+          })
+          .on("mouseout", function(d) {
+            d3.select(this)
+            .transition()
+            .duration(250)
+            .style("fill", function(d) { return color(d.name); });
+            d3.select("#tooltip").remove();
+          });
+
+
 
       var legend = chart.selectAll(".legend")
         .data(color.domain())

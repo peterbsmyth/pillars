@@ -160,6 +160,10 @@ PAGE: CHART
 	transform:rotateZ(180deg);
 }
 
+g g rect:hover{
+	fill: steelblue;
+}
+
 /**********************************
 COLORS
 **********************************/
