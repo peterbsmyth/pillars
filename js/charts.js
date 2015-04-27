@@ -43,25 +43,25 @@ var buildChart = function(selectedDate){
           count++;
           //add duration to the
           if(item.pillar === "ZAZEN"){                                                  //candidate for improvement
-            zazenHours = addMinutes(zazenHours,durationToMinutes(item.duration));       //simplify this if..else structure
+            zazenHours = zazenHours.addMinutes(durationToMinutes(item.duration));       //simplify this if..else structure
           }                                                                             //or do away with it completely
           else if(item.pillar === "WORK"){
-            workHours = addMinutes(workHours,durationToMinutes(item.duration));
+            workHours = workHours.addMinutes(durationToMinutes(item.duration));
           }
           else if(item.pillar === "SOCIAL"){
-            socialHours = addMinutes(socialHours,durationToMinutes(item.duration));
+            socialHours = socialHours.addMinutes(durationToMinutes(item.duration));
           }
           else if(item.pillar === "LEARN"){
-            learnHours = addMinutes(learnHours,durationToMinutes(item.duration));
+            learnHours = learnHours.addMinutes(durationToMinutes(item.duration));
           }
           else if(item.pillar === "BIKE"){
-            bikeHours = addMinutes(bikeHours,durationToMinutes(item.duration));
+            bikeHours = bikeHours.addMinutes(durationToMinutes(item.duration));
           }
           else if(item.pillar === "EAT WELL"){
-            eatwellHours = addMinutes(eatwellHours,durationToMinutes(item.duration));
+            eatwellHours = eatwellHours.addMinutes(durationToMinutes(item.duration));
           }
           else if(item.pillar === "SLACK"){
-            slackHours = addMinutes(slackHours,durationToMinutes(item.duration));
+            slackHours = slackHours.addMinutes(durationToMinutes(item.duration));
           }
 
         }
@@ -90,25 +90,25 @@ var buildChart = function(selectedDate){
           eatwellHours = makeUTCDate("1990-09-13T00:00:00");
           slackHours = makeUTCDate("1990-09-13T00:00:00");
           if(item.pillar === "ZAZEN"){
-            zazenHours = addMinutes(zazenHours,durationToMinutes(item.duration));  //candidate for improvement, same as above
+            zazenHours = zazenHours.addMinutes(durationToMinutes(item.duration));  //candidate for improvement, same as above
           }
           else if(item.pillar === "WORK"){
-            workHours = addMinutes(workHours,durationToMinutes(item.duration));
+            workHours = workHours.addMinutes(durationToMinutes(item.duration));
           }
           else if(item.pillar === "SOCIAL"){
-            socialHours = addMinutes(socialHours,durationToMinutes(item.duration));
+            socialHours = socialHours.addMinutes(durationToMinutes(item.duration));
           }
           else if(item.pillar === "LEARN"){
-            learnHours = addMinutes(learnHours,durationToMinutes(item.duration));
+            learnHours = learnHours.addMinutes(durationToMinutes(item.duration));
           }
           else if(item.pillar === "BIKE"){
-            bikeHours = addMinutes(bikeHours,durationToMinutes(item.duration));
+            bikeHours = bikeHours.addMinutes(durationToMinutes(item.duration));
           }
           else if(item.pillar === "EAT WELL"){
-            eatwellHours = addMinutes(eatwellHours,durationToMinutes(item.duration));
+            eatwellHours = eatwellHours.addMinutes(durationToMinutes(item.duration));
           }
           else if(item.pillar === "SLACK"){
-            slackHours = addMinutes(slackHours,durationToMinutes(item.duration));
+            slackHours = slackHours.addMinutes(durationToMinutes(item.duration));
           }
         }
       });

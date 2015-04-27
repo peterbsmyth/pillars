@@ -20,7 +20,6 @@ buildTable(startToday);
 
 //Set default date for entry form
 $("body").on("click","#add-entry",function(){
-
   //if there is a tr
   if ($("#dayTable TBODY").children().is("tr")){
     //set default date input to previous date+duration
@@ -28,7 +27,7 @@ $("body").on("click","#add-entry",function(){
     var lastDuration = $("#dayTable TBODY tr").last().children("td[class='duration']").text();
     var newDatetime = new Date(lastDatetime);
 
-    newDatetime = addMinutes(newDatetime,durationToMinutes(lastDuration));
+    newDatetime = newDatetime.addMinutes(durationToMinutes(lastDuration));
 
     $("#date").val(newDatetime.toDatetimeInputValue());
     //set duration to null

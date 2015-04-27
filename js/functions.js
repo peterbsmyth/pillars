@@ -64,9 +64,8 @@ var makeUTCDate = function(dateString){
   return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(),  d.getUTCHours(), d.getUTCMinutes());
 }
 
-//Candidate for improvement, add to Date.prototype
-var addMinutes = function(date, minutes) {
-    return new Date(date.getTime() + minutes*60000);
+Date.prototype.addMinutes = function(minutes){
+  return new Date(this.getTime() + minutes*60000);
 }
 
 //Candidate for improvement, add to String.prototype
@@ -76,7 +75,6 @@ var durationToMinutes = function(duration){
   return hours + minutes;
 }
 
-//Candidate for improvement, add to String.prototype
 var datetimeFormat = function(datetimestring){
   //Expects string formatted "YYYY-MM-DDTHH:MM:SS"
   var x = datetimestring;
