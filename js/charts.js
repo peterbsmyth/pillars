@@ -188,16 +188,9 @@ var buildChart = function(selectedDate){
       }
 
 
-
       var color = d3.scale.ordinal()
                   .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]); //http://bl.ocks.org/mbostock/3886208
 
-      var tip = d3.tip() //candidate for removal
-            .attr('class', 'd3-tip')
-            .offset([-10, 0])
-            .html(function(d) {
-              return "<strong>Pillar:</strong> <span>" + d.name + "</span><br><strong>Duration:</strong>" + "<span>" + d.duration.toDurationFormat() + "</span>";
-            })
 
       //set domain of color to be duration names that do not contain hDM
       // key.indexOf("hDM") returns -1 if "hDM" is not in string
@@ -236,7 +229,6 @@ var buildChart = function(selectedDate){
               .style("text-anchor", "end")
               .text("Hours");
 
-      chart.call(tip); //candidate for removal
 
       var dateBar = chart.selectAll(".dateBar")
         .data(dates)
@@ -253,8 +245,6 @@ var buildChart = function(selectedDate){
             return yScale(d.y1) - yScale(d.y0); })
           .style("fill", function(d) { return color(d.name); })
           .on('mouseover', function(d){
-            console.log(d); //candidate for removal
-            // debugger;
             d3.select(this)
             .style("fill", "orange");
             chart.append("text")

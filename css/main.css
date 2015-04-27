@@ -11,6 +11,7 @@ body {
 	font: 1em/1.5 Helvetica, Arial, sans-serif;
 }
 
+
 /**********************************
 HEADER
 **********************************/
@@ -30,18 +31,9 @@ FOOTER
 **********************************/
 
 
-
 /**********************************
 PAGE: INDEX
 **********************************/
-.blue{
-	background-color: blue;
-} /*Candidate for removal*/
-
-.black{
-	background-color: black;
-} /*Candidate for removal*/
-
 .centered{
 	margin: 0 auto;
 } /*Candidate for removal*/
@@ -107,6 +99,7 @@ PAGE: INDEX
 	width: 42%;
 }
 
+
 /**********************************
 PAGE: SUMMARY
 **********************************/
@@ -117,6 +110,7 @@ PAGE: SUMMARY
 #sQualityCol{
 	width: 18%;
 }
+
 
 /**********************************
 PAGE: CHART
@@ -143,10 +137,6 @@ PAGE: CHART
 	width: 204px;
 }
 
-.highlight{
-	fill: blue;
-} /*Candidate for removal*/
-
 #leftPicker, #centerPicker, #rightPicker, #chart-title{
 	display: inline-block;
 }
@@ -160,11 +150,6 @@ PAGE: CHART
 	transform:rotateZ(180deg);
 }
 
-g g rect:hover{
-	fill: steelblue;
-}/*Candidate for removal*/
-
-
 
 /**********************************
 COLORS
@@ -172,16 +157,3 @@ COLORS
 a.glyphicon-remove:hover, .glyphicon-remove{
 	color: red;
 }
-
-
-/**********************************
-FLOAT CLEARFIX
-**********************************/
-
-.group:after {  /* Apply to parent container of floated elements */
-	content: "";
-	display: table;
-	clear: both;
-}
-
-/*CLEARFIX is candidate for removal */

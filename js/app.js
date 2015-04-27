@@ -1,4 +1,4 @@
-//Candidate for Improvement Add Error Handling to AJAX functions 
+//Candidate for Improvement Add Error Handling to AJAX functions
 
 //variables for dayTable + summaryTable tds
 var pillar, datetime, duration, quality, notes;
@@ -244,7 +244,7 @@ $("#dayTable").on('click', ".okay", function() {
       }
     });
   }
-});// Using Event Delegation...whats that? http://stackoverflow.com/questions/16893043/jquery-click-event-not-working-after-adding-class-using-jquery ALSO SEE: https://learn.jquery.com/events/event-delegation/
+});// Using Event Delegation...https://learn.jquery.com/events/event-delegation/
 
 //Cancel DayTable Edit
 $("#dayTable").on('click', ".cancel", function() {
@@ -321,7 +321,6 @@ $("#summaryTable").on('click', ".okay", function() {
     $editRow.find("a").first().toggleClass("glyphicon-pencil glyphicon-ok");
     $editRow.find("a").last().hide();
 
-    console.log(data); //candidate for deletion
     $.ajax({
       type: "POST",
       url: "functions.php",
@@ -336,7 +335,7 @@ $("#summaryTable").on('click', ".okay", function() {
       }
     });
   }
-});// Using Event Delegation...whats that? http://stackoverflow.com/questions/16893043/jquery-click-event-not-working-after-adding-class-using-jquery ALSO SEE: https://learn.jquery.com/events/event-delegation/
+});// Using Event Delegation... https://learn.jquery.com/events/event-delegation/
 
 //Cancel DayTable Edit
 $("#summaryTable").on('click', ".cancel", function() {
@@ -355,8 +354,3 @@ $("#summaryTable").on('click', ".cancel", function() {
   $editRow.children(".quality").replaceWith("<td class='quality'>" + quality + "</td>");
   $editRow.children(".notes").replaceWith("<td class='notes'>" + notes + "</td>");
 });
-
-
-
-
-// With Guidance from http://codereview.stackexchange.com/questions/38816/jquery-dynamic-elements-like-tr-and-td-add-to-html-table
