@@ -28,8 +28,8 @@ var buildChart = function(selectedDate){
       //set variables for first item
       var curDate = response[0].event_date.substr(0,10);
       var count = 0;
-      var zazenHours = makeUTCDate("1990-09-13T00:00:00"); //candidate for improvement...initialize all variables at once
-      var workHours = makeUTCDate("1990-09-13T00:00:00");  //candidate for learning...know why I am making a UTC date and be able to explain
+      var zazenHours = makeUTCDate("1990-09-13T00:00:00");
+      var workHours = makeUTCDate("1990-09-13T00:00:00");
       var socialHours = makeUTCDate("1990-09-13T00:00:00");
       var learnHours = makeUTCDate("1990-09-13T00:00:00");
       var bikeHours = makeUTCDate("1990-09-13T00:00:00");
@@ -82,7 +82,7 @@ var buildChart = function(selectedDate){
           });
           count = 1;
           curDate = item.event_date.substr(0,10);
-          zazenHours = makeUTCDate("1990-09-13T00:00:00"); //candidate for improvement...reset all variable at once
+          zazenHours = makeUTCDate("1990-09-13T00:00:00");
           workHours = makeUTCDate("1990-09-13T00:00:00");
           socialHours = makeUTCDate("1990-09-13T00:00:00");
           learnHours = makeUTCDate("1990-09-13T00:00:00");
@@ -149,30 +149,26 @@ var buildChart = function(selectedDate){
       var maxDate = dates[dates.length-1].date;
 
 
-      var xScale;
+      var xScale = d3.time.scale.utc()
+                    .range([0,width]);
+
       // candidates for improvement...
       // explain why I'm using .utc()
-      // reduce the conditional logic to include only .domain
       if (dates.length < 7){
-        xScale = d3.time.scale.utc()
-                      .domain([minDate,d3.time.day.utc.offset(maxDate,1 + ( 7 - dates.length))])
-                      .range([0,width]);
+        xScale.domain([minDate,d3.time.day.utc.offset(maxDate,1 + ( 7 - dates.length))]);
       }
       else{
-        xScale = d3.time.scale.utc()
-                      .domain([minDate,d3.time.day.utc.offset(maxDate,1)])
-                      .range([0,width]);
+        xScale.domain([minDate,d3.time.day.utc.offset(maxDate,1)]);
       }
 
 
       var yScale = d3.scale.linear()
                     .domain([0,24])
                     .range([0,height]);
-      // Candidate for learning... what d3.time.days is doing and how its different with .utc
+
       var xAxis = d3.svg.axis()
                     .orient("top")
-                    .ticks(d3.time.days.utc,1) //I don't understand how this works. *Magically* displays domain days
-                    // .ticks(d3.time.days,1) //I don't understand how this works. *Magically* displays domain days
+                    .ticks(d3.time.days,1)
                     .tickFormat(d3.time.format('%a, %m/%d'))
                     .scale(xScale);
 
@@ -289,6 +285,8 @@ var buildChart = function(selectedDate){
           .attr("dy", ".35em")
           .style("text-anchor", "end")
           .text(function(d) { return d; });
+
+      $(".x.axis").children("g").last().remove() //fix to remove final label of x axis
 
     },
     error: function(XHR, textStatus, errorThrown){ // Candidate for learning...
