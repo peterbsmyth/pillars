@@ -28,8 +28,8 @@ var buildChart = function(selectedDate){
       //set variables for first item
       var curDate = response[0].event_date.substr(0,10);
       var count = 0;
-      var zazenHours = makeUTCDate("1990-09-13T00:00:00");
-      var workHours = makeUTCDate("1990-09-13T00:00:00");
+      var zazenHours = makeUTCDate("1990-09-13T00:00:00"); //candidate for improvement...initialize all variables at once
+      var workHours = makeUTCDate("1990-09-13T00:00:00");  //candidate for learning...know why I am making a UTC date and be able to explain
       var socialHours = makeUTCDate("1990-09-13T00:00:00");
       var learnHours = makeUTCDate("1990-09-13T00:00:00");
       var bikeHours = makeUTCDate("1990-09-13T00:00:00");
@@ -42,9 +42,9 @@ var buildChart = function(selectedDate){
           //add 1 to the event counter
           count++;
           //add duration to the
-          if(item.pillar === "ZAZEN"){
-            zazenHours = addMinutes(zazenHours,durationToMinutes(item.duration));
-          }
+          if(item.pillar === "ZAZEN"){                                                  //candidate for improvement
+            zazenHours = addMinutes(zazenHours,durationToMinutes(item.duration));       //simplify this if..else structure
+          }                                                                             //or do away with it completely
           else if(item.pillar === "WORK"){
             workHours = addMinutes(workHours,durationToMinutes(item.duration));
           }
@@ -82,7 +82,7 @@ var buildChart = function(selectedDate){
           });
           count = 1;
           curDate = item.event_date.substr(0,10);
-          zazenHours = makeUTCDate("1990-09-13T00:00:00");
+          zazenHours = makeUTCDate("1990-09-13T00:00:00"); //candidate for improvement...reset all variable at once
           workHours = makeUTCDate("1990-09-13T00:00:00");
           socialHours = makeUTCDate("1990-09-13T00:00:00");
           learnHours = makeUTCDate("1990-09-13T00:00:00");
@@ -90,7 +90,7 @@ var buildChart = function(selectedDate){
           eatwellHours = makeUTCDate("1990-09-13T00:00:00");
           slackHours = makeUTCDate("1990-09-13T00:00:00");
           if(item.pillar === "ZAZEN"){
-            zazenHours = addMinutes(zazenHours,durationToMinutes(item.duration));
+            zazenHours = addMinutes(zazenHours,durationToMinutes(item.duration));  //candidate for improvement, same as above
           }
           else if(item.pillar === "WORK"){
             workHours = addMinutes(workHours,durationToMinutes(item.duration));
@@ -150,7 +150,9 @@ var buildChart = function(selectedDate){
 
 
       var xScale;
-
+      // candidates for improvement...
+      // explain why I'm using .utc()
+      // reduce the conditional logic to include only .domain
       if (dates.length < 7){
         xScale = d3.time.scale.utc()
                       .domain([minDate,d3.time.day.utc.offset(maxDate,1 + ( 7 - dates.length))])
@@ -166,7 +168,7 @@ var buildChart = function(selectedDate){
       var yScale = d3.scale.linear()
                     .domain([0,24])
                     .range([0,height]);
-
+      // Candidate for learning... what d3.time.days is doing and how its different with .utc
       var xAxis = d3.svg.axis()
                     .orient("top")
                     .ticks(d3.time.days.utc,1) //I don't understand how this works. *Magically* displays domain days
@@ -190,7 +192,7 @@ var buildChart = function(selectedDate){
       var color = d3.scale.ordinal()
                   .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]); //http://bl.ocks.org/mbostock/3886208
 
-      var tip = d3.tip()
+      var tip = d3.tip() //candidate for removal
             .attr('class', 'd3-tip')
             .offset([-10, 0])
             .html(function(d) {
@@ -199,7 +201,7 @@ var buildChart = function(selectedDate){
 
       //set domain of color to be duration names that do not contain hDM
       // key.indexOf("hDM") returns -1 if "hDM" is not in string
-      color.domain(d3.keys(dates[0].duration).filter(function(key) {  return key.indexOf("hDM") === -1; }));
+      color.domain(d3.keys(dates[0].duration).filter(function(key) {  return key.indexOf("hDM") === -1; })); //candidate for learning d3.keys function
 
       //calculate y positions for data
       dates.forEach(function(d) {
@@ -234,7 +236,7 @@ var buildChart = function(selectedDate){
               .style("text-anchor", "end")
               .text("Hours");
 
-      chart.call(tip);
+      chart.call(tip); //candidate for removal
 
       var dateBar = chart.selectAll(".dateBar")
         .data(dates)
@@ -251,7 +253,7 @@ var buildChart = function(selectedDate){
             return yScale(d.y1) - yScale(d.y0); })
           .style("fill", function(d) { return color(d.name); })
           .on('mouseover', function(d){
-            console.log(d);
+            console.log(d); //candidate for removal
             // debugger;
             d3.select(this)
             .style("fill", "orange");
@@ -299,8 +301,8 @@ var buildChart = function(selectedDate){
           .text(function(d) { return d; });
 
     },
-    error: function(XHR, textStatus, errorThrown){
-      console.log("error");
+    error: function(XHR, textStatus, errorThrown){ // Candidate for learning...
+      console.log("error");                        // Error Handling
       console.log(XHR);
       console.log(textStatus);
       console.log(errorThrown);
@@ -315,8 +317,8 @@ $('#datePicker').val(today.toDateInputValue());
 $("#chart-title").text(setTitle(today.toDateInputValue()));
 
 //Display chart starting last week
-$("#back7").on("click",function(){
-  today.setDate(today.getDate() - 7);
+$("#back7").on("click",function(){            //Candidates for improvement...
+  today.setDate(today.getDate() - 7);         //Combine these 4 functions into 1
   var newDate = today.toJSONLocal();
   $("svg").empty();
   $("#chart-title").text(setTitle(newDate));

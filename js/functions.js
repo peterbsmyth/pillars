@@ -12,6 +12,7 @@ function getUrlParameter(sParam)
     }
 } // From: http://stackoverflow.com/questions/19491336/get-url-parameter-jquery
 
+//Candidate for improvement, add to Date.prototype
 function addDays(date, days) {
     var result = new Date(date);
     result.setDate(date.getDate() + days);
@@ -57,21 +58,25 @@ Date.prototype.toChartDurationFormat = function(){
   return hours + " Hrs" + " " + minutes + " Mins";
 }
 
+//Candidate for improvement, add to Date.prototype
 var makeUTCDate = function(dateString){
   var d = new Date(dateString);
   return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(),  d.getUTCHours(), d.getUTCMinutes());
 }
 
+//Candidate for improvement, add to Date.prototype
 var addMinutes = function(date, minutes) {
     return new Date(date.getTime() + minutes*60000);
 }
 
+//Candidate for improvement, add to String.prototype
 var durationToMinutes = function(duration){
   var hours = parseInt(duration.substr(0,2),10) * 60;
   var minutes = parseInt(duration.substr(3,2),10);
   return hours + minutes;
 }
 
+//Candidate for improvement, add to String.prototype
 var datetimeFormat = function(datetimestring){
   //Expects string formatted "YYYY-MM-DDTHH:MM:SS"
   var x = datetimestring;

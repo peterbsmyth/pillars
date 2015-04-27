@@ -1,7 +1,9 @@
 @media screen and (min-width: 480px) { /*Anything larger than a smartphone*/
 
-}	
+}
 
 @media screen and (min-width: 660px){ /*Desktops/Laptops Only*/
 
 }
+
+/*Candidate for Removal*/

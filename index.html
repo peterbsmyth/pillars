@@ -1,3 +1,5 @@
+<!-- reusing header and footer html across pages best practice-->
+
 <!DOCTYPE html>
 
 <html>
@@ -48,6 +50,7 @@
       <div class="row">
         <div class="col-md-10 col-md-offset-1">
           <div class="table-responsive">
+            <!-- Candidate for improvement, better ways of defining column width -->
             <table id="dayTable" class="table table-hover tablesorter">
               <THEAD>
                 <tr>
@@ -143,7 +146,7 @@
       <option value="WRENCH">WRENCH</option>
     </select>
 
-    <script type="text/javascript" src="js/app.js"></script>
+    <!-- Candidate for improvement ...orgainizing JS files -->    <script type="text/javascript" src="js/app.js"></script>
     <script type="text/javascript" src="js/day.js"></script>
   </body>
 </html>

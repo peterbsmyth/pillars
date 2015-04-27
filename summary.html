@@ -19,7 +19,7 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.21.3/js/jquery.tablesorter.min.js"></script>
     <script type="text/javascript" src="js/functions.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <title>PILLAR INPUT FORM</title>
+    <!-- Assign better name + favicon --><title>PILLAR INPUT FORM</title>
   </head>
   <body>
     <div class="container">
@@ -56,6 +56,7 @@
                 <tr>
                   <th>Edit</th>
                   <th>Date</th>
+                  <!-- Candidate for improvement, better ways of defining column width -->
                   <th id="sQualityCol">Quality</th>
                   <th id="sNotesCol">Notes</th>
                 </tr>
@@ -78,7 +79,7 @@
           <div class="modal-body">
             <form class="form" method="post" id="summary-entry">
 
-
+              <!-- Candidate for improvement ...line spacing best practices..? -->
               <div class="row">
 
                 <div class="col-sm-6">
@@ -120,13 +121,14 @@
         </div>
       </div>
     </div>
-
+    <!-- Candidate for improvement ...alternate method of acheiving same effect? -->
     <select id="quality" name="user_pillar" class="form-control">
       <option value="YAY">YAY</option>
       <option value="SOLID">SOLID</option>
       <option value="WRENCH">WRENCH</option>
     </select>
 
+    <!-- Candidate for improvement ...orgainizing JS files -->
     <script type="text/javascript" src="js/app.js"></script>
     <script type="text/javascript" src="js/summary.js"></script>
   </body>

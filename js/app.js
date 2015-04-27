@@ -1,3 +1,5 @@
+//Candidate for Improvement Add Error Handling to AJAX functions 
+
 //variables for dayTable + summaryTable tds
 var pillar, datetime, duration, quality, notes;
 
@@ -16,7 +18,7 @@ var buildTable = function(selectedDate){
 
     //add new table
     response.forEach(function(item){
-      var $row = $("<tr>").attr("id", item.id);
+      var $row = $("<tr>").attr("id", item.id);  //candidate for learning ... difference between "<td>" and "td"
 
       var $edit= $("<td>").addClass("edit"); //use BootStrap pencil glyphicon
       $("<a href='#'></a>").addClass("okay glyphicon glyphicon-pencil").appendTo($edit);
@@ -319,7 +321,7 @@ $("#summaryTable").on('click', ".okay", function() {
     $editRow.find("a").first().toggleClass("glyphicon-pencil glyphicon-ok");
     $editRow.find("a").last().hide();
 
-    console.log(data);
+    console.log(data); //candidate for deletion
     $.ajax({
       type: "POST",
       url: "functions.php",
