@@ -1,19 +1,14 @@
 <!-- reusing header and footer html across pages best practice-->
-
 <!DOCTYPE html>
-
 <html>
   <head>
     <meta charset="utf-8">  <!--set charset to utf-8-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  <!--enable mobile views-->
-
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="css/normalize.css"> <!--reset css for cross-browser compatibility-->
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="css/agency.css">
     <link rel="stylesheet" type="text/css" href="css/main.min.css">
-
-
     <!-- JS -->
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.21.3/js/jquery.tablesorter.min.js"></script>
@@ -25,7 +20,7 @@
     <div class="container">
       <div class="row">
         <header class="clearfix">
-          <h1 class="pull-left">Pillars</h1>
+          <a href="index.html"><h1 class="pull-left">Pillars</h1></a>
           <nav class='btn-group pull-right'>
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">View <span class="caret"></span></button>
             <ul class="dropdown-menu" role="menu">
@@ -67,7 +62,6 @@
         </div>
       </div>
     </div>
-
     <div class="modal fade" id="addEntryModal">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -77,10 +71,7 @@
           </div>
           <div class="modal-body">
             <form class="form" method="post" id="single-entry">
-
-
               <div class="row">
-
                 <div class="col-sm-6">
                   <div class="form-group">
                     <label for="pillar">Pillar:</label>
@@ -94,56 +85,40 @@
                       <option value="SLACK">SLACK</option>
                     </select>
                   </div>
-
                   <div class="form-group">
                     <label for="date">Date:</label>
                     <input type="datetime-local" id="date" name="user_date" class="form-control">
                   </div>
-
                 </div>
-
                 <div class="col-sm-6">
                   <div class="form-group">
                     <label for="duration">Duration:</label>
                     <input type="text" id="duration" name="user_duration" placeholder="HH:MM" class="form-control">
                   </div>
-
                   <div class="form-group">
                     <label for="notes">Notes:</label>
                     <input type="text" id="notes" name="user_notes" class="form-control">
                   </div>
                 </div>
-
                 <div class="form-group">
                     <label>Quality:</label>
-
                     <label class="radio-inline"><input type="radio" id="yay" value="YAY" name="user_quality">Yay</label>
-
                     <label class="radio-inline"><input type="radio" id="solid" value="SOLID" name="user_quality">Solid</label>
-
                     <label class="radio-inline"><input type="radio" id="wrench" value="WRENCH" name="user_quality">Wrench</label>
-
                     <label class="radio-inline"><input type="radio" id="null" value="NULL" name="user_quality" checked="checked">Null</label>
                   </div>
               </div>
-
-
               <button type="submit" class="btn btn-success form-control">Add Entry</button>
-
-
           </form>
           </div>
         </div>
       </div>
     </div>
-
-
     <select id="quality" name="user_pillar" class="form-control">
       <option value="YAY">YAY</option>
       <option value="SOLID">SOLID</option>
       <option value="WRENCH">WRENCH</option>
     </select>
-
     <script type="text/javascript" src="js/script.min.js"></script>
   </body>
 </html>
