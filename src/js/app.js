@@ -299,7 +299,6 @@ $("#summaryTable").on('click', ".okay", function() {
     $editRow.children(".date").empty().append($dateInput);
     $editRow.children(".quality").empty().append($qualityInput);
     $editRow.children(".notes").empty().append($notesInput);
-
   }
   //Accept Edit Mode Changes
   else{
