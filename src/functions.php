@@ -74,7 +74,7 @@ function newSummary($date,$quality,$notes){
    $result->bindParam(3, $notes);
    $result->execute();
 
-   $result = $db->prepare("SELECT * FROM personal.pillars_days ORDER BY id DESC LIMIT 1;");
+   $result = $db->prepare("SELECT * FROM branchou_personal.pillars_days ORDER BY id DESC LIMIT 1;");
    $result->execute();
   } catch (Exception $e){
     echo $e->getMessage();
@@ -98,7 +98,7 @@ function newEntryJSON($pillar, $date, $duration, $quality, $notes){
     $result->bindParam(5, $notes);
     $result->execute();
 
-    $result = $db->prepare("SELECT * FROM personal.pillars_log ORDER BY id DESC LIMIT 1;");
+    $result = $db->prepare("SELECT * FROM branchou_personal.pillars_log ORDER BY id DESC LIMIT 1;");
     $result->execute();
   } catch(Exception $e){
     echo $e->getMessage();
