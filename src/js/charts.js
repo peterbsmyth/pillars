@@ -8,7 +8,7 @@ var setTitle = function(selectedDate){
   var endDay = makeUTCDate(startDay);
   endDay = addDays(endDay,6).toJSONLocal();
   return "Pillars For " + selectedDate.toDateFormat() + " - " + endDay.toDateFormat();
-}
+};
 
 var buildChart = function(selectedDate){
   //Build Data String
@@ -190,7 +190,7 @@ var buildChart = function(selectedDate){
 
       //set domain of color to be duration names that do not contain hDM
       // key.indexOf("hDM") returns -1 if "hDM" is not in string
-      color.domain(d3.keys(dates[0].duration).filter(function(key) {  return key.indexOf("hDM") === -1; })); //candidate for learning d3.keys function
+      color.domain(d3.keys(dates[0].duration).filter(function(key) {  return key.indexOf("hDM") === -1; }));
 
       //calculate y positions for data
       dates.forEach(function(d) {
@@ -286,7 +286,7 @@ var buildChart = function(selectedDate){
           .style("text-anchor", "end")
           .text(function(d) { return d; });
 
-      $(".x.axis").children("g").last().remove() //fix to remove final label of x axis
+      $(".x.axis").children("g").last().remove(); //fix to remove final label of x axis
 
     },
     error: function(XHR, textStatus, errorThrown){ // Candidate for learning...
@@ -296,7 +296,7 @@ var buildChart = function(selectedDate){
       console.log(errorThrown);
     }
   });
-}
+};
 
 
 //initialize chart

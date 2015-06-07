@@ -12,7 +12,8 @@ var buildTable = function(selectedDate){
   var data = {content : "today", startDay: startDay,endDay: endDay};
 
   $.getJSON("functions.php",{content : "today", startDay: startDay,endDay: endDay},function(response){
-    //empty current table
+    console.log(response);
+    //empty current table.
     var $tableBody = $("#dayTable TBODY");
     $tableBody.empty();
 
@@ -43,15 +44,128 @@ var buildTable = function(selectedDate){
       $tableBody.append($row);
     });
     $("#dayTable").trigger("update");
+    console.log(response);
+
+    //chart
+    var zazenHours = makeUTCDate("1990-09-13T00:00:00");
+    var workHours = makeUTCDate("1990-09-13T00:00:00");
+    var socialHours = makeUTCDate("1990-09-13T00:00:00");
+    var learnHours = makeUTCDate("1990-09-13T00:00:00");
+    var bikeHours = makeUTCDate("1990-09-13T00:00:00");
+    var eatwellHours = makeUTCDate("1990-09-13T00:00:00");
+    var slackHours = makeUTCDate("1990-09-13T00:00:00");
+
+    response.forEach(function(item){
+      if(item.pillar === "ZAZEN"){                                                  //candidate for improvement
+        zazenHours = zazenHours.addMinutes(durationToMinutes(item.duration));       //simplify this if..else structure
+      }                                                                             //or do away with it completely
+      else if(item.pillar === "WORK"){
+        workHours = workHours.addMinutes(durationToMinutes(item.duration));
+      }
+      else if(item.pillar === "SOCIAL"){
+        socialHours = socialHours.addMinutes(durationToMinutes(item.duration));
+      }
+      else if(item.pillar === "LEARN"){
+        learnHours = learnHours.addMinutes(durationToMinutes(item.duration));
+      }
+      else if(item.pillar === "BIKE"){
+        bikeHours = bikeHours.addMinutes(durationToMinutes(item.duration));
+      }
+      else if(item.pillar === "EAT WELL"){
+        eatwellHours = eatwellHours.addMinutes(durationToMinutes(item.duration));
+      }
+      else if(item.pillar === "SLACK"){
+        slackHours = slackHours.addMinutes(durationToMinutes(item.duration));
+      }
+    });
+
+    var z = {
+      pillar: "ZAZEN",
+      duration: zazenHours.toHoursDotMinutes()
+    };
+
+    var w = {
+      pillar: "WORK",
+      duration: workHours.toHoursDotMinutes()
+    };
+
+    var s = {
+      pillar: "SOCIAL",
+      duration: socialHours.toHoursDotMinutes()
+    };
+
+    var l = {
+      pillar: "LEARN",
+      duration: learnHours.toHoursDotMinutes()
+    };
+
+    var b = {
+      pillar: "BIKE",
+      duration: bikeHours.toHoursDotMinutes()
+    };
+
+    var e = {
+      pillar: "EAT WELL",
+      duration: eatwellHours.toHoursDotMinutes()
+    };
+
+    var k = {
+      pillar: "SLACK",
+      duration: slackHours.toHoursDotMinutes()
+    };
+
+    var data = [z,w,s,l,b,e,k];
+
+    console.log(data);
+
+    var width = 960,
+        height = 500,
+        radius = Math.min(width, height) / 2;
+
+    var color = d3.scale.ordinal()
+        .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+    var arc = d3.svg.arc()
+        .outerRadius(radius - 10)
+        .innerRadius(radius - 70);
+
+    var pie = d3.layout.pie()
+        .sort(null)
+        .value(function(d) { return d.duration; });
+
+    var svg = d3.select("body").append("svg")
+        .attr("width", width)
+        .attr("height", height)
+      .append("g")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+    data.forEach(function(d) {
+      d.duration = +d.duration;
+    });
+
+    var g = svg.selectAll(".arc")
+        .data(pie(data))
+      .enter().append("g")
+        .attr("class", "arc");
+
+    g.append("path")
+        .attr("d", arc)
+        .style("fill", function(d) { return color(d.data.pillar); });
+
+    g.append("text")
+        .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+        .attr("dy", ".35em")
+        .style("text-anchor", "middle")
+        .text(function(d) { return d.data.pillar; });
+
+
   });
-}
+};
 
 //Build summaryTable given a date
 var buildSummary = function(startSummary, endSummary){
 
   //Build Data String
-  var startSummary = startSummary;
-  var endSummary = endSummary;
 
   $.getJSON("functions.php",{content : "summary", startSummary: startSummary, endSummary: endSummary},function(response){
     //empty current table
@@ -80,7 +194,7 @@ var buildSummary = function(startSummary, endSummary){
     });
     $("#summaryTable").trigger("update");
   });
-}
+};
 
 //Update dayTable with new Entry
 $( "#single-entry" ).on( "submit", function( event ) {
