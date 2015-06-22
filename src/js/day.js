@@ -3,6 +3,8 @@ $("body").on("change", "#datePicker", function(){
   console.log("Updating Table...");
   var selectedDate = $(this).val();
   buildTable(selectedDate);
+  $("svg").remove();
+  donutChart(selectedDate);
 });
 
 

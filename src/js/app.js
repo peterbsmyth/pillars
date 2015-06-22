@@ -9,9 +9,8 @@ var buildTable = function(selectedDate){
   //Build Data String
   var startDay = selectedDate;
   var endDay = startDay + "T23:59:59";
-  var data = {content : "today", startDay: startDay,endDay: endDay};
 
-  $.getJSON("functions.php",{content : "today", startDay: startDay,endDay: endDay},function(response){
+  $.getJSON("functions.php",{content : "pillarsLog", startDay: startDay,endDay: endDay},function(response){
     console.log(response);
     //empty current table.
     var $tableBody = $("#dayTable TBODY");
@@ -46,77 +45,22 @@ var buildTable = function(selectedDate){
     $("#dayTable").trigger("update");
     console.log(response);
 
-    //chart
-    var zazenHours = makeUTCDate("1990-09-13T00:00:00");
-    var workHours = makeUTCDate("1990-09-13T00:00:00");
-    var socialHours = makeUTCDate("1990-09-13T00:00:00");
-    var learnHours = makeUTCDate("1990-09-13T00:00:00");
-    var bikeHours = makeUTCDate("1990-09-13T00:00:00");
-    var eatwellHours = makeUTCDate("1990-09-13T00:00:00");
-    var slackHours = makeUTCDate("1990-09-13T00:00:00");
 
-    response.forEach(function(item){
-      if(item.pillar === "ZAZEN"){                                                  //candidate for improvement
-        zazenHours = zazenHours.addMinutes(durationToMinutes(item.duration));       //simplify this if..else structure
-      }                                                                             //or do away with it completely
-      else if(item.pillar === "WORK"){
-        workHours = workHours.addMinutes(durationToMinutes(item.duration));
-      }
-      else if(item.pillar === "SOCIAL"){
-        socialHours = socialHours.addMinutes(durationToMinutes(item.duration));
-      }
-      else if(item.pillar === "LEARN"){
-        learnHours = learnHours.addMinutes(durationToMinutes(item.duration));
-      }
-      else if(item.pillar === "BIKE"){
-        bikeHours = bikeHours.addMinutes(durationToMinutes(item.duration));
-      }
-      else if(item.pillar === "EAT WELL"){
-        eatwellHours = eatwellHours.addMinutes(durationToMinutes(item.duration));
-      }
-      else if(item.pillar === "SLACK"){
-        slackHours = slackHours.addMinutes(durationToMinutes(item.duration));
-      }
-    });
+  });
+};
 
-    var z = {
-      pillar: "ZAZEN",
-      duration: zazenHours.toHoursDotMinutes()
-    };
+var donutChart = function(selectedDate){
+  var startDay = selectedDate;
+  var endDay = startDay + "T23:59:59";
 
-    var w = {
-      pillar: "WORK",
-      duration: workHours.toHoursDotMinutes()
-    };
-
-    var s = {
-      pillar: "SOCIAL",
-      duration: socialHours.toHoursDotMinutes()
-    };
-
-    var l = {
-      pillar: "LEARN",
-      duration: learnHours.toHoursDotMinutes()
-    };
-
-    var b = {
-      pillar: "BIKE",
-      duration: bikeHours.toHoursDotMinutes()
-    };
-
-    var e = {
-      pillar: "EAT WELL",
-      duration: eatwellHours.toHoursDotMinutes()
-    };
-
-    var k = {
-      pillar: "SLACK",
-      duration: slackHours.toHoursDotMinutes()
-    };
-
-    var data = [z,w,s,l,b,e,k];
-
+  $.getJSON("functions.php",{content : "dayCumulativeDuration", startDay: startDay,endDay: endDay},function(data){
+    console.log("donut chart...");
     console.log(data);
+
+    //chart
+    data.forEach(function(d) {
+      d.duration = +d.duration;
+    });
 
     var width = 960,
         height = 500,
@@ -139,9 +83,7 @@ var buildTable = function(selectedDate){
       .append("g")
         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-    data.forEach(function(d) {
-      d.duration = +d.duration;
-    });
+
 
     var g = svg.selectAll(".arc")
         .data(pie(data))
@@ -157,10 +99,10 @@ var buildTable = function(selectedDate){
         .attr("dy", ".35em")
         .style("text-anchor", "middle")
         .text(function(d) { return d.data.pillar; });
-
-
   });
 };
+
+
 
 //Build summaryTable given a date
 var buildSummary = function(startSummary, endSummary){

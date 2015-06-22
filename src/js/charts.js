@@ -24,7 +24,8 @@ var buildChart = function(selectedDate){
     data: data,
     dataType: "json",
     success: function(response){
-
+      console.log('response');
+      console.log(response);
       //set variables for first item
       var curDate = response[0].event_date.substr(0,10);
       var count = 0;
@@ -127,7 +128,8 @@ var buildChart = function(selectedDate){
           slack: slackHours
         }
       });
-
+      console.log('dates...');
+      console.log(dates);
       /////////////////////
       // BEGIN D3 /////////
       /////////////////////

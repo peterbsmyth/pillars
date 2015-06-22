@@ -18,29 +18,6 @@ $notes = $_POST['user_notes'];
 $id = $_POST['user_id'];
 
 //Functions
-function getDayJSON($startDay, $endDay){
-  require_once 'db/connect.php';
-
-  try {
-     $result = $db->prepare("Select * FROM pillars_log WHERE event_date between ? and ?;");
-     $result->bindParam(1, $startDay);
-     $result->bindParam(2, $endDay);
-     $result->execute();
-  } catch (Exception $e){
-    echo $e->getMessage();
-    die();
-  }
-
-
-  $rows = array();
-
-  while($r = $result->fetch(PDO::FETCH_ASSOC)) {
-    $rows[] = $r;
-  }
-
-  echo json_encode($rows);
-}
-
 function getSummaryJSON($startSummary, $endSummary){
   require_once 'db/connect.php';
 
@@ -181,11 +158,36 @@ function getPillarsLogJSON($startDay,$endDay){
   echo json_encode($rows);
 }
 
+function getDayCumulativeDurationJSON($startDay,$endDay){
+  require_once('db/connect.php');
+  try{
+    $result = $db->prepare("SELECT pillars AS pillar, IFNULL(SUM(TIME_TO_SEC(duration))/3600,0) AS duration
+FROM pillars AS p LEFT OUTER JOIN pillars_log AS pl ON p.pillars = pl.pillar
+AND event_date between ? and ?
+GROUP BY p.pillars
+ORDER BY p.id;");
+    $result->bindParam(1,$startDay);
+    $result->bindParam(2,$endDay);
+    $result->execute();
+  } catch (Exception $e){
+    echo $e->getMessage();
+    die();
+  }
+
+  $rows = array();
+
+  while($r = $result->fetch(PDO::FETCH_ASSOC)) {
+    $rows[] = $r;
+  }
+
+  echo json_encode($rows);
+}
+
 //Content
-//if($content == "lastEntry"){ getLastEntryJSON(); }
-if($content == "today"){ getDayJSON($startDay,$endDay); }
+
 if($content == "summary"){ getSummaryJSON($startSummary,$endSummary); }
 if($content == "pillarsLog"){ getPillarsLogJSON($startDay, $endDay); }
+if($content == "dayCumulativeDuration"){ getDayCumulativeDurationJSON($startDay, $endDay); }
 if($postContent == "newEntry"){ newEntryJSON($pillar, $date, $duration, $quality, $notes); }
 if($postContent == "newSummary"){newSummary($date,$quality,$notes);}
 if($postContent == "updateEntry") {updateEntry($id, $pillar, $date, $duration, $quality, $notes);}
