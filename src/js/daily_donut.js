@@ -1,23 +1,26 @@
 var donutApp = angular.module('donutApp',[]);
 
-donutApp.controller('donutCtrl',['$scope',function($scope){
+donutApp.controller('donutCtrl',['$scope','$http',function($scope,$http){
   var isX = true;
-  $scope.x = [10,20,70,40,50,60,30];
-  $scope.y = [10,40,30,null,80,10,20];
-  $scope.donutData = $scope.x;
+  $scope.today = new Date(Date.now());
+  var todayJSON = $scope.today.toJSONLocal();
+  $scope.donutData = [{"pillar":"ZAZEN","duration":"1"},{"pillar":"WORK","duration":"1"},{"pillar":"SOCIAL","duration":"1"},{"pillar":"LEARN","duration":"1"},{"pillar":"BIKE","duration":"1"},{"pillar":"EAT WELL","duration":"1"},{"pillar":"SLACK","duration":"1"}];
+
+  $http.get('functions.php?content=dayCumulativeDuration&startDay='+todayJSON+'&endDay='+todayJSON+'T23%3A59%3A59').success(function(data){
+    $scope.donutData = data;
+  });
 
   $scope.update = function(){
-    isX = !isX;
-    if(isX){
-      $scope.donutData = $scope.x;
-    }
-    else {
-      $scope.donutData = $scope.y;
-    }
+    var prevDay = addDays($scope. today,-1);
+    $scope.today = prevDay;
+    todayJSON = $scope.today.toJSONLocal();
+    $http.get('functions.php?content=dayCumulativeDuration&startDay='+todayJSON+'&endDay='+todayJSON+'T23%3A59%3A59').success(function(data){
+      $scope.donutData = data;
+    });
   };
 }]);
 
-donutApp.directive('donutChart',function(){
+donutApp.directive('donutChart',function($rootScope){
   function link(scope,element,attr){
     var height = 500;
     var width = 500;
@@ -38,7 +41,10 @@ donutApp.directive('donutChart',function(){
       .innerRadius(radius * 0.5)
       .outerRadius(radius * 0.9);
 
-    var pie = d3.layout.pie().sort(null);
+    var pie = d3.layout.pie().sort(null)
+        .value(function(d){
+
+          return d.duration;});
 
     var donut = svg.append('g')
       .attr('transform','translate(' + width/2 + ',' + height/2 + ')');
@@ -61,9 +67,7 @@ donutApp.directive('donutChart',function(){
     }
 
     scope.$watch('data',function(data){
-
       arcs.data(pie(data)).transition().duration(500).ease('linear').attrTween('d',arcTween);
-
     });
   }
   return {
