@@ -34,11 +34,11 @@
       </div>
       <div class="row">
         <div class="col-md-8 col-md-offset-2">
-          <div class="donut">
-
+          <div class="donut" ng-controller="donutCtrl">
+            <button type="button" name="button" ng-click="update()">Switch Data</button>
+            <br>
+            <donut-chart data="donutData"></donut-chart>
           </div>
-          <donut-chart></donut-chart>
-          <donut-chart></donut-chart>
         </div>
       </div>
     </div>

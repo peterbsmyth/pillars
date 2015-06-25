@@ -1,13 +1,24 @@
 var donutApp = angular.module('donutApp',[]);
 
+donutApp.controller('donutCtrl',['$scope',function($scope){
+  var isX = true;
+  $scope.x = [10,20,70,40,50,60,30];
+  $scope.y = [10,40,30,null,80,10,20];
+  $scope.donutData = $scope.x;
+
+  $scope.update = function(){
+    isX = !isX;
+    if(isX){
+      $scope.donutData = $scope.x;
+    }
+    else {
+      $scope.donutData = $scope.y;
+    }
+  };
+}]);
+
 donutApp.directive('donutChart',function(){
   function link(scope,element,attr){
-    var isX = true;
-
-    var x = [10,20,70,40,50,60,30];
-    var y = [10,40,30,null,80,10,20];
-    var data = x;
-
     var height = 500;
     var width = 500;
     var radius = Math.min(width,height) / 2;
@@ -29,18 +40,17 @@ donutApp.directive('donutChart',function(){
 
     var pie = d3.layout.pie().sort(null);
 
-
     var donut = svg.append('g')
       .attr('transform','translate(' + width/2 + ',' + height/2 + ')');
 
     var arcs = donut.selectAll('path')
-      .data(pie(data))
+      .data(pie(scope.data))
       .enter()
         .append('path')
           .attr('fill',function(d,i){return color(i);})
           .each(function(d) {this._current = d;});
 
-    arcs.data(pie(data)).attr('d',arc);
+    arcs.data(pie(scope.data)).attr('d',arc);
 
     function arcTween(a){
       var i = d3.interpolate(this._current, a);
@@ -50,26 +60,15 @@ donutApp.directive('donutChart',function(){
       };
     }
 
-    function update(){
-      isX = !isX;
-
-      if(isX){
-        data = x;
-      }
-      else {
-        data = y;
-      }
+    scope.$watch('data',function(data){
 
       arcs.data(pie(data)).transition().duration(500).ease('linear').attrTween('d',arcTween);
 
-    }
-
-
-
-    setInterval(update,2000);
+    });
   }
   return {
-    link: link,
-    restrict: 'E'
+    restrict: 'E',
+    scope: {data: '=data'},
+    link: link
   };
 });
