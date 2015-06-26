@@ -44,7 +44,16 @@ module.exports = function(grunt){
       },
       web: {
         files:[
-          {src: ['src/js/functions.js','src/js/*.js'], dest: 'web/js/script.min.js'},
+          {
+            options: {
+              beautify: true,
+              mangle: false,
+              compress: false,
+              preserveComments: 'all'
+            },
+            src: ['src/js/functions.js','src/js/*.js'],
+            dest: 'web/js/script.min.js'
+          },
         ]
       }
     },
@@ -61,7 +70,7 @@ module.exports = function(grunt){
       },
       web: {
         files: [
-          {expand: true, cwd:'src/', src: ['fonts/*','db/*','charts.html','css/*.gif','*.php'], dest:'web/'}
+          {expand: true, cwd:'src/', src: ['fonts/*','db/*','charts.html','daily_donut.html','css/*.gif','*.php'], dest:'web/'}
         ]
       }
     },
@@ -88,16 +97,6 @@ module.exports = function(grunt){
           livereload: true
         }
       }
-    },
-    express:{
-      all:{
-        options:{
-          port:9000,
-          hostname:'localhost',
-          bases: ['dev/'],
-          livereload: true
-        }
-      }
     }
   });
 
@@ -107,11 +106,9 @@ module.exports = function(grunt){
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-express');
 
   //Register task(s)
   grunt.registerTask('default', ['uglify:dev','concat:devcss','copy:dev']);
   grunt.registerTask('build', ['uglify:build','concat:buildcss','cssmin:buildcss','copy:build']);
-  grunt.registerTask('web', ['uglify:web','concat:webcss','cssmin:webcss','copy:web'])
-  grunt.registerTask('server', ['express','watch']);
+  grunt.registerTask('web', ['uglify:web','concat:webcss','cssmin:webcss','copy:web']);
 };

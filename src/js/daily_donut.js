@@ -1,10 +1,8 @@
 var donutApp = angular.module('donutApp',[]);
 
-donutApp.controller('donutCtrl',['$scope','$http',function($scope,$http){
-  var isX = true;
+donutApp.controller('DonutCtrl',['$scope','$http',function($scope,$http){
   $scope.today = new Date(Date.now());
   var todayJSON = $scope.today.toJSONLocal();
-  $scope.donutData = [{"pillar":"ZAZEN","duration":"1"},{"pillar":"WORK","duration":"1"},{"pillar":"SOCIAL","duration":"1"},{"pillar":"LEARN","duration":"1"},{"pillar":"BIKE","duration":"1"},{"pillar":"EAT WELL","duration":"1"},{"pillar":"SLACK","duration":"1"}];
 
   $http.get('functions.php?content=dayCumulativeDuration&startDay='+todayJSON+'&endDay='+todayJSON+'T23%3A59%3A59').success(function(data){
     $scope.donutData = data;
@@ -20,7 +18,7 @@ donutApp.controller('donutCtrl',['$scope','$http',function($scope,$http){
   };
 }]);
 
-donutApp.directive('donutChart',function($rootScope){
+donutApp.directive('donutChart',function(){
   function link(scope,element,attr){
     var height = 500;
     var width = 500;
@@ -49,15 +47,6 @@ donutApp.directive('donutChart',function($rootScope){
     var donut = svg.append('g')
       .attr('transform','translate(' + width/2 + ',' + height/2 + ')');
 
-    var arcs = donut.selectAll('path')
-      .data(pie(scope.data))
-      .enter()
-        .append('path')
-          .attr('fill',function(d,i){return color(i);})
-          .each(function(d) {this._current = d;});
-
-    arcs.data(pie(scope.data)).attr('d',arc);
-
     function arcTween(a){
       var i = d3.interpolate(this._current, a);
       this._current = i(0);
@@ -67,7 +56,19 @@ donutApp.directive('donutChart',function($rootScope){
     }
 
     scope.$watch('data',function(data){
-      arcs.data(pie(data)).transition().duration(500).ease('linear').attrTween('d',arcTween);
+      // bind the data
+      var arcs = donut.selectAll('path')
+        .data(pie(data));
+
+      // enter
+      arcs.enter()
+          .append('path')
+            .attr('fill',function(d,i){return color(i);})
+            .attr('d', arc)
+            .each(function(d) {this._current = d;});
+
+      // update
+      arcs.transition().duration(500).ease('linear').attrTween('d',arcTween);
     });
   }
   return {
