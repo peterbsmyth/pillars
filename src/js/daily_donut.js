@@ -4,6 +4,37 @@ donutApp.controller('DonutCtrl',['$scope','$http',function($scope,$http){
   $scope.today = new Date(Date.now());
   var todayJSON = $scope.today.toJSONLocal();
 
+  $scope.donutData = [
+    {
+        "pillar": "ZAZEN",
+        "duration": "1"
+    },
+    {
+        "pillar": "WORK",
+        "duration": "1"
+    },
+    {
+        "pillar": "SOCIAL",
+        "duration": "1"
+    },
+    {
+        "pillar": "LEARN",
+        "duration": "1"
+    },
+    {
+        "pillar": "BIKE",
+        "duration": "1"
+    },
+    {
+        "pillar": "EAT WELL",
+        "duration": "1"
+    },
+    {
+        "pillar": "SLACK",
+        "duration": "1"
+    }
+];
+
   $http.get('functions.php?content=dayCumulativeDuration&startDay='+todayJSON+'&endDay='+todayJSON+'T23%3A59%3A59').success(function(data){
     $scope.donutData = data;
   });
@@ -56,6 +87,8 @@ donutApp.directive('donutChart',function(){
     }
 
     scope.$watch('data',function(data){
+      if (!data) return;
+
       // bind the data
       var arcs = donut.selectAll('path')
         .data(pie(data));
@@ -65,7 +98,24 @@ donutApp.directive('donutChart',function(){
           .append('path')
             .attr('fill',function(d,i){return color(i);})
             .attr('d', arc)
-            .each(function(d) {this._current = d;});
+            .each(function(d) {this._current = d;})
+            .on('mouseover',function(d){
+              svg.append('text')
+                .attr('id','tooltip')
+                .attr('x',width/2)
+                .attr('y',height/2)
+                .attr('text-anchor','middle')
+                .text(d.data.pillar);
+              svg.append('text')
+                .attr('id','tooltip')
+                .attr('x',width/2)
+                .attr('y',height/2 - 10)
+                .attr('text-anchor','middle')
+                .text(d.data.duration);
+            })
+            .on('mouseout',function(d){
+              d3.selectAll('text').remove();
+            });
 
       // update
       arcs.transition().duration(500).ease('linear').attrTween('d',arcTween);
