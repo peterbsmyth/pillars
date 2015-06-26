@@ -6,31 +6,31 @@ donutApp.controller('DonutCtrl',['$scope','$http',function($scope,$http){
 
   $scope.donutData = [
     {
-        "pillar": "ZAZEN",
+        "pillar": "No Data",
         "duration": "1"
     },
     {
-        "pillar": "WORK",
+        "pillar": "NO DATA",
         "duration": "1"
     },
     {
-        "pillar": "SOCIAL",
+        "pillar": "NO DATA",
         "duration": "1"
     },
     {
-        "pillar": "LEARN",
+        "pillar": "NO DATA",
         "duration": "1"
     },
     {
-        "pillar": "BIKE",
+        "pillar": "NO DATA",
         "duration": "1"
     },
     {
-        "pillar": "EAT WELL",
+        "pillar": "NO DATA",
         "duration": "1"
     },
     {
-        "pillar": "SLACK",
+        "pillar": "NO DATA",
         "duration": "1"
     }
 ];
@@ -40,8 +40,6 @@ donutApp.controller('DonutCtrl',['$scope','$http',function($scope,$http){
   });
 
   $scope.update = function(){
-    var prevDay = addDays($scope. today,-1);
-    $scope.today = prevDay;
     todayJSON = $scope.today.toJSONLocal();
     $http.get('functions.php?content=dayCumulativeDuration&startDay='+todayJSON+'&endDay='+todayJSON+'T23%3A59%3A59').success(function(data){
       $scope.donutData = data;
@@ -89,6 +87,24 @@ donutApp.directive('donutChart',function(){
     scope.$watch('data',function(data){
       if (!data) return;
 
+      //add all durations
+      var sum = 0;
+      data.forEach(function(d){
+        sum += +d.duration;
+      });
+      //remove 'no data' if exists
+      d3.selectAll('text').remove();
+      //if sum of durations = 0 add 'no data' and return
+      if (sum === 0) {
+          d3.selectAll('path').remove();
+          svg.append('text')
+            .attr('x',width/2)
+            .attr('y',height/2)
+            .attr('text-anchor','middle')
+            .text('No Data');
+          return;
+      }
+
       // bind the data
       var arcs = donut.selectAll('path')
         .data(pie(data));
@@ -101,13 +117,11 @@ donutApp.directive('donutChart',function(){
             .each(function(d) {this._current = d;})
             .on('mouseover',function(d){
               svg.append('text')
-                .attr('id','tooltip')
                 .attr('x',width/2)
                 .attr('y',height/2)
                 .attr('text-anchor','middle')
                 .text(d.data.pillar);
               svg.append('text')
-                .attr('id','tooltip')
                 .attr('x',width/2)
                 .attr('y',height/2 - 10)
                 .attr('text-anchor','middle')

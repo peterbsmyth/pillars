@@ -34,10 +34,15 @@
       </div>
       <div class="row">
         <div class="col-md-8 col-md-offset-2">
-          <div class="donut" ng-controller="DonutCtrl">
-            <button type="button" name="button" ng-click="update()">Previous Day</button>
-            <br>
-            <donut-chart data="donutData"></donut-chart>
+          <div style="display:flex;justify-content:center;align-items:center;">
+            <div class="donut" ng-controller="DonutCtrl">
+              <h3 style="margin: 15px auto; width: 20%; text-align: center;">Date</h3>
+              <input
+              style="display: block; margin: 0 auto; text-align: center;"
+              type="date" ng-model="today" ng-change="update()">
+              <br>
+              <donut-chart data="donutData"></donut-chart>
+            </div>
           </div>
         </div>
       </div>
