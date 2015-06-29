@@ -132,6 +132,18 @@ PAGE: CHART
   shape-rendering: crispEdges;
 }
 
+.activityaxis text {
+  font: 10px sans-serif;
+}
+
+.activityaxis path,
+.activityaxis line,
+line.activityaxis {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
 #chart-form{
 	padding: 10px 0;
 	width: 204px;
