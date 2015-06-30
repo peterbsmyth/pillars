@@ -1,9 +1,15 @@
 var activityApp = angular.module('activityApp',[]);
 
 activityApp.controller('ActivityCtrl',['$scope','$http',function($scope,$http){
-  $http.get('data.json').success(function(response){
+  $http.get('data1.json').success(function(response){
     $scope.activityData = response;
   });
+
+  $scope.update = function(){
+    $http.get('data.json').success(function(response){
+      $scope.activityData = response;
+    });
+  };
 }]);
 
 activityApp.directive('activityChart',function(){
@@ -27,7 +33,7 @@ activityApp.directive('activityChart',function(){
         .attr('y2',height-15)
         .attr('stroke','black')
         .attr('stroke-width',1)
-        .attr('class','activityaxis');
+        .attr('class','activitybound');
 
     //top side bounding line
     svg.append('line')
@@ -37,7 +43,7 @@ activityApp.directive('activityChart',function(){
         .attr('y2',0)
         .attr('stroke','black')
         .attr('stroke-width',1)
-        .attr('class','activityaxis');
+        .attr('class','activitybound');
 
     //right side bounding line
     svg.append('line')
@@ -47,7 +53,7 @@ activityApp.directive('activityChart',function(){
         .attr('y2',height-15)
         .attr('stroke','black')
         .attr('stroke-width',1)
-        .attr('class','activityaxis');
+        .attr('class','activitybound');
 
     var xScale = d3.time.scale()
         .range([0,width]);
@@ -73,8 +79,7 @@ activityApp.directive('activityChart',function(){
     scope.$watch('data',function(data){
       if (!data) return;
 
-      console.log('DATA:');
-      console.log(data);
+      d3.selectAll('.activityaxis').remove();
 
       var startDay = makeUTCDate(new Date (data[0].event_date.substr(0,10)));
 
@@ -131,7 +136,40 @@ activityApp.directive('activityChart',function(){
           }
         });
 
+      bars.exit().remove();
 
+      //update
+      bars.transition().attr('width',function(d){
+        //make event_date string into a date starting at T00:00:00
+        var durationy = makeUTCDate(d.event_date.substr(0,10));
+        //convert duration to a date object for xScale
+        durationy = durationy.addMinutes(durationToMinutes(d.duration));
+        return xScale(durationy);
+      })
+      .transition().attr('fill',function(d){ //color determined by pillar name
+        if (d.pillar == "ZAZEN"){
+          return "#98abc5";
+        }
+        else if (d.pillar == "WORK") {
+          return "#8a89a6";
+        }
+        else if (d.pillar == "SOCIAL") {
+          return "#7b6888";
+        }
+        else if (d.pillar == "LEARN") {
+          return "#6b486b";
+        }
+        else if (d.pillar == "BIKE") {
+          return "#a05d56";
+        }
+        else if (d.pillar == "EAT WELL") {
+          return "#d0743c";
+        }
+        else if (d.pillar == "SLACK") {
+          return "#ff8c00";
+        }
+      })
+      .transition().attr('x',function(d){return xScale(new Date(d.event_date));});
 
     });
   }
