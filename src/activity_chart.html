@@ -41,7 +41,18 @@
               style="display: block; margin: 0 auto; text-align: center;"
               type="date" ng-model="today" ng-change="newDay()">
               <br>
-              <activity-chart data="activityData"></activity-chart>
+              <activity-chart data="activityData" selected="selectedEvent"></activity-chart>
+              <div>
+                {{selectedEvent.event_date}}
+                <br>
+                {{selectedEvent.duration}}
+                <br>
+                {{selectedEvent.pillar}}
+                <br>
+                {{selectedEvent.notes}}
+                <br>
+                {{selectedEvent.quality}}
+              </div>
             </div>
           </div>
         </div>

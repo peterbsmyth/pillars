@@ -142,6 +142,16 @@ activityApp.directive('activityChart',function(){
           else if (d.pillar == "SLACK") {
             return "#ff8c00";
           }
+        })
+        .on('mouseover',function(d){
+          scope.$apply(function(){
+            scope.selected = d;
+          });
+        })
+        .on('mouseout',function(){
+          scope.$apply(function(){
+            scope.selected = null;
+          });
         });
 
       bars.exit().remove();
@@ -183,7 +193,7 @@ activityApp.directive('activityChart',function(){
   }
   return {
     restrict: 'E',
-    scope: {data: '=data'},
+    scope: {data: '=data', selected: '='},
     link: link
   };
 });
