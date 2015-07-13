@@ -162,6 +162,13 @@ line.activitybound {
 	transform:rotateZ(180deg);
 }
 
+/**********************************
+PAGE: DATA EXPLORER
+**********************************/
+
+#dataTable{
+	margin-top: 5%;
+}
 
 /**********************************
 COLORS

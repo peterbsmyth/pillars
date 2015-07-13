@@ -1,0 +1,109 @@
+<!-- reusing header and footer html across pages best practice-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">  <!--set charset to utf-8-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  <!--enable mobile views-->
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="css/normalize.css"> <!--reset css for cross-browser compatibility-->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/agency.css">
+    <link rel="stylesheet" type="text/css" href="css/main.min.css">
+    <!-- JS -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.21.3/js/jquery.tablesorter.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js" charset="utf-8"></script>
+    <title>PILLAR INPUT FORM</title>
+  </head>
+  <body ng-app="dataApp" ng-controller="DataCtrl">
+    <div class="container">
+      <div class="row">
+        <header class="clearfix">
+          <a href="index.html"><h1 class="pull-left">Pillars</h1></a>
+          <nav class='btn-group pull-right'>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">View <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="index.html">Day</a></li>
+              <li><a href="summary.html">Summary</a></li>
+              <li><a href="charts.html">Charts</a></li>
+              <li><a href="daily_donut.html">Daily Donut</a></li>
+              <li><a href="activity_chart.html">Activity Chart</a></li>
+            </ul>
+          </nav>
+        </header>
+      </div>
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+          <form id="" class="form form-inline centered" ng-submit="formSubmit()">
+              <label for="pillarSelect">Pillar:</label>
+              <select class="pillarSelect form-control" name="pillarSelect" ng-model="formData.pillar">
+                <option value="zazen">zazen</option>
+                <option value="work">work</option>
+                <option value="social">social</option>
+                <option value="learn">learn</option>
+                <option value="bike">bike</option>
+                <option value="eat well">eat well</option>
+              </select>
+
+              <label for="minDuration">Min Duration:</label>
+              <input id="minDuration" type="text" class="form-control" placeholder="HH:MM" name="minDuration" ng-model="formData.minDuration">
+
+              <label for="maxDuration">Max Duration:</label>
+              <input id="maxDuration" type="text" class="form-control" placeholder="HH:MM" name="maxDuration" ng-model="formData.maxDuration">
+
+              <label for="qualitySelect">Quality:</label>
+              <select class="qualitySelect form-control" name="qualitySelect" ng-model="formData.quality">
+                <option value="yay">yay</option>
+                <option value="solid">solid</option>
+                <option value="wrench">wrench</option>
+              </select>
+
+              <label for="startDate">Start Date:</label>
+              <input class="form-control" id="startDate" type="date" name="startDate" ng-model="formData.startDate">
+
+              <label for="endDate">End Date:</label>
+              <input class="form-control" id="endDate" type="date" name="endDate" ng-model="formData.endDate">
+
+              <label for="notesInput">Notes:</label>
+              <input class="form-control" placeholder="Notes" type="text" name="notesInput" id="notesInput" ng-model="formData.notes">
+
+              <input type="submit" value="Filter!" class="btn btn-lg">
+          </form>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <div class="table-responsive">
+            <!-- Candidate for improvement, better ways of defining column width -->
+            <table id="dataTable" class="table table-hover tablesorter">
+              <THEAD>
+                <tr>
+                  <th id="iEditCol">Edit</th>
+                  <th id="iPillarCol">Pillar</th>
+                  <th id="iDatetimeCol">Datetime</th>
+                  <th id="DurationCol">Duration</th>
+                  <th id="iQualityCol">Quality</th>
+                  <th id="iNotesCol">Notes</th>
+                </tr>
+              </THEAD>
+              <TBODY>
+                <tr ng-repeat="entry in success">
+                  <td></td>
+                  <td>{{entry.pillar}}</td>
+                  <td>{{entry.event_date}}</td>
+                  <td>{{entry.duration}}</td>
+                  <td>{{entry.quality}}</td>
+                  <td>{{entry.notes}}</td>
+                </tr>
+              </TBODY>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="js/script.min.js"></script>
+  </body>
+</html>
