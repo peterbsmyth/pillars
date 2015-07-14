@@ -36,9 +36,9 @@
       </div>
       <div class="row">
         <div class="col-md-8 col-md-offset-2">
-          <form id="" class="form form-inline centered" ng-submit="formSubmit()">
+          <form novaildate name="explorerForm" class="form form-inline centered explorer-form" ng-submit="explorerForm.$valid && formSubmit()">
               <label for="pillarSelect">Pillar:</label>
-              <select class="pillarSelect form-control" name="pillarSelect" ng-model="formData.pillar">
+              <select class="pillarSelect form-control" name="pillar" ng-model="formData.pillar" select>
                 <option value="zazen">zazen</option>
                 <option value="work">work</option>
                 <option value="social">social</option>
@@ -48,28 +48,33 @@
               </select>
 
               <label for="minDuration">Min Duration:</label>
-              <input id="minDuration" type="text" class="form-control" placeholder="HH:MM" name="minDuration" ng-model="formData.minDuration">
+              <input required hhmm id="minDuration" type="text" class="form-control" placeholder="HH:MM" name="minDuration" ng-model="formData.minDuration">
 
               <label for="maxDuration">Max Duration:</label>
-              <input id="maxDuration" type="text" class="form-control" placeholder="HH:MM" name="maxDuration" ng-model="formData.maxDuration">
+              <input required hhmm id="maxDuration" type="text" class="form-control" placeholder="HH:MM" name="maxDuration" ng-model="formData.maxDuration">
 
               <label for="qualitySelect">Quality:</label>
-              <select class="qualitySelect form-control" name="qualitySelect" ng-model="formData.quality">
+              <select required select class="qualitySelect form-control" name="quality" ng-model="formData.quality">
                 <option value="yay">yay</option>
                 <option value="solid">solid</option>
                 <option value="wrench">wrench</option>
               </select>
 
               <label for="startDate">Start Date:</label>
-              <input class="form-control" id="startDate" type="date" name="startDate" ng-model="formData.startDate">
+              <input required class="form-control" id="startDate" type="date" name="startDate" ng-model="formData.startDate">
 
               <label for="endDate">End Date:</label>
-              <input class="form-control" id="endDate" type="date" name="endDate" ng-model="formData.endDate">
+              <input required class="form-control" id="endDate" type="date" name="endDate" ng-model="formData.endDate">
 
               <label for="notesInput">Notes:</label>
-              <input class="form-control" placeholder="Notes" type="text" name="notesInput" id="notesInput" ng-model="formData.notes">
+              <input required class="form-control" placeholder="Notes" type="text" name="notes" id="notesInput" ng-model="formData.notes">
 
               <input type="submit" value="Filter!" class="btn btn-lg">
+              <br>
+                <span ng-show="explorerForm.minDuration.$error.hhmm">Please enter a valid time (HH:MM)</span>
+                <span ng-show="explorerForm.maxDuration.$error.hhmm">Please enter a valid time (HH:MM)</span>
+                <span ng-show="explorerForm.pillar.$error.select">Please select a Pillar</span>
+                <span ng-show="explorerForm.quality.$error.select">Please select a Quality level</span>
           </form>
         </div>
       </div>
