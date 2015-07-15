@@ -36,7 +36,7 @@
       </div>
       <div class="row">
         <div class="col-md-8 col-md-offset-2">
-          <form novaildate name="explorerForm" class="form form-inline centered explorer-form" ng-submit="explorerForm.$valid && formSubmit()">
+          <form novaildate name="explorerForm" class="form form-inline centered explorer-form" ng-submit="formSubmit()">
               <label for="pillarSelect">Pillar:</label>
               <select class="pillarSelect form-control" name="pillar" ng-model="formData.pillar" select>
                 <option value="zazen">zazen</option>
@@ -48,26 +48,26 @@
               </select>
 
               <label for="minDuration">Min Duration:</label>
-              <input required hhmm id="minDuration" type="text" class="form-control" placeholder="HH:MM" name="minDuration" ng-model="formData.minDuration">
+              <input hhmm id="minDuration" type="text" class="form-control" placeholder="HH:MM" name="minDuration" ng-model="formData.minDuration">
 
               <label for="maxDuration">Max Duration:</label>
-              <input required hhmm id="maxDuration" type="text" class="form-control" placeholder="HH:MM" name="maxDuration" ng-model="formData.maxDuration">
+              <input hhmm id="maxDuration" type="text" class="form-control" placeholder="HH:MM" name="maxDuration" ng-model="formData.maxDuration">
 
               <label for="qualitySelect">Quality:</label>
-              <select required select class="qualitySelect form-control" name="quality" ng-model="formData.quality">
+              <select select class="qualitySelect form-control" name="quality" ng-model="formData.quality">
                 <option value="yay">yay</option>
                 <option value="solid">solid</option>
                 <option value="wrench">wrench</option>
               </select>
 
               <label for="startDate">Start Date:</label>
-              <input required class="form-control" id="startDate" type="date" name="startDate" ng-model="formData.startDate">
+              <input class="form-control" id="startDate" type="date" name="startDate" ng-model="formData.startDate">
 
               <label for="endDate">End Date:</label>
-              <input required class="form-control" id="endDate" type="date" name="endDate" ng-model="formData.endDate">
+              <input class="form-control" id="endDate" type="date" name="endDate" ng-model="formData.endDate">
 
               <label for="notesInput">Notes:</label>
-              <input required class="form-control" placeholder="Notes" type="text" name="notes" id="notesInput" ng-model="formData.notes">
+              <input class="form-control" placeholder="Notes" type="text" name="notes" id="notesInput" ng-model="formData.notes">
 
               <input type="submit" value="Filter!" class="btn btn-lg">
               <br>
