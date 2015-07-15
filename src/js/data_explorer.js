@@ -1,4 +1,4 @@
-var dataApp = angular.module('dataApp',[]);
+var dataApp = angular.module('dataApp',['dataAppFilters']);
 
 dataApp.controller('DataCtrl',['$scope','$http',function($scope,$http){
   $scope.formData = {};
@@ -16,8 +16,9 @@ dataApp.controller('DataCtrl',['$scope','$http',function($scope,$http){
       url: 'angular_functions.php',
       data: formClone,
       headers: {'Content-type' : 'application/x-www-form-urlencoded'}
-    }).success(function(data){
-      $scope.success = data;
+    }).success(function(response){
+      $scope.success = response.data;
+      $scope.stats = response.stats.total_duration;
     });
   };
 }]);

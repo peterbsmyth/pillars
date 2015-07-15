@@ -17,45 +17,44 @@ function getDataExplorerJSON($request){
   @$notes = $request->notes;
   $counter = 0;
 
-  $sql = "SELECt * FROM pillars_log WHERE";
+  //Begin dataMySQL
+  $dataSQL = "SELECt * FROM pillars_log WHERE";
   if($pillar) {
-    $sql .= " pillar = ? AND ";
+    $dataSQL .= " pillar = ? AND ";
   }
   if($minDuration && $maxDuration) {
-    $sql .= " duration BETWEEN ? AND ? AND ";
+    $dataSQL .= " duration BETWEEN ? AND ? AND ";
   }
   elseif($minDuration && !$maxDuration) {
-    $sql .= " duration >= ? AND ";
+    $dataSQL .= " duration >= ? AND ";
   }
   elseif(!$minDuration && $maxDuration) {
-    $sql .= " duration <= ? AND ";
+    $dataSQL .= " duration <= ? AND ";
   }
   if($quality) {
-    $sql .= "quality = ? AND ";
+    $dataSQL .= "quality = ? AND ";
   }
   if($startDate == "ull" && $endDate == "ull"){
 
   }
   elseif($startDate && $endDate == "ull") {
-    $sql .= "event_date >= ? AND ";
+    $dataSQL .= "event_date >= ? AND ";
   }
   elseif($startDate == "ull" && $endDate) {
-    $sql .= "event_date <= ? AND ";
+    $dataSQL .= "event_date <= ? AND ";
   }
   elseif($startDate && $endDate) {
-    $sql .= "event_date BETWEEN ? AND ? AND ";
+    $dataSQL .= "event_date BETWEEN ? AND ? AND ";
   }
   if($notes) {
     $notes = "%" . $notes . "%";
-    $sql .= "notes  LIKE ? AND";
+    $dataSQL .= "notes  LIKE ? AND";
   }
-  $sql .= " 1=1";
-
-  // echo json_encode($request);
+  $dataSQL .= " 1=1";
 
   try {
 
-    $result = $db->prepare($sql);
+    $result = $db->prepare($dataSQL);
     if($pillar) {
       $counter++;
       $result->bindParam($counter,$pillar);
@@ -106,13 +105,107 @@ function getDataExplorerJSON($request){
     die();
   }
 
-  $rows = array();
+  $data = array();
 
   while($r = $result->fetch(PDO::FETCH_ASSOC)) {
-    $rows[] = $r;
+    $data[] = $r;
+  }
+  //end data MySQL
+
+  //Begin stats MySQL
+  $counter = 0;
+  $statsSQL = "SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(duration))) AS total_duration FROM pillars_log WHERE";
+  if($pillar) {
+    $statsSQL .= " pillar = ? AND ";
+  }
+  if($minDuration && $maxDuration) {
+    $statsSQL .= " duration BETWEEN ? AND ? AND ";
+  }
+  elseif($minDuration && !$maxDuration) {
+    $statsSQL .= " duration >= ? AND ";
+  }
+  elseif(!$minDuration && $maxDuration) {
+    $statsSQL .= " duration <= ? AND ";
+  }
+  if($quality) {
+    $statsSQL .= "quality = ? AND ";
+  }
+  if($startDate == "ull" && $endDate == "ull"){
+
+  }
+  elseif($startDate && $endDate == "ull") {
+    $statsSQL .= "event_date >= ? AND ";
+  }
+  elseif($startDate == "ull" && $endDate) {
+    $statsSQL .= "event_date <= ? AND ";
+  }
+  elseif($startDate && $endDate) {
+    $statsSQL .= "event_date BETWEEN ? AND ? AND ";
+  }
+  if($notes) {
+    $notes = "%" . $notes . "%";
+    $statsSQL .= "notes  LIKE ? AND";
+  }
+  $statsSQL .= " 1=1";
+
+  try {
+
+    $result = $db->prepare($statsSQL);
+    if($pillar) {
+      $counter++;
+      $result->bindParam($counter,$pillar);
+    }
+    if($minDuration && $maxDuration) {
+      $counter++;
+      $result->bindParam($counter,$minDuration);
+      $counter++;
+      $result->bindParam($counter,$maxDuration);
+    }
+    elseif($minDuration && !$maxDuration) {
+      $counter++;
+      $result->bindParam($counter,$minDuration);
+    }
+    elseif(!$minDuration && $maxDuration) {
+      $counter++;
+      $result->bindParam($counter,$maxDuration);
+    }
+    if($quality) {
+      $counter++;
+      $result->bindParam($counter,$quality);
+    }
+    if($startDate == "ull" && $endDate == "ull"){
+
+    }
+    elseif($startDate && $endDate == "ull") {
+      $counter++;
+      $result->bindParam($counter,$startDate);
+    }
+    elseif($startDate == "ull" && $endDate) {
+      $counter++;
+      $result->bindParam($counter,$endDate);
+    }
+    elseif($startDate && $endDate) {
+      $counter++;
+      $result->bindParam($counter,$startDate);
+      $counter++;
+      $result->bindParam($counter,$endDate);
+    }
+
+    if($notes) {
+      $counter++;
+      $result->bindParam($counter,$notes);
+    }
+    $result->execute();
+  } catch (Exception $e){
+    echo $e->getMessage();
+    die();
   }
 
-  echo json_encode($rows);
+  $stats = $result->fetch(PDO::FETCH_ASSOC);
+
+  $response = (object) ['data' => $data, 'stats' => $stats];
+
+  echo json_encode($response);
 }
 
 getDataExplorerJSON($request);

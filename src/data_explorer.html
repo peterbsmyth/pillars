@@ -34,6 +34,7 @@
           </nav>
         </header>
       </div>
+
       <div class="row">
         <div class="col-md-8 col-md-offset-2">
           <form novaildate name="explorerForm" class="form form-inline centered explorer-form" ng-submit="formSubmit()">
@@ -78,7 +79,7 @@
           </form>
         </div>
       </div>
-
+      <pre>{{stats}}</pre>
       <div class="row">
         <div class="col-md-10 col-md-offset-1">
           <div class="table-responsive">
@@ -98,7 +99,7 @@
                 <tr ng-repeat="entry in success">
                   <td></td>
                   <td>{{entry.pillar}}</td>
-                  <td>{{entry.event_date}}</td>
+                  <td>{{entry.event_date | datetime}}</td>
                   <td>{{entry.duration}}</td>
                   <td>{{entry.quality}}</td>
                   <td>{{entry.notes}}</td>
