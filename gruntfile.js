@@ -39,7 +39,7 @@ module.exports = function(grunt){
           compress: false,
           preserveComments: 'all'
         },
-        src: ['src/js/functions.js','src/js/*.js'],
+        src: ['src/js/functions.js','src/js/**/*.js',],
         dest: 'dev/js/script.min.js'
       },
       web: {
@@ -76,7 +76,7 @@ module.exports = function(grunt){
     },
     watch: {
       js: {
-        files: ['src/js/*.js'],
+        files: ['src/js/**/*.js'],
         tasks: ['uglify:dev'],
         options: {
           livereload: true,
