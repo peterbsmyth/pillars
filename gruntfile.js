@@ -60,7 +60,7 @@ module.exports = function(grunt){
     copy: {
       dev: {
         files: [
-          {expand: true, cwd:'src/', src: ['fonts/*','db/*','*.html','css/*.gif','*.php'], dest: 'dev/'},
+          {expand: true, cwd:'src/', src: ['fonts/*','db/*','*.html','css/*.gif','*.php','partials/*'], dest: 'dev/'},
         ],
       },
       build: {
@@ -90,7 +90,7 @@ module.exports = function(grunt){
         }
       },
       other: {
-        files: ['fonts/*','db/*','*.html','css/*.gif','*.php'],
+        files: ['fonts/*','db/*','*.html','css/*.gif','*.php','partials/*'],
         tasks: ['copy:dev'],
         options: {
           cwd: {files: 'src/'},

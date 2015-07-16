@@ -6,19 +6,19 @@ chartsApp.config(function($stateProvider,$urlRouterProvider){
 
   $stateProvider.state('stackedState', {
     url: '/stacked',
-    templateUrl: 'stacked.html',
+    templateUrl: 'partials/stacked.html',
     controller: 'StackedCtrl'
   });
 
   $stateProvider.state('donutState', {
     url: '/donut',
-    templateUrl: 'donut.html',
+    templateUrl: 'partials/donut.html',
     controller: 'DonutCtrl'
   });
 
   $stateProvider.state('activityState', {
     url: '/activity',
-    templateUrl: 'activity.html',
+    templateUrl: 'partials/activity.html',
     controller: 'ActivityCtrl'
   });
 
