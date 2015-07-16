@@ -68,6 +68,10 @@ stackedApp.directive('stackedBarChart',function(){
     scope.$watch('data',function(response){
       if (!response) return;
 
+      //remove pre-existing axes
+      d3.selectAll('.x.axis').remove();
+      d3.selectAll('.g').remove();
+
       var curDate = response[0].event_date.substr(0,10);
       var count = 0;
       var zazenHours = makeUTCDate("1990-09-13T00:00:00");
@@ -169,8 +173,7 @@ stackedApp.directive('stackedBarChart',function(){
           slack: slackHours
         }
       });
-      console.log('dates...');
-      console.log(dates);
+
       /////////////////////
       // BEGIN D3 /////////
       /////////////////////
@@ -225,42 +228,44 @@ stackedApp.directive('stackedBarChart',function(){
             .attr("transform", "translate(0,-1)")
             .call(xAxis);
 
-      var dateBar = chart.selectAll(".dateBar")
-        .data(dates)
-      .enter().append("g")
+      var dateBars = chart.selectAll(".dateBar")
+        .data(dates);
+
+
+      dateBars.enter().append("g")
         .attr("class", "g")
         .attr("transform", function(d) { return "translate(" + xScale(d.date) + ",0)"; });
 
-      dateBar.selectAll("rect")
-          .data(function(d) { return d.duration.pillars; })
-        .enter().append("rect")
-          .attr("width", barWidth-1)
-          .attr("y", function(d) { return yScale(d.y0); })
-          .attr("height", function(d) {
-            return yScale(d.y1) - yScale(d.y0); })
-          .style("fill", function(d) { return color(d.name); })
-          .on('mouseover', function(d){
-            d3.select(this)
-            .style("fill", "orange");
-            chart.append("text")
-            .attr("id", "tooltip")
-            .attr("x", 450)
-            .attr("y", height)
-            .attr("text-anchor", "middle")
-            .attr("font-family", "sans-serif")
-            .attr("font-size", "15px")
-            .attr("font-weight", "bold")
-            .attr("fill", "black")
-            .text("Pillar: " + d.name + " Duration: " + d.duration.toChartDurationFormat());
-          })
-          .on("mouseout", function(d) {
-            d3.select(this)
-            .transition()
-            .duration(250)
-            .style("fill", function(d) { return color(d.name); });
-            d3.select("#tooltip").remove();
-          });
+      var singleBar = dateBars.selectAll("rect")
+          .data(function(d) { return d.duration.pillars; });
 
+      singleBar.enter().append("rect")
+        .attr("width", barWidth-1)
+        .attr("y", function(d) { return yScale(d.y0); })
+        .attr("height", function(d) {
+          return yScale(d.y1) - yScale(d.y0); })
+        .style("fill", function(d) { return color(d.name); })
+        .on('mouseover', function(d){
+          d3.select(this)
+          .style("fill", "orange");
+          chart.append("text")
+          .attr("id", "tooltip")
+          .attr("x", 450)
+          .attr("y", height)
+          .attr("text-anchor", "middle")
+          .attr("font-family", "sans-serif")
+          .attr("font-size", "15px")
+          .attr("font-weight", "bold")
+          .attr("fill", "black")
+          .text("Pillar: " + d.name + " Duration: " + d.duration.toChartDurationFormat());
+        })
+        .on("mouseout", function(d) {
+          d3.select(this)
+          .transition()
+          .duration(250)
+          .style("fill", function(d) { return color(d.name); });
+          d3.select("#tooltip").remove();
+        });
 
 
       var legend = chart.selectAll(".legend")
