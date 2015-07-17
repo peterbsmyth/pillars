@@ -4,7 +4,9 @@ chartsApp.controller('ActivityCtrl',['$scope','$http',function($scope,$http){
 
   var update = function(url){
     $http.get(url).success(function(response){
-      $scope.activityData = response;
+      $scope.activity = {
+          data: response
+      };
     });
   };
 
