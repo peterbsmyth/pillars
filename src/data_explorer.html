@@ -46,6 +46,7 @@
                 <option value="learn">learn</option>
                 <option value="bike">bike</option>
                 <option value="eat well">eat well</option>
+                <option value="slack">slack</option>
               </select>
 
               <label for="minDuration">Min Duration:</label>
@@ -74,8 +75,8 @@
               <br>
                 <span ng-show="explorerForm.minDuration.$error.hhmm">Please enter a valid time (HH:MM)</span>
                 <span ng-show="explorerForm.maxDuration.$error.hhmm">Please enter a valid time (HH:MM)</span>
-                <span ng-show="explorerForm.pillar.$error.select">Please select a Pillar</span>
-                <span ng-show="explorerForm.quality.$error.select">Please select a Quality level</span>
+                <span ng-show="explorerForm.pillar.$dirty && explorerForm.pillar.$error.select">Please select a Pillar</span>
+                <span ng-show="explorerForm.quality.$dirty && explorerForm.quality.$error.select">Please select a Quality level</span>
           </form>
         </div>
       </div>
