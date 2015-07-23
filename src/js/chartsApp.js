@@ -22,4 +22,11 @@ chartsApp.config(function($stateProvider,$urlRouterProvider){
     controller: 'ActivityCtrl'
   });
 
+  $stateProvider.state('weeklyActivityState', {
+    url: '/weekly-activity',
+    templateUrl: 'partials/weekly_activity.html',
+    controller: 'WeeklyActivityCtrl'
+  });
+
+
 });

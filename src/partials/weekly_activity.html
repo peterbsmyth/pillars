@@ -1,0 +1,14 @@
+<div class="row">
+  <div style="display:flex;justify-content:center;align-items:center;">
+    <div class="stack">
+      <p style="margin: 15px auto; width: 20%; text-align: center;">Date</p>
+      <input
+      style="display: block; margin: 0 auto; text-align: center;"
+      type="date" ng-model="today" ng-change="newDay()">
+      <br>
+      <div class="chart-container">
+        <weekly-activity-chart data="weeklyActivity.data"></weekly-activity-chart>
+      </div>
+    </div>
+  </div>
+</div>

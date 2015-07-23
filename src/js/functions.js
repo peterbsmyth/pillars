@@ -142,3 +142,15 @@ String.prototype.toDateFormat = function(){
   //Expects string formatted "YYYY-MM-DD"
   return this.substr(5,2) + "/" + this.substr(8,2) + "/" + this.substr(0,4);
 };
+
+String.prototype.toHoursDotMinutes = function(){
+  //Expects string formatted "HH:mm:SS"
+  return parseInt(this.substr(0,2)) + parseInt(this.substr(3,2))/60;
+};
+
+var getY0 = function(datestring){
+  //Expects string formatted "YYYY-MM-DD HH:mm:SS"
+  var hh = parseInt(datestring.substr(11,2),10);
+  var mm = parseInt(datestring.substr(14,2),10);
+  return hh + mm/60;
+};
