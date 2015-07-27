@@ -2,7 +2,7 @@ var chartsApp = angular.module('chartsApp',['ui.router']);
 
 chartsApp.config(function($stateProvider,$urlRouterProvider){
 
-  $urlRouterProvider.otherwise("/stacked");
+  $urlRouterProvider.otherwise("/weekly-activity");
 
   $stateProvider.state('stackedState', {
     url: '/stacked',
@@ -26,6 +26,12 @@ chartsApp.config(function($stateProvider,$urlRouterProvider){
     url: '/weekly-activity',
     templateUrl: 'partials/weekly_activity.html',
     controller: 'WeeklyActivityCtrl'
+  });
+
+  $stateProvider.state('annualCalendarState', {
+    url: '/annual-calendar',
+    templateUrl: 'partials/annual_calendar.html',
+    controller: 'AnnualCalendarCtrl'
   });
 
 
