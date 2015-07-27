@@ -5,17 +5,23 @@ chartsApp.directive('annualCalendar',function(){
     link: function(scope,element,attrs){
       var calendar = [];
       var today = new Date(Date.now());
+      var lastYear = addDays(today,-365);
+      var col = 0;
       for (i=0; i < 366; i++){
-        dateString = today.toJSONLocal();
-        calendar.unshift({
-          date: dateString,
-          count: 0
+        dateString = lastYear.toJSONLocal();
+        var date = makeUTCDate(dateString);
+        var c = date.getDay();
+        calendar.push({
+          date: date,
+          count: 0,
+          col: col
         });
-        today = addDays(today,-1);
+        lastYear = addDays(lastYear,1);
+        if (c === 6){ col++; }
       }
 
       var width = 11 + (365*13);
-      var height = 11;
+      var height = 11 + 13*6;
 
       var svg = d3.select(element[0]).append('svg')
             .attr('width',width)
@@ -28,7 +34,8 @@ chartsApp.directive('annualCalendar',function(){
       .append('rect')
         .attr('width',11)
         .attr('height',11)
-        .attr('x',function(d,i){return i*13;})
+        .attr('x',function(d,i){return d.col*13;})
+        .attr('y',function(d,i){return d.date.getDay() * 13;})
         .attr('fill','#eeeeee');
 
       var colorScale = d3.scale.ordinal() //based on http://www.colorhexa.com/ff8c00 monochromatic color
@@ -48,8 +55,8 @@ chartsApp.directive('annualCalendar',function(){
           }
 
           for (var i = 0; i < calendar.length; i++) {
-            if (events[calendar[i].date]){
-              calendar[i].count = events[calendar[i].date];
+            if (events[calendar[i].date.toJSONLocal()]){
+              calendar[i].count = events[calendar[i].date.toJSONLocal()];
             }
           }
 
@@ -63,14 +70,6 @@ chartsApp.directive('annualCalendar',function(){
               }
             });
 
-          // var data = d3.nest()
-          //     .key(function(d){
-          //       return d.event_date.substr(0,10);
-          //     })
-          //     .rollup(function(v){
-          //       return v.length;
-          //     })
-          //     .entries(newVal);
               console.log("EVENTS:");
               console.log(events);
               console.log("CALENDAR:");
