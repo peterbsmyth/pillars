@@ -31,6 +31,9 @@ chartsApp.directive('annualCalendar',function(){
         .attr('x',function(d,i){return i*13;})
         .attr('fill','#eeeeee');
 
+      var colorScale = d3.scale.ordinal() //based on http://www.colorhexa.com/ff8c00 monochromatic color
+            .range(['#ffaf4d','#ff981a','#e67e00','#b36200']);
+
         scope.$watch('data',function(newVal,oldVal){
           if (!newVal) return;
 
@@ -49,6 +52,16 @@ chartsApp.directive('annualCalendar',function(){
               calendar[i].count = events[calendar[i].date];
             }
           }
+
+          colorScale.domain(d3.extent(calendar, function(d){ return d.count === 0 ? null : d.count; }));
+
+          svg.selectAll('rect')
+            .attr('fill',function(d,i){
+              if (d.count === 0) return '#eee';
+              else{
+                return colorScale(d.count);
+              }
+            });
 
           // var data = d3.nest()
           //     .key(function(d){
