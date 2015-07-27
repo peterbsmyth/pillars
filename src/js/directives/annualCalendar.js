@@ -4,17 +4,33 @@ chartsApp.directive('annualCalendar',function(){
     scope: {data: '='},
     link: function(scope,element,attrs){
       var calendar = [];
+      var yAxis = [];
       var today = new Date(Date.now());
       var lastYear = addDays(today,-365);
       var col = 0;
+      var month = lastYear.getMonth();
+      var x = true;
+      var monthFormatter = d3.time.format("%b");
+
       for (i=0; i < 366; i++){
         dateString = lastYear.toJSONLocal();
         var date = makeUTCDate(dateString);
         var c = date.getDay();
+        if (c === 0 && date.getMonth() === 0 && x){
+          month = -1;
+          x = !x;
+        }
+        if (c === 0 && date.getMonth() > month){
+            yAxis.push({
+              col: col,
+              month: monthFormatter(date)
+            });
+            month++;
+        }
         calendar.push({
           date: date,
           count: 0,
-          col: col
+          col: col,
         });
         lastYear = addDays(lastYear,1);
         if (c === 6){ col++; }
@@ -52,6 +68,7 @@ chartsApp.directive('annualCalendar',function(){
         .attr('dx','-10')
         .attr('dy','74');
 
+      //Prepare Calendar
       svg.selectAll('rect')
         .data(calendar)
         .enter()
@@ -64,6 +81,19 @@ chartsApp.directive('annualCalendar',function(){
 
       var colorScale = d3.scale.ordinal() //based on http://www.colorhexa.com/ff8c00 monochromatic color
             .range(['#ffaf4d','#ff981a','#e67e00','#b36200']);
+      svg.selectAll('.y')
+          .data(yAxis)
+          .enter()
+        .append('text')
+          .text(function(d){ return d.month;})
+          .attr('dy',-5)
+          .attr('dx',function(d){
+            return d.col*13;
+          })
+          .attr('fill','#ccc');
+
+
+      var minMonth = calendar[0].date.get;
 
         scope.$watch('data',function(newVal,oldVal){
           if (!newVal) return;
@@ -98,6 +128,9 @@ chartsApp.directive('annualCalendar',function(){
               console.log(events);
               console.log("CALENDAR:");
               console.log(calendar);
+              console.log("Y AXIS:");
+              console.log(yAxis);
+              console.log(yAxis.length);
         });
 
     }
