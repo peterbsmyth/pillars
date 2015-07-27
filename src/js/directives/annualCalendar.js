@@ -20,13 +20,37 @@ chartsApp.directive('annualCalendar',function(){
         if (c === 6){ col++; }
       }
 
-      var width = 11 + (365*13);
+      var margin = {top: 20, right: 20, bottom: 20, left: 20};
+      var width = 11 + (53*13);
       var height = 11 + 13*6;
 
       var svg = d3.select(element[0]).append('svg')
-            .attr('width',width)
-            .attr('height',height)
-          .append('g');
+            .attr('width',width + margin.left + margin.right)
+            .attr('height',height + margin.top + margin.bottom)
+          .append('g')
+            .attr('transform','translate('+margin.left+','+margin.top+')');
+
+      //Lazy y-axis from GitHub's commit calendar
+      svg.append('text')
+        .text('M')
+        .style('fill','#ccc')
+        .attr('text-anchor','middle')
+        .attr('dx','-10')
+        .attr('dy','22');
+
+      svg.append('text')
+        .text('W')
+        .style('fill','#ccc')
+        .attr('text-anchor','middle')
+        .attr('dx','-10')
+        .attr('dy','48');
+
+      svg.append('text')
+        .text('F')
+        .attr('text-anchor','middle')
+        .style('fill','#ccc')
+        .attr('dx','-10')
+        .attr('dy','74');
 
       svg.selectAll('rect')
         .data(calendar)
