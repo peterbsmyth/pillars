@@ -51,7 +51,7 @@ module.exports = function(grunt){
               compress: false,
               preserveComments: 'all'
             },
-            src: ['src/js/functions.js','src/js/*.js'],
+            src: ['src/js/functions.js','src/js/**/*.js'],
             dest: 'web/js/script.min.js'
           },
         ]
@@ -70,7 +70,7 @@ module.exports = function(grunt){
       },
       web: {
         files: [
-          {expand: true, cwd:'src/', src: ['fonts/*','db/*','charts.html','daily_donut.html','css/*.gif','*.php'], dest:'web/'}
+          {expand: true, cwd:'src/', src: ['fonts/*','db/*','*.html','css/*.gif','*.php','partials/*'], dest:'web/'}
         ]
       }
     },
