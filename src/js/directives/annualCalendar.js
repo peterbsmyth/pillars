@@ -194,14 +194,6 @@ chartsApp.directive('annualCalendar',function(){
             .on('mouseout',function(d){
               svg.selectAll('.tip').remove();
             });
-
-              console.log("EVENTS:");
-              console.log(events);
-              console.log("CALENDAR:");
-              console.log(calendar);
-              console.log("Y AXIS:");
-              console.log(yAxis);
-              console.log(yAxis.length);
         });
 
     }
