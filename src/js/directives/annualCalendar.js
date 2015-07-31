@@ -13,6 +13,7 @@ chartsApp.directive('annualCalendar',function(){
       var monthFormatter = d3.time.format("%b");
       var tipFormatter = d3.time.format("%b %e, %Y");
 
+
       for (i=0; i < 366; i++){
         dateString = lastYear.toJSONLocal();
         var date = makeUTCDate(dateString);
@@ -40,6 +41,8 @@ chartsApp.directive('annualCalendar',function(){
       var margin = {top: 70, right: 70, bottom: 70, left: 90};
       var width = 11 + (53*13);
       var height = 11 + 13*6;
+      var legendX = 540;
+      var legendY = height + 10;
 
       var svg = d3.select(element[0]).append('svg')
             .attr('width',width + margin.left + margin.right)
@@ -70,18 +73,19 @@ chartsApp.directive('annualCalendar',function(){
         .attr('dy','74');
 
       //Prepare Calendar
-      svg.selectAll('rect')
+      svg.selectAll('.cal')
         .data(calendar)
         .enter()
       .append('rect')
+        .attr('class','cal')
         .attr('width',11)
         .attr('height',11)
         .attr('x',function(d,i){return d.col*13;})
         .attr('y',function(d,i){return d.date.getDay() * 13;})
         .attr('fill','#eeeeee');
 
-      var colorScale = d3.scale.linear() //based on http://www.colorhexa.com/ff8c00 monochromatic color
-            .range(['#ffaf4d','#ff981a','#e67e00','#b36200']);
+      var colorScale = d3.scale.linear() //based on http://www.perbang.dk/rgbgradient/ from #eee to #FF8C00
+            .range(['#F2D5B2','#F6BD77','#FAA43B','#FF8C00']);
 
       svg.selectAll('.y')
           .data(yAxis)
@@ -94,6 +98,37 @@ chartsApp.directive('annualCalendar',function(){
           })
           .attr('fill','#ccc');
 
+
+      svg.selectAll('.legend')
+          .data(colorScale.range())
+          .enter()
+        .append('rect')
+          .attr('class','legend')
+          .attr('width',11)
+          .attr('height',11)
+          .attr('x',function(d,i){ return legendX + 13 + i*13; })
+          .attr('y',legendY)
+          .attr('fill',function(d){ return d; });
+
+      svg.append('rect')
+        .attr('class','legend')
+        .attr('width',11)
+        .attr('height',11)
+        .attr('x', legendX)
+        .attr('y', legendY)
+        .attr('fill',"#eee");
+
+      svg.append('text')
+        .attr('class','legend')
+        .attr('x', legendX - 25)
+        .attr('y',legendY + 10)
+        .text('Less');
+
+        svg.append('text')
+          .attr('class','legend')
+          .attr('x', legendX + 5*13)
+          .attr('y',legendY + 10)
+          .text('More');
 
       var minMonth = calendar[0].date.get;
 
@@ -119,7 +154,7 @@ chartsApp.directive('annualCalendar',function(){
           var extent = d3.extent(calendar, function(d){ return d.count === 0 ? null : d.count; }); //calculate min, max excluding 0
           var range = d3.range(extent[0],extent[1]+1,((extent[1]-extent[0])/4)); //calculate a range of 5 values, starting with min, stopping with max, spaced evenly
           colorScale.domain(range); //use range as domain
-          svg.selectAll('rect')
+          svg.selectAll('.cal')
             .attr('fill',function(d,i){
               if (d.count === 0) return '#eee';
               else{
