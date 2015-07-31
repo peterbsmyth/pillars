@@ -80,8 +80,9 @@ chartsApp.directive('annualCalendar',function(){
         .attr('y',function(d,i){return d.date.getDay() * 13;})
         .attr('fill','#eeeeee');
 
-      var colorScale = d3.scale.ordinal() //based on http://www.colorhexa.com/ff8c00 monochromatic color
+      var colorScale = d3.scale.linear() //based on http://www.colorhexa.com/ff8c00 monochromatic color
             .range(['#ffaf4d','#ff981a','#e67e00','#b36200']);
+
       svg.selectAll('.y')
           .data(yAxis)
           .enter()
@@ -115,8 +116,9 @@ chartsApp.directive('annualCalendar',function(){
             }
           }
 
-          colorScale.domain(d3.extent(calendar, function(d){ return d.count === 0 ? null : d.count; }));
-
+          var extent = d3.extent(calendar, function(d){ return d.count === 0 ? null : d.count; }); //calculate min, max excluding 0
+          var range = d3.range(extent[0],extent[1]+1,((extent[1]-extent[0])/4)); //calculate a range of 5 values, starting with min, stopping with max, spaced evenly
+          colorScale.domain(range); //use range as domain
           svg.selectAll('rect')
             .attr('fill',function(d,i){
               if (d.count === 0) return '#eee';
