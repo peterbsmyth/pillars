@@ -11,6 +11,7 @@ chartsApp.directive('annualCalendar',function(){
       var month = lastYear.getMonth();
       var x = true;
       var monthFormatter = d3.time.format("%b");
+      var tipFormatter = d3.time.format("%b %e, %Y");
 
       for (i=0; i < 366; i++){
         dateString = lastYear.toJSONLocal();
@@ -36,7 +37,7 @@ chartsApp.directive('annualCalendar',function(){
         if (c === 6){ col++; }
       }
 
-      var margin = {top: 20, right: 20, bottom: 20, left: 20};
+      var margin = {top: 70, right: 70, bottom: 70, left: 90};
       var width = 11 + (53*13);
       var height = 11 + 13*6;
 
@@ -122,6 +123,39 @@ chartsApp.directive('annualCalendar',function(){
               else{
                 return colorScale(d.count);
               }
+            })
+            .on('mouseover',function(d){
+              var xPosition = parseFloat(d3.select(this).attr("x"));
+              var yPosition = parseFloat(d3.select(this).attr("y"));
+
+              var tooltip = svg.append('rect')
+                .attr('class','tip')
+                .attr('x',xPosition - 90)
+                .attr('y',yPosition - 60)
+                .attr('rx',3)
+                .attr('ry',3)
+                .attr('width',160)
+                .attr('height',50)
+                .style({
+                  'fill': 'rgba(0,0,0,0.9)',
+                  'border': '2px solid #FFF'
+                });
+
+
+                svg.append('text')
+                  .text(d.count + " events on " + tipFormatter(d.date))
+                  .attr('x',xPosition - 85)
+                  .attr('y',yPosition - 30)
+                  .style({
+                    fill: "#FFF",
+                    'font-weight': 'bold',
+                    'font-size': '1.2em'
+                  })
+                  .attr('class','tip');
+
+            })
+            .on('mouseout',function(d){
+              svg.selectAll('.tip').remove();
             });
 
               console.log("EVENTS:");
