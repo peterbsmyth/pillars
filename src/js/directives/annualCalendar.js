@@ -217,7 +217,7 @@ chartsApp.directive('annualCalendar',function(){
             var xPosition = parseFloat(d3.select(this).attr("x"));
             var yPosition = parseFloat(d3.select(this).attr("y"));
 
-            var tooltip = svg.append('rect')
+            svg.append('rect')
               .attr('class','tip')
               .attr('x',xPosition - 90)
               .attr('y',yPosition - 60)
@@ -231,23 +231,22 @@ chartsApp.directive('annualCalendar',function(){
               });
 
 
-              svg.append('text')
-                .text(d.count + " events on " + tipFormatter(d.date))
-                .attr('x',xPosition - 85)
-                .attr('y',yPosition - 30)
-                .style({
+            svg.append('text')
+              .text(d.count + " events on " + tipFormatter(d.date))
+              .attr('x',xPosition - 85)
+              .attr('y',yPosition - 30)
+              .style({
                   fill: "#FFF",
                   'font-weight': 'bold',
                   'font-size': '1.2em'
-                })
-                .attr('class','tip');
+              })
+              .attr('class','tip');
 
           })
           .on('mouseout',function(d){
             svg.selectAll('.tip').remove();
           });
-
-      });
+        });
 
     }
   };

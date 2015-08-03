@@ -1,20 +1,16 @@
-chartsApp.controller('AnnualCalendarCtrl',['$scope','$http',function($scope,$http){
+chartsApp.controller('AnnualCalendarCtrl',['$scope','$http','apiService',function($scope,$http,apiService){
   $scope.today = new Date(Date.now());
   $scope.lastYear = addDays(today,-365);
   var todayJSON = $scope.today.toJSONLocal();
   var lastYearJSON = $scope.lastYear.toJSONLocal();
 
   todayUTC = makeUTCDate(todayJSON);
-  todayJSON = todayUTC.toJSONLocal() + "T23:59:59";
+  todayJSON = todayUTC.toJSONLocal();
 
-  var update = function(url){
-    $http.get(url).success(function(response){
-      $scope.annualCalendar = {
-          data: response
-      };
-    });
-  };
-
-  update('functions.php?content=pillarsLog&startDay='+ lastYearJSON +'&endDay='+todayJSON+'T23%3A59%3A59');
-
+  apiService.dates(lastYearJSON,todayJSON).success(function(response){
+    $scope.annualCalendar = {
+      data: response
+    };
+  });
+  
 }]);

@@ -1,26 +1,26 @@
-chartsApp.controller('WeeklyActivityCtrl',['$scope','$http',function($scope,$http){
+chartsApp.controller('WeeklyActivityCtrl',['$scope','$http','apiService',function($scope,$http,apiService){
   $scope.today = new Date(Date.now());
   $scope.today.setDate($scope.today.getDate() - 6);
   var prevWeekJSON = $scope.today.toJSONLocal();
 
   var endDayJSON = makeUTCDate(prevWeekJSON);
-  endDayJSON = addDays(endDayJSON,6).toJSONLocal() + "T23:59:59";
+  endDayJSON = addDays(endDayJSON,6).toJSONLocal();
 
-  var update = function(url){
-    $http.get(url).success(function(response){
-      $scope.weeklyActivity = {
-          data: response
-      };
+  var update = function(startDate,endDate){
+    apiService.dates(startDate,endDate).success(function(response){
+      $scope.weeklyActivity = { data: response };
     });
   };
 
-  update('functions.php?content=pillarsLog&startDay='+ prevWeekJSON +'&endDay='+endDayJSON+'T23%3A59%3A59');
+
+
+  update(prevWeekJSON,endDayJSON);
 
   $scope.newDay = function(){
     prevWeekJSON = $scope.today.toJSONLocal();
     var endDayJSON = makeUTCDate(prevWeekJSON);
-    endDayJSON = addDays(endDayJSON,6).toJSONLocal() + "T23:59:59";
-    update('functions.php?content=pillarsLog&startDay='+prevWeekJSON+'&endDay='+endDayJSON+'T23%3A59%3A59');
+    endDayJSON = addDays(endDayJSON,6).toJSONLocal();
+    update(prevWeekJSON,endDayJSON);
   };
 
 

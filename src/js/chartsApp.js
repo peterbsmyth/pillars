@@ -1,4 +1,4 @@
-var chartsApp = angular.module('chartsApp',['ui.router']);
+var chartsApp = angular.module('chartsApp',['ui.router','chartsApp.services']);
 
 chartsApp.config(function($stateProvider,$urlRouterProvider){
 

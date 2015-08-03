@@ -1,4 +1,4 @@
-chartsApp.controller('DonutCtrl',['$scope','$http',function($scope,$http){
+chartsApp.controller('DonutCtrl',['$scope','$http','apiService',function($scope,$http,apiService){
   $scope.today = new Date(Date.now());
   var todayJSON = $scope.today.toJSONLocal();
 
@@ -35,18 +35,20 @@ chartsApp.controller('DonutCtrl',['$scope','$http',function($scope,$http){
     ]
   };
 
-  $http.get('functions.php?content=dayCumulativeDuration&startDay='+todayJSON+'&endDay='+todayJSON+'T23%3A59%3A59').success(function(response){
-    $scope.donut = {
-      data: response
-    };
-  });
+  function update(day){
+      apiService.cumulativeDay(day).success(function(response){
+        $scope.donut = {
+          data: response
+        };
+      });
+  }
 
-  $scope.update = function(){
+  update(todayJSON);
+
+
+
+  $scope.newDay = function(){
     todayJSON = $scope.today.toJSONLocal();
-    $http.get('functions.php?content=dayCumulativeDuration&startDay='+todayJSON+'&endDay='+todayJSON+'T23%3A59%3A59').success(function(response){
-      $scope.donut = {
-        data: response
-      };
-    });
+    update(todayJSON);
   };
 }]);
