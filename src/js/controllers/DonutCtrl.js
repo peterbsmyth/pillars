@@ -36,9 +36,9 @@ chartsApp.controller('DonutCtrl',['$scope','$http','apiService',function($scope,
   };
 
   function update(day){
-      apiService.cumulativeDay(day).success(function(response){
+      apiService.cumulativeDay(day).then(function(response){
         $scope.donut = {
-          data: response
+          data: response.data
         };
       });
   }

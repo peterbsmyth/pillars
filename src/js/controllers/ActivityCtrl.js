@@ -3,8 +3,8 @@ chartsApp.controller('ActivityCtrl',['$scope','$http','apiService',function($sco
   var todayJSON = $scope.today.toJSONLocal();
 
   function update(day){
-    apiService.day(day).success(function(response){
-      $scope.activity = { data: response };
+    apiService.day(day).then(function(response){
+      $scope.activity = { data: response.data };
     });
   }
 

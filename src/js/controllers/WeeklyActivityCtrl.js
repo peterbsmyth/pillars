@@ -7,8 +7,8 @@ chartsApp.controller('WeeklyActivityCtrl',['$scope','$http','apiService',functio
   endDayJSON = addDays(endDayJSON,6).toJSONLocal();
 
   var update = function(startDate,endDate){
-    apiService.dates(startDate,endDate).success(function(response){
-      $scope.weeklyActivity = { data: response };
+    apiService.dates(startDate,endDate).then(function(response){
+      $scope.weeklyActivity = { data: response.data };
     });
   };
 

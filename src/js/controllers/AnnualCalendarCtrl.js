@@ -7,10 +7,10 @@ chartsApp.controller('AnnualCalendarCtrl',['$scope','$http','apiService',functio
   todayUTC = makeUTCDate(todayJSON);
   todayJSON = todayUTC.toJSONLocal();
 
-  apiService.dates(lastYearJSON,todayJSON).success(function(response){
+  apiService.dates(lastYearJSON,todayJSON).then(function(response){
     $scope.annualCalendar = {
-      data: response
+      data: response.data
     };
   });
-  
+
 }]);

@@ -7,9 +7,9 @@ chartsApp.controller('StackedCtrl',['$scope','$http','apiService',function($scop
   endDayJSON = addDays(endDayJSON,6).toJSONLocal();
 
   var update = function(startDay,endDay){
-      apiService.dates(startDay,endDay).success(function(response){
+      apiService.dates(startDay,endDay).then(function(response){
         $scope.stacked = {
-          data: response
+          data: response.data
         };
       });
   };
