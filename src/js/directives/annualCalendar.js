@@ -3,47 +3,82 @@ chartsApp.directive('annualCalendar',function(){
     restrict: 'E',
     scope: {data: '='},
     link: function(scope,element,attrs){
+
+      //calendar array
       var calendar = [];
+
+      //yAxis array to store which column month labels will go on
       var yAxis = [];
+
+      //todays date
       var today = new Date(Date.now());
-      var lastYear = addDays(today,-365);
+
+      //last Years date
+      var lastYear = addDays(today,-365); //NoTE: addDays to move into chartsApp helpers service
+
+      //initialize column to 0
       var col = 0;
+
+      //get the month of a year ago
       var month = lastYear.getMonth();
-      var x = true;
-      var monthFormatter = d3.time.format("%b");
+
+      //boolean for first sunday
+      var first = true;
+
+      //formatters for yaxis and tool tip
+      var yAxisFormatter = d3.time.format("%b");
       var tipFormatter = d3.time.format("%b %e, %Y");
 
+      //for 365 days
+      for (i=0; i <= 365; i++){
 
-      for (i=0; i < 366; i++){
+        //get date as a string
         dateString = lastYear.toJSONLocal();
+
+        //make a UTC (no timezone offset) date
         var date = makeUTCDate(dateString);
+
+        //c is current day of week
         var c = date.getDay();
-        if (c === 0 && date.getMonth() === 0 && x){
+
+        //if sunday, if january, and it's the first sunday
+        if (c === 0 && date.getMonth() === 0 && first){
+          //set month to -1 to allow following if block to run
           month = -1;
-          x = !x;
+          //only do this for the first Sunday
+          first = !first;
         }
+
+        //if its sunday and a new month
         if (c === 0 && date.getMonth() > month){
+            //add a new object to yAxis indicating the position and month for labeling
             yAxis.push({
               col: col,
-              month: monthFormatter(date)
+              month: yAxisFormatter(date)
             });
             month++;
         }
+        //add datum to calendar array including the date, initialized count, and column for positioning
         calendar.push({
           date: date,
           count: 0,
           col: col,
         });
+
+        //add next time through the loop, use the next day and if its a saturday start a new column
         lastYear = addDays(lastYear,1);
         if (c === 6){ col++; }
       }
 
-      var margin = {top: 70, right: 70, bottom: 70, left: 90};
-      var width = 11 + (53*13);
-      var height = 11 + 13*6;
-      var legendX = 540;
-      var legendY = height + 10;
 
+      //BEGIN D3
+      var margin = {top: 70, right: 70, bottom: 70, left: 90}; //margins
+      var width = 11 + (53*13); // 1 square + 53 squares with 2px padding
+      var height = 11 + 6*13; //1 square + 6 squares with 2px padding
+      var legendX = 540; //x Position for legend
+      var legendY = height + 10; //y position for legend
+
+      //append svg with a g object accounting for margins
       var svg = d3.select(element[0]).append('svg')
             .attr('width',width + margin.left + margin.right)
             .attr('height',height + margin.top + margin.bottom)
@@ -74,19 +109,20 @@ chartsApp.directive('annualCalendar',function(){
 
       //Prepare Calendar
       svg.selectAll('.cal')
-        .data(calendar)
-        .enter()
-      .append('rect')
-        .attr('class','cal')
-        .attr('width',11)
-        .attr('height',11)
-        .attr('x',function(d,i){return d.col*13;})
-        .attr('y',function(d,i){return d.date.getDay() * 13;})
-        .attr('fill','#eeeeee');
+          .data(calendar)
+          .enter()
+        .append('rect')
+          .attr('class','cal')
+          .attr('width',11)
+          .attr('height',11)
+          .attr('x',function(d,i){return d.col*13;})
+          .attr('y',function(d,i){return d.date.getDay() * 13;})
+          .attr('fill','#eeeeee');
 
       var colorScale = d3.scale.linear() //based on http://www.perbang.dk/rgbgradient/ from #eee to #FF8C00
             .range(['#F2D5B2','#F6BD77','#FAA43B','#FF8C00']);
 
+      //Prepare y Axis
       svg.selectAll('.y')
           .data(yAxis)
           .enter()
@@ -98,7 +134,7 @@ chartsApp.directive('annualCalendar',function(){
           })
           .attr('fill','#ccc');
 
-
+      //Prepare Legend
       svg.selectAll('.legend')
           .data(colorScale.range())
           .enter()
@@ -124,85 +160,94 @@ chartsApp.directive('annualCalendar',function(){
         .attr('y',legendY + 10)
         .text('Less');
 
-        svg.append('text')
-          .attr('class','legend')
-          .attr('x', legendX + 5*13)
-          .attr('y',legendY + 10)
-          .text('More');
+      svg.append('text')
+        .attr('class','legend')
+        .attr('x', legendX + 5*13)
+        .attr('y',legendY + 10)
+        .text('More');
 
-      var minMonth = calendar[0].date.get;
+      scope.$watch('data',function(newVal,oldVal){
+        //if theres no new value (no data), return
+        if (!newVal) return;
 
-        scope.$watch('data',function(newVal,oldVal){
-          if (!newVal) return;
+        //instantiate events object
+        var events = {};
 
-          var events = {};
-          var l = newVal.length;
-          while(l--){
-            var currentDate = newVal[l].event_date.substr(0,10);
-            if(!events[currentDate]){
-              events[currentDate] = 0;
-            }
-            events[currentDate]++;
+        //for each item in array, starting with the last
+        var l = newVal.length;
+        while(l--){
+          //get the day of the event
+          var eventDate = newVal[l].event_date.substr(0,10);
+          //if the events object doesn't have the current event's day as a key, create a key and give it a value 0
+          if(!events[eventDate]){
+            events[eventDate] = 0;
           }
 
-          for (var i = 0; i < calendar.length; i++) {
-            if (events[calendar[i].date.toJSONLocal()]){
-              calendar[i].count = events[calendar[i].date.toJSONLocal()];
-            }
+          //+1 to event's value
+          events[eventDate]++;
+        }
+
+        //for every day in the calendar (365)
+        for (var i = 0; i < calendar.length; i++) {
+          //if current calendars day matches a day key in the events object
+          if (events[calendar[i].date.toJSONLocal()]){
+            //calendar's count = events count
+            calendar[i].count = events[calendar[i].date.toJSONLocal()];
           }
+        }
 
-          var extent = d3.extent(calendar, function(d){ return d.count === 0 ? null : d.count; }); //calculate min, max excluding 0
-          var range = d3.range(extent[0],extent[1]+1,((extent[1]-extent[0])/4)); //calculate a range of 5 values, starting with min, stopping with max, spaced evenly
-          colorScale.domain(range); //use range as domain
-          svg.selectAll('.cal')
-            .attr('fill',function(d,i){
-              if (d.count === 0) return '#eee';
-              else{
-                return colorScale(d.count);
-              }
-            })
-            .on('mouseover',function(d){
-              var xPosition = parseFloat(d3.select(this).attr("x"));
-              var yPosition = parseFloat(d3.select(this).attr("y"));
+        //calculate min, max excluding 0
+        var extent = d3.extent(calendar, function(d){ return d.count === 0 ? null : d.count; });
 
-              var tooltip = svg.append('rect')
-                .attr('class','tip')
-                .attr('x',xPosition - 90)
-                .attr('y',yPosition - 60)
-                .attr('rx',3)
-                .attr('ry',3)
-                .attr('width',160)
-                .attr('height',50)
+        //calculate a range of 5 values, starting with min, stopping with max, spaced evenly
+        var range = d3.range(extent[0],extent[1]+1,((extent[1]-extent[0])/4));
+
+        //use range as domain
+        colorScale.domain(range);
+
+        //Give calendar color based on # events and add tooltip events
+        svg.selectAll('.cal')
+          .attr('fill',function(d,i){
+            if (d.count === 0) return '#eee';
+            else{
+              return colorScale(d.count);
+            }
+          })
+          .on('mouseover',function(d){
+            var xPosition = parseFloat(d3.select(this).attr("x"));
+            var yPosition = parseFloat(d3.select(this).attr("y"));
+
+            var tooltip = svg.append('rect')
+              .attr('class','tip')
+              .attr('x',xPosition - 90)
+              .attr('y',yPosition - 60)
+              .attr('rx',3)
+              .attr('ry',3)
+              .attr('width',160)
+              .attr('height',50)
+              .style({
+                'fill': 'rgba(0,0,0,0.9)',
+                'border': '2px solid #FFF'
+              });
+
+
+              svg.append('text')
+                .text(d.count + " events on " + tipFormatter(d.date))
+                .attr('x',xPosition - 85)
+                .attr('y',yPosition - 30)
                 .style({
-                  'fill': 'rgba(0,0,0,0.9)',
-                  'border': '2px solid #FFF'
-                });
+                  fill: "#FFF",
+                  'font-weight': 'bold',
+                  'font-size': '1.2em'
+                })
+                .attr('class','tip');
 
+          })
+          .on('mouseout',function(d){
+            svg.selectAll('.tip').remove();
+          });
 
-                svg.append('text')
-                  .text(d.count + " events on " + tipFormatter(d.date))
-                  .attr('x',xPosition - 85)
-                  .attr('y',yPosition - 30)
-                  .style({
-                    fill: "#FFF",
-                    'font-weight': 'bold',
-                    'font-size': '1.2em'
-                  })
-                  .attr('class','tip');
-
-            })
-            .on('mouseout',function(d){
-              svg.selectAll('.tip').remove();
-            });
-
-              console.log("EVENTS:");
-              console.log(events);
-              console.log("CALENDAR:");
-              console.log(calendar);
-              console.log("Y AXIS:");
-              console.log(yAxis);
-              console.log(yAxis.length);
-        });
+      });
 
     }
   };
