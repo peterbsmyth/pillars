@@ -119,8 +119,8 @@ chartsApp.directive('annualCalendar',function(){
           .attr('y',function(d,i){return d.date.getDay() * 13;})
           .attr('fill','#eeeeee');
 
-      var colorScale = d3.scale.linear() //based on http://www.perbang.dk/rgbgradient/ from #eee to #FF8C00
-            .range(['#F2D5B2','#F6BD77','#FAA43B','#FF8C00']);
+      var colorScale = d3.scale.threshold() //based on http://www.perbang.dk/rgbgradient/ from #eee to #FF8C00
+            .range(['#eeeeee','#F2D5B2','#F6BD77','#FAA43B','#FF8C00']);
 
       //Prepare y Axis
       svg.selectAll('.y')
@@ -142,17 +142,9 @@ chartsApp.directive('annualCalendar',function(){
           .attr('class','legend')
           .attr('width',11)
           .attr('height',11)
-          .attr('x',function(d,i){ return legendX + 13 + i*13; })
+          .attr('x',function(d,i){ return legendX + i*13; })
           .attr('y',legendY)
           .attr('fill',function(d){ return d; });
-
-      svg.append('rect')
-        .attr('class','legend')
-        .attr('width',11)
-        .attr('height',11)
-        .attr('x', legendX)
-        .attr('y', legendY)
-        .attr('fill',"#eee");
 
       svg.append('text')
         .attr('class','legend')
@@ -199,8 +191,8 @@ chartsApp.directive('annualCalendar',function(){
         //calculate min, max excluding 0
         var extent = d3.extent(calendar, function(d){ return d.count === 0 ? null : d.count; });
 
-        //calculate a range of 5 values, starting with min, stopping with max, spaced evenly
-        var range = d3.range(extent[0],extent[1]+1,((extent[1]-extent[0])/4));
+        //calculate a range of 4 values, starting with min, stopping with max, spaced evenly
+        var range = d3.range(extent[0],extent[1],((extent[1]-extent[0])/4));
 
         //use range as domain
         colorScale.domain(range);
@@ -208,10 +200,7 @@ chartsApp.directive('annualCalendar',function(){
         //Give calendar color based on # events and add tooltip events
         svg.selectAll('.cal')
           .attr('fill',function(d,i){
-            if (d.count === 0) return '#eee';
-            else{
-              return colorScale(d.count);
-            }
+            return colorScale(d.count);
           })
           .on('mouseover',function(d){
             var xPosition = parseFloat(d3.select(this).attr("x"));
