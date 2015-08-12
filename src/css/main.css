@@ -162,6 +162,21 @@ line.activitybound {
 	transform:rotateZ(180deg);
 }
 
+/**********************************
+PAGE: DATA EXPLORER
+**********************************/
+
+#dataTable{
+	margin-top: 5%;
+}
+
+.explorer-form input.ng-invalid.ng-touched {
+	background-color: #FA787E;
+}
+
+.explorer-form input.ng-valid.ng-touched {
+	background-color: #78FA89;
+}
 
 /**********************************
 COLORS

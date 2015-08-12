@@ -1,0 +1,75 @@
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <form novaildate name="explorerForm" class="form form-inline centered explorer-form" ng-submit="formSubmit()">
+        <label for="pillarSelect">Pillar:</label>
+        <select class="pillarSelect form-control" name="pillar" ng-model="formData.pillar" select>
+          <option value="zazen">zazen</option>
+          <option value="work">work</option>
+          <option value="social">social</option>
+          <option value="learn">learn</option>
+          <option value="bike">bike</option>
+          <option value="eat well">eat well</option>
+          <option value="slack">slack</option>
+        </select>
+
+        <label for="minDuration">Min Duration:</label>
+        <input hhmm id="minDuration" type="text" class="form-control" placeholder="HH:MM" name="minDuration" ng-model="formData.minDuration">
+
+        <label for="maxDuration">Max Duration:</label>
+        <input hhmm id="maxDuration" type="text" class="form-control" placeholder="HH:MM" name="maxDuration" ng-model="formData.maxDuration">
+
+        <label for="qualitySelect">Quality:</label>
+        <select select class="qualitySelect form-control" name="quality" ng-model="formData.quality">
+          <option value="yay">yay</option>
+          <option value="solid">solid</option>
+          <option value="wrench">wrench</option>
+        </select>
+
+        <label for="startDate">Start Date:</label>
+        <input class="form-control" id="startDate" type="date" name="startDate" ng-model="formData.startDate">
+
+        <label for="endDate">End Date:</label>
+        <input class="form-control" id="endDate" type="date" name="endDate" ng-model="formData.endDate">
+
+        <label for="notesInput">Notes:</label>
+        <input class="form-control" placeholder="Notes" type="text" name="notes" id="notesInput" ng-model="formData.notes">
+
+        <input type="submit" value="Filter!" class="btn btn-lg">
+        <br>
+          <span ng-show="explorerForm.minDuration.$error.hhmm">Please enter a valid time (HH:MM)</span>
+          <span ng-show="explorerForm.maxDuration.$error.hhmm">Please enter a valid time (HH:MM)</span>
+          <span ng-show="explorerForm.pillar.$dirty && explorerForm.pillar.$error.select">Please select a Pillar</span>
+          <span ng-show="explorerForm.quality.$dirty && explorerForm.quality.$error.select">Please select a Quality level</span>
+    </form>
+  </div>
+</div>
+<pre>{{stats}}</pre>
+<div class="row">
+  <div class="col-md-10 col-md-offset-1">
+    <div class="table-responsive">
+      <!-- Candidate for improvement, better ways of defining column width -->
+      <table id="dataTable" class="table table-hover tablesorter">
+        <THEAD>
+          <tr>
+            <th id="iEditCol">Edit</th>
+            <th id="iPillarCol">Pillar</th>
+            <th id="iDatetimeCol">Datetime</th>
+            <th id="DurationCol">Duration</th>
+            <th id="iQualityCol">Quality</th>
+            <th id="iNotesCol">Notes</th>
+          </tr>
+        </THEAD>
+        <TBODY>
+          <tr ng-repeat="entry in success">
+            <td></td>
+            <td>{{entry.pillar}}</td>
+            <td>{{entry.event_date | datetime}}</td>
+            <td>{{entry.duration}}</td>
+            <td>{{entry.quality}}</td>
+            <td>{{entry.notes}}</td>
+          </tr>
+        </TBODY>
+      </table>
+    </div>
+  </div>
+</div>

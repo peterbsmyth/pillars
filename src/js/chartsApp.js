@@ -1,4 +1,4 @@
-var chartsApp = angular.module('chartsApp',['ui.router','chartsApp.services']);
+var chartsApp = angular.module('chartsApp',['ui.router','chartsApp.services','chartsApp.filters']);
 
 chartsApp.config(function($stateProvider,$urlRouterProvider){
 
@@ -34,5 +34,9 @@ chartsApp.config(function($stateProvider,$urlRouterProvider){
     controller: 'AnnualCalendarCtrl'
   });
 
-
+  $stateProvider.state('dataExplorerState', {
+    url: '/data-explorer',
+    templateUrl: 'partials/data_explorer.html',
+    controller: 'DataExplorerCtrl'
+  });
 });

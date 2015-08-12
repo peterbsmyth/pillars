@@ -20,9 +20,7 @@ chartsApp.directive('donutChart',function(){
       .outerRadius(radius * 0.9);
 
     var pie = d3.layout.pie().sort(null)
-        .value(function(d){
-
-          return d.duration;});
+        .value(function(d){return d.duration;});
 
     var donut = svg.append('g')
       .attr('transform','translate(' + width/2 + ',' + height/2 + ')');
