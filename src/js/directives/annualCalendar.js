@@ -11,7 +11,7 @@ chartsApp.directive('annualCalendar',function(){
       var yAxis = [];
 
       //todays date
-      var today = new Date(Date.now());
+      var today = new Date();
 
       //last Years date
       var lastYear = addDays(today,-365); //NoTE: addDays to move into chartsApp helpers service
@@ -119,8 +119,8 @@ chartsApp.directive('annualCalendar',function(){
           .attr('y',function(d,i){return d.date.getDay() * 13;})
           .attr('fill','#eeeeee');
 
-      var colorScale = d3.scale.threshold() //based on http://www.perbang.dk/rgbgradient/ from #eee to #FF8C00
-            .range(['#eeeeee','#F2D5B2','#F6BD77','#FAA43B','#FF8C00']);
+      var colorScale = d3.scale.threshold() //based on http://www.perbang.dk/rgbgradient/ from #eee to #FF8C00 (modified)
+            .range(['#eeeeee','#F6BD77','#FAA43B','#FF8C00','#b36200']);
 
       //Prepare y Axis
       svg.selectAll('.y')
