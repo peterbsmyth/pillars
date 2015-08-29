@@ -2,6 +2,10 @@ module.exports = function(grunt){
   //Configure task(s)
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    clean:{
+      dev: ['dev/'],
+      build: ['build/']
+    },
     concat:{
       devcss:{
         src: ['src/css/*.css'],
@@ -37,6 +41,7 @@ module.exports = function(grunt){
           beautify: true,
           mangle: false,
           compress: false,
+          sourceMap: true,
           preserveComments: 'all'
         },
         src: ['src/js/functions.js','src/js/**/*.js',],
@@ -106,9 +111,10 @@ module.exports = function(grunt){
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-clean');
 
-  //Register task(s)
-  grunt.registerTask('default', ['uglify:dev','concat:devcss','copy:dev']);
+  //Register tasks
+  grunt.registerTask('default', ['clean:dev','uglify:dev','concat:devcss','copy:dev']);
   grunt.registerTask('build', ['uglify:build','concat:buildcss','cssmin:buildcss','copy:build']);
   grunt.registerTask('web', ['uglify:web','concat:webcss','cssmin:webcss','copy:web']);
 };
