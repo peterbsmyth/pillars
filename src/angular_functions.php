@@ -14,10 +14,15 @@ function getDataExplorerJSON($request){
   @$quality = $request->quality;
   @$startDate = $request->startDate;
   @$endDate = $request->endDate;
+  @$notes = $request->notes;
   $counter = 0;
 
+  if($notes){
+    $notes = "%" . $notes . "%";
+  }
+
   //Begin dataMySQL
-  $dataSQL = "SELECt pillar, event_date FROM pillars_log WHERE";
+  $dataSQL = "SELECt * FROM pillars_log WHERE";
   if($pillar) {
     $dataSQL .= " pillar = ? AND ";
   }
@@ -31,24 +36,29 @@ function getDataExplorerJSON($request){
     $dataSQL .= " duration <= ? AND ";
   }
   if($quality) {
-    $dataSQL .= "quality = ? AND ";
+    $dataSQL .= " quality = ? AND ";
   }
   if($startDate == "ull" && $endDate == "ull"){
 
   }
   elseif($startDate && $endDate == "ull") {
-    $dataSQL .= "event_date >= ? AND ";
+    $dataSQL .= " event_date >= ? AND ";
   }
   elseif($startDate == "ull" && $endDate) {
-    $dataSQL .= "event_date <= ? AND ";
+    $dataSQL .= " event_date <= ? AND ";
   }
   elseif($startDate && $endDate) {
-    $dataSQL .= "event_date BETWEEN ? AND ? AND ";
+    $dataSQL .= " event_date BETWEEN ? AND ? AND ";
   }
+
+  if($notes) {
+    $dataSQL .= " notes LIKE ? AND ";
+  }
+
   $dataSQL .= " 1=1";
 
   try {
-
+    $counter = 0;
     $result = $db->prepare($dataSQL);
     if($pillar) {
       $counter++;
@@ -90,8 +100,14 @@ function getDataExplorerJSON($request){
       $result->bindParam($counter,$endDate);
     }
 
+    if ($notes) {
+      $counter++;
+      $result->bindParam($counter,$notes);
+    }
+
     $result->execute();
   } catch (Exception $e){
+    echo $e;
     echo $e->getMessage();
     die();
   }
@@ -104,8 +120,8 @@ function getDataExplorerJSON($request){
   //end data MySQL
 
   //Begin stats MySQL
-  $counter = 0;
-  $statsSQL = "SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(duration))) AS total_duration FROM pillars_log WHERE";
+
+  $statsSQL = "SELECt SEC_TO_TIME(SUM(TIME_TO_SEC(duration))) AS total_duration FROM pillars_log WHERE";
   if($pillar) {
     $statsSQL .= " pillar = ? AND ";
   }
@@ -133,10 +149,14 @@ function getDataExplorerJSON($request){
   elseif($startDate && $endDate) {
     $statsSQL .= "event_date BETWEEN ? AND ? AND ";
   }
+
+  if($notes) {
+    $statsSQL .= " notes LIKE ? AND ";
+  }
   $statsSQL .= " 1=1";
 
   try {
-
+    $counter = 0;
     $result = $db->prepare($statsSQL);
     if($pillar) {
       $counter++;
@@ -178,8 +198,14 @@ function getDataExplorerJSON($request){
       $result->bindParam($counter,$endDate);
     }
 
+    if ($notes) {
+      $counter++;
+      $result->bindParam($counter,$notes);
+    }
+
     $result->execute();
   } catch (Exception $e){
+    echo $e;
     echo $e->getMessage();
     die();
   }
