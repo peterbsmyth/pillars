@@ -179,6 +179,27 @@ PAGE: DATA EXPLORER
 }
 
 /**********************************
+PARTIAL: LINE CHART
+**********************************/
+
+.lineChart .axis path,
+.lineChart .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.lineChart .x.axis path {
+
+}
+
+.lineChart .line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+/**********************************
 COLORS
 **********************************/
 a.glyphicon-remove:hover, .glyphicon-remove{

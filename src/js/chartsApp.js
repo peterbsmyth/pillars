@@ -39,4 +39,22 @@ chartsApp.config(function($stateProvider,$urlRouterProvider){
     templateUrl: 'partials/data_explorer.html',
     controller: 'DataExplorerCtrl'
   });
+
+  $stateProvider.state('dataExplorerState.table', {
+    url: '/table',
+    templateUrl: 'partials/data_explorer/table.html',
+    controller: 'DataExplorerCtrl'
+  });
+
+  $stateProvider.state('dataExplorerState.calendar', {
+    url: '/calendar',
+    templateUrl: 'partials/data_explorer/calendar.html',
+    controller: 'DataExplorerCtrl'
+  });
+
+  $stateProvider.state('dataExplorerState.line', {
+    url: '/line',
+    templateUrl: 'partials/data_explorer/line.html',
+    controller: 'DataExplorerCtrl'
+  });
 });

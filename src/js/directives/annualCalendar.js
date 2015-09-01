@@ -108,9 +108,10 @@ chartsApp.directive('annualCalendar',function(){
         .attr('dy','74');
 
       //Prepare Calendar
-      svg.selectAll('.cal')
-          .data(calendar)
-          .enter()
+      var cal = svg.selectAll('.cal')
+          .data(calendar);
+
+      cal.enter()
         .append('rect')
           .attr('class','cal')
           .attr('width',11)
@@ -158,18 +159,26 @@ chartsApp.directive('annualCalendar',function(){
         .attr('y',legendY + 10)
         .text('More');
 
-      scope.$watch('data',function(newVal,oldVal){
+      scope.$watch('data',function(response){
         //if theres no new value (no data), return
-        if (!newVal) return;
+
+        if (!response) {
+            console.log("no action!");
+            return;
+        }
+        //reset calendar
+        cal.attr('fill','#eee');
+
+        console.log("action! ");
 
         //instantiate events object
         var events = {};
 
         //for each item in array, starting with the last
-        var l = newVal.length;
+        var l = response.length;
         while(l--){
           //get the day of the event
-          var eventDate = newVal[l].event_date.substr(0,10);
+          var eventDate = response[l].event_date.substr(0,10);
           //if the events object doesn't have the current event's day as a key, create a key and give it a value 0
           if(!events[eventDate]){
             events[eventDate] = 0;
@@ -197,8 +206,10 @@ chartsApp.directive('annualCalendar',function(){
         //use range as domain
         colorScale.domain(range);
 
+        cal.exit().remove();
+
         //Give calendar color based on # events and add tooltip events
-        svg.selectAll('.cal')
+        cal
           .attr('fill',function(d,i){
             return colorScale(d.count);
           })

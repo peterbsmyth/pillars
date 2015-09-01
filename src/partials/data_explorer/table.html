@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="col-md-10 col-md-offset-1">
+    <div class="table-responsive">
+      <!-- Candidate for improvement, better ways of defining column width -->
+      <table id="dataTable" class="table table-hover tablesorter">
+        <THEAD>
+          <tr>
+            <th id="iEditCol">Edit</th>
+            <th id="iPillarCol">Pillar</th>
+            <th id="iDatetimeCol">Datetime</th>
+            <th id="DurationCol">Duration</th>
+            <th id="iQualityCol">Quality</th>
+            <th id="iNotesCol">Notes</th>
+          </tr>
+        </THEAD>
+        <TBODY>
+          <tr ng-repeat="entry in success.data">
+            <td></td>
+            <td>{{entry.pillar}}</td>
+            <td>{{entry.event_date | datetime}}</td>
+            <td>{{entry.duration}}</td>
+            <td>{{entry.quality}}</td>
+            <td>{{entry.notes}}</td>
+          </tr>
+        </TBODY>
+      </table>
+    </div>
+  </div>
+</div>

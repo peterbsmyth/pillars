@@ -1,4 +1,3 @@
-//Needs switching over to using services and reconciling "angular_functions.php" with "functions.php"
 chartsApp.controller('DataExplorerCtrl',['$scope','$http',function($scope,$http){
   $scope.formData = {};
 
@@ -16,9 +15,10 @@ chartsApp.controller('DataExplorerCtrl',['$scope','$http',function($scope,$http)
       data: formClone,
       headers: {'Content-type' : 'application/x-www-form-urlencoded'}
     }).success(function(response){
-      $scope.success = response.data;
+      $scope.success = {
+        data: response.data
+      };
       $scope.stats = response.stats.total_duration;
-      console.log(JSON.stringify(response.data));
     });
   };
 }]);

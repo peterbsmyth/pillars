@@ -35,6 +35,11 @@
         <input class="form-control" placeholder="Notes" type="text" name="notes" id="notesInput" ng-model="formData.notes">
 
         <input type="submit" value="Filter!" class="btn btn-lg">
+        <div>
+          <a ui-sref="dataExplorerState.table">Table</a>
+          <a ui-sref="dataExplorerState.calendar">Calendar</a>
+          <a ui-sref="dataExplorerState.line">Line</a>
+        </div>
         <br>
           <span ng-show="explorerForm.minDuration.$error.hhmm">Please enter a valid time (HH:MM)</span>
           <span ng-show="explorerForm.maxDuration.$error.hhmm">Please enter a valid time (HH:MM)</span>
@@ -44,32 +49,4 @@
   </div>
 </div>
 <pre>{{stats}}</pre>
-<div class="row">
-  <div class="col-md-10 col-md-offset-1">
-    <div class="table-responsive">
-      <!-- Candidate for improvement, better ways of defining column width -->
-      <table id="dataTable" class="table table-hover tablesorter">
-        <THEAD>
-          <tr>
-            <th id="iEditCol">Edit</th>
-            <th id="iPillarCol">Pillar</th>
-            <th id="iDatetimeCol">Datetime</th>
-            <th id="DurationCol">Duration</th>
-            <th id="iQualityCol">Quality</th>
-            <th id="iNotesCol">Notes</th>
-          </tr>
-        </THEAD>
-        <TBODY>
-          <tr ng-repeat="entry in success">
-            <td></td>
-            <td>{{entry.pillar}}</td>
-            <td>{{entry.event_date | datetime}}</td>
-            <td>{{entry.duration}}</td>
-            <td>{{entry.quality}}</td>
-            <td>{{entry.notes}}</td>
-          </tr>
-        </TBODY>
-      </table>
-    </div>
-  </div>
-</div>
+<div ui-view></div>
