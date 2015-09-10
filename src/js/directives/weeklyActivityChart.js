@@ -20,31 +20,31 @@ chartsApp.directive('weeklyActivityChart',function(){
 
     var colors = [
       {
-        pillar: "zazen",
+        pillar: "ZAZEN",
         color: "#98abc5"
       },
       {
-        pillar: "work",
+        pillar: "WORK",
         color: "#8a89a6"
       },
       {
-        pillar: "social",
+        pillar: "SOCIAL",
         color: "#7b6888"
       },
       {
-        pillar: "bike",
+        pillar: "BIKE",
         color: "#6b486b"
       },
       {
-        pillar: "learn",
+        pillar: "LEARN",
         color: "#a05d56"
       },
       {
-        pillar: "eatwell",
+        pillar: "EAT WELL",
         color: "#d0743c"
       },
       {
-        pillar: "slack",
+        pillar: "SLACK",
         color: "#ff8c00"
       }
     ];
@@ -158,26 +158,10 @@ chartsApp.directive('weeklyActivityChart',function(){
         .attr("y", function(d) { return yScale(d.y0); })
         .attr("height", function(d) {return yScale(d.y1) - yScale(d.y0); })
         .style('fill',function(d){ //color determined by pillar name
-          if (d.pillar == "ZAZEN"){
-            return "#98abc5";
-          }
-          else if (d.pillar == "WORK") {
-            return "#8a89a6";
-          }
-          else if (d.pillar == "SOCIAL") {
-            return "#7b6888";
-          }
-          else if (d.pillar == "LEARN") {
-            return "#6b486b";
-          }
-          else if (d.pillar == "BIKE") {
-            return "#a05d56";
-          }
-          else if (d.pillar == "EAT WELL") {
-            return "#d0743c";
-          }
-          else if (d.pillar == "SLACK") {
-            return "#ff8c00";
+          for (var i = 0; i < colors.length; i++){
+            if (d.pillar == colors[i].pillar){
+              return colors[i].color;
+            }
           }
         })
         .on('mouseover', function(d){
@@ -199,26 +183,10 @@ chartsApp.directive('weeklyActivityChart',function(){
           .transition()
           .duration(250)
           .style('fill',function(d){ //color determined by pillar name
-            if (d.pillar == "ZAZEN"){
-              return "#98abc5";
-            }
-            else if (d.pillar == "WORK") {
-              return "#8a89a6";
-            }
-            else if (d.pillar == "SOCIAL") {
-              return "#7b6888";
-            }
-            else if (d.pillar == "LEARN") {
-              return "#6b486b";
-            }
-            else if (d.pillar == "BIKE") {
-              return "#a05d56";
-            }
-            else if (d.pillar == "EAT WELL") {
-              return "#d0743c";
-            }
-            else if (d.pillar == "SLACK") {
-              return "#ff8c00";
+            for (var i = 0; i < colors.length; i++){
+              if (d.pillar == colors[i].pillar){
+                return colors[i].color;
+              }
             }
           });
           d3.select("#tooltip").remove();
