@@ -166,10 +166,13 @@ chartsApp.directive('annualCalendar',function(){
             console.log("no action!");
             return;
         }
-        //reset calendar
+        //reset calendar color
         cal.attr('fill','#eee');
 
-        console.log("action! ");
+        //reset calendar event counts to 0
+        for (var i = 0; i < calendar.length; i++){
+          calendar[i].count = 0;
+        }
 
         //instantiate events object
         var events = {};
