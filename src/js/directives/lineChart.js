@@ -5,7 +5,7 @@ chartsApp.directive('lineChart',function(){
     var margin = {top: 10, right: 10, bottom: 50, left: 40};
 
     var height = 600 - margin.top - margin.bottom;
-    var width = 1100 - margin.left - margin.right;
+    var width = 900 - margin.left - margin.right;
 
     var chart = d3.select(element[0]).append('svg')
                   .attr('height',height + margin.top + margin.bottom)
@@ -49,12 +49,13 @@ chartsApp.directive('lineChart',function(){
           })
           .entries(response);
 
-      response.forEach(function(d){
-        // debugger;
-        d.event_date = d.event_date.substr(0,10);
-        d.event_date = parseDate(d.event_date);
-        d.duration = durationToMinutes(d.duration);
-      });
+
+      // response.forEach(function(d){
+      //   // debugger;
+      //   d.event_date = d.event_date.substr(0,10);
+      //   d.event_date = parseDate(d.event_date);
+      //   d.duration = durationToMinutes(d.duration);
+      // });
 
       xScale.domain(d3.extent(nestedData, function(d){ return parseDate(d.key);}));
       yScale.domain([0,d3.max(nestedData, function(d){return d.values;})+5]);
@@ -77,7 +78,7 @@ chartsApp.directive('lineChart',function(){
           .data(nestedData)
           .enter()
         .append('circle')
-          .attr('r',3)
+          .attr('r',2)
           .attr('cx',function(d){
             // debugger;
             return xScale(parseDate(d.key));})

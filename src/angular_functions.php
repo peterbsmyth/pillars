@@ -107,6 +107,7 @@ function getDataExplorerJSON($request){
 
     $result->execute();
   } catch (Exception $e){
+    echo $dataSql;
     echo $e;
     echo $e->getMessage();
     die();
@@ -141,13 +142,13 @@ function getDataExplorerJSON($request){
 
   }
   elseif($startDate && $endDate == "ull") {
-    $statsSQL .= "event_date >= ? AND ";
+    $statsSQL .= " event_date >= ? AND ";
   }
   elseif($startDate == "ull" && $endDate) {
-    $statsSQL .= "event_date <= ? AND ";
+    $statsSQL .= " event_date <= ? AND ";
   }
   elseif($startDate && $endDate) {
-    $statsSQL .= "event_date BETWEEN ? AND ? AND ";
+    $statsSQL .= " event_date BETWEEN ? AND ? AND ";
   }
 
   if($notes) {

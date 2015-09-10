@@ -18,7 +18,9 @@ chartsApp.controller('DataExplorerCtrl',['$scope','$http',function($scope,$http)
       $scope.success = {
         data: response.data
       };
-      $scope.stats = response.stats.total_duration;
+      $scope.stats = {
+        data: response.stats.total_duration
+      };
     });
   };
 }]);
