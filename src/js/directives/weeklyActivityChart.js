@@ -18,6 +18,37 @@ chartsApp.directive('weeklyActivityChart',function(){
                   .ticks(24)
                   .scale(yScale);
 
+    var colors = [
+      {
+        pillar: "zazen",
+        color: "#98abc5"
+      },
+      {
+        pillar: "work",
+        color: "#8a89a6"
+      },
+      {
+        pillar: "social",
+        color: "#7b6888"
+      },
+      {
+        pillar: "bike",
+        color: "#6b486b"
+      },
+      {
+        pillar: "learn",
+        color: "#a05d56"
+      },
+      {
+        pillar: "eatwell",
+        color: "#d0743c"
+      },
+      {
+        pillar: "slack",
+        color: "#ff8c00"
+      }
+    ];
+
     //Boilerplate chart append
     var chart = d3.select(element[0]).append('svg')
                 .attr("width", width + margin.left + margin.right)
@@ -194,25 +225,32 @@ chartsApp.directive('weeklyActivityChart',function(){
         });
 
 
-      // var legend = chart.selectAll(".legend")
-      //   .data(color.domain())
-      // .enter().append("g")
-      //   .attr("class", "legend")
-      //   .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-      //
-      // legend.append("rect")
-      //     .attr("x", width - 18)
-      //     .attr("y", 350)
-      //     .attr("width", 18)
-      //     .attr("height", 18)
-      //     .style("fill", color);
-      //
-      // legend.append("text")
-      //     .attr("x", width - 24)
-      //     .attr("y", 359)
-      //     .attr("dy", ".35em")
-      //     .style("text-anchor", "end")
-      //     .text(function(d) { return d; });
+      var legend = chart.selectAll(".legend")
+        .data(colors)
+      .enter().append("g")
+        .attr("class", "legend")
+        .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+      legend.append("rect")
+          .attr("x", width - 18)
+          .attr("y", 350)
+          .attr("width", 18)
+          .attr("height", 18)
+          .attr("fill", function(d,i){ return d.color; });
+
+      // chart.append("rect")
+      //      .attr("x", width - 18)
+      //      .attr("y", 350)
+      //      .attr("width", 18)
+      //      .attr("height", 18)
+      //      .style("fill", function());
+
+      legend.append("text")
+          .attr("x", width - 24)
+          .attr("y", 359)
+          .attr("dy", ".35em")
+          .style("text-anchor", "end")
+          .text(function(d) { return d.pillar; });
 
       $(".x.axis").children("g").last().remove(); //fix to remove final label of x axis
     });
