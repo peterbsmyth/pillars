@@ -1,7 +1,7 @@
 chartsApp.directive('activityChart',function(){
   function link (scope,element,attr){
 
-    var margin = {top: 20, right: 35, bottom: 20, left: 35};
+    var margin = {top: 30, right: 35, bottom: 20, left: 35};
     var height = 156 - margin.bottom - margin.top;
     var width = 500 - margin.right - margin.left;
 
@@ -41,6 +41,57 @@ chartsApp.directive('activityChart',function(){
         .attr('stroke-width',1)
         .attr('class','activitybound');
 
+    var colors = [
+      {
+        pillar: "ZAZEN",
+        color: "#98abc5"
+      },
+      {
+        pillar: "WORK",
+        color: "#8a89a6"
+      },
+      {
+        pillar: "SOCIAL",
+        color: "#7b6888"
+      },
+      {
+        pillar: "LEARN",
+        color: "#6b486b"
+      },
+      {
+        pillar: "BIKE",
+        color: "#a05d56"
+      },
+      {
+        pillar: "EAT WELL",
+        color: "#d0743c"
+      },
+      {
+        pillar: "SLACK",
+        color: "#ff8c00"
+      }
+    ];
+
+    var legend = svg.selectAll(".legend")
+      .data(colors)
+    .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) { return "translate(" + i * 65 + ",0)"; });
+    //
+    legend.append("rect")
+        .attr("x", 0)
+        .attr("y", -30)
+        .attr("width", 18)
+        .attr("height", 18)
+        .attr("fill", function(d,i){ return d.color; });
+    //
+    legend.append("text")
+        .attr("x", 10)
+        .attr("y", -20)
+        .attr("dy", ".35em")
+        // .style("text-anchor", "end")
+        .text(function(d) { return d.pillar; });
+
     var xScale = d3.time.scale()
         .range([0,width]);
 
@@ -71,7 +122,7 @@ chartsApp.directive('activityChart',function(){
 
       var endDay = addDays(startDay,1);
 
-      var bars = svg.selectAll('rect').data(data);
+      var bars = svg.selectAll('.bar').data(data);
 
       xScale
         .domain([startDay,endDay]);
@@ -88,7 +139,8 @@ chartsApp.directive('activityChart',function(){
 
       bars.enter()
         .append('rect')
-        .attr('height',100)
+        .attr('class','bar')
+        .attr('height',90)
         .attr('width',function(d){
           //make event_date string into a date starting at T00:00:00
           var durationy = makeUTCDate(d.event_date.substr(0,10));
@@ -96,7 +148,7 @@ chartsApp.directive('activityChart',function(){
           durationy = durationy.addMinutes(durationToMinutes(d.duration));
           return xScale(durationy);
         })
-        .attr('y',height-115)
+        .attr('y',height-105)
         .attr('x',function(d){return xScale(new Date(d.event_date));})
         .attr('fill',function(d){ //color determined by pillar name
           if (d.pillar == "ZAZEN"){

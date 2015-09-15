@@ -32,11 +32,11 @@ chartsApp.directive('weeklyActivityChart',function(){
         color: "#7b6888"
       },
       {
-        pillar: "BIKE",
+        pillar: "LEARN",
         color: "#6b486b"
       },
       {
-        pillar: "LEARN",
+        pillar: "BIKE",
         color: "#a05d56"
       },
       {
@@ -205,13 +205,6 @@ chartsApp.directive('weeklyActivityChart',function(){
           .attr("width", 18)
           .attr("height", 18)
           .attr("fill", function(d,i){ return d.color; });
-
-      // chart.append("rect")
-      //      .attr("x", width - 18)
-      //      .attr("y", 350)
-      //      .attr("width", 18)
-      //      .attr("height", 18)
-      //      .style("fill", function());
 
       legend.append("text")
           .attr("x", width - 24)

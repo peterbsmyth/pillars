@@ -2,7 +2,7 @@ chartsApp.directive('donutChart',function(){
   function link(scope,element,attr){
     var height = 500;
     var width = 500;
-    var radius = Math.min(width,height) / 2;
+    var radius = (Math.min(width,height) / 2) - 10;
 
     var svg = d3.select(element[0]).append('svg');
 
@@ -14,6 +14,57 @@ chartsApp.directive('donutChart',function(){
 
     var color = d3.scale.ordinal()
         .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+    var colors = [
+      {
+        pillar: "ZAZEN",
+        color: "#98abc5"
+      },
+      {
+        pillar: "WORK",
+        color: "#8a89a6"
+      },
+      {
+        pillar: "SOCIAL",
+        color: "#7b6888"
+      },
+      {
+        pillar: "LEARN",
+        color: "#6b486b"
+      },
+      {
+        pillar: "BIKE",
+        color: "#a05d56"
+      },
+      {
+        pillar: "EAT WELL",
+        color: "#d0743c"
+      },
+      {
+        pillar: "SLACK",
+        color: "#ff8c00"
+      }
+    ];
+
+    var legend = svg.selectAll(".legend")
+      .data(colors)
+    .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+    legend.append("rect")
+        .attr("x", width - 18)
+        .attr("y", 350)
+        .attr("width", 18)
+        .attr("height", 18)
+        .attr("fill", function(d,i){ return d.color; });
+
+    legend.append("text")
+        .attr("x", width - 24)
+        .attr("y", 359)
+        .attr("dy", ".35em")
+        .style("text-anchor", "end")
+        .text(function(d) { return d.pillar; });
 
     var arc = d3.svg.arc()
       .innerRadius(radius * 0.5)
@@ -42,11 +93,12 @@ chartsApp.directive('donutChart',function(){
         sum += +d.duration;
       });
       //remove 'no data' if exists
-      d3.selectAll('text').remove();
+      d3.selectAll('.no-data').remove();
       //if sum of durations = 0 add 'no data' and return
       if (sum === 0) {
           d3.selectAll('path').remove();
           svg.append('text')
+            .attr('class','no-data')
             .attr('x',width/2)
             .attr('y',height/2)
             .attr('text-anchor','middle')
@@ -66,18 +118,20 @@ chartsApp.directive('donutChart',function(){
             .each(function(d) {this._current = d;})
             .on('mouseover',function(d){
               svg.append('text')
+                .attr('class','details')
                 .attr('x',width/2)
                 .attr('y',height/2)
                 .attr('text-anchor','middle')
-                .text(d.data.pillar);
+                .text("Pillars: " + d.data.pillar);
               svg.append('text')
+                .attr('class','details')
                 .attr('x',width/2)
                 .attr('y',height/2 - 10)
                 .attr('text-anchor','middle')
-                .text(d.data.duration);
+                .text(d.data.duration + " Hrs");
             })
             .on('mouseout',function(d){
-              d3.selectAll('text').remove();
+              d3.selectAll('.details').remove();
             });
 
       // update
