@@ -4,7 +4,8 @@ module.exports = function(grunt){
     pkg: grunt.file.readJSON('package.json'),
     clean:{
       dev: ['dev/'],
-      build: ['build/']
+      build: ['build/'],
+      web: ['web/'],
     },
     concat:{
       devcss:{
@@ -48,19 +49,16 @@ module.exports = function(grunt){
         dest: 'dev/js/script.min.js'
       },
       web: {
-        files:[
-          {
-            options: {
-              beautify: true,
-              mangle: false,
-              compress: false,
-              preserveComments: 'all'
-            },
-            src: ['src/js/functions.js','src/js/**/*.js'],
-            dest: 'web/js/script.min.js'
+          options: {
+            beautify: true,
+            mangle: false,
+            compress: true,
+            sourceMap: true,
+            preserveComments: 'all'
           },
-        ]
-      }
+          src: ['src/js/functions.js','src/js/**/*.js'],
+          dest: 'web/js/script.min.js'
+        }
     },
     copy: {
       dev: {
@@ -70,12 +68,12 @@ module.exports = function(grunt){
       },
       build: {
         files: [
-          {expand: true, cwd:'src/', src: ['fonts/*','*.html','css/*.gif','*.php'], dest:'build/'}
+          {expand: true, cwd:'src/', src: ['fonts/*','*.html','css/*.gif','*.php','partials/**/*.html'], dest:'build/'}
         ]
       },
       web: {
         files: [
-          {expand: true, cwd:'src/', src: ['fonts/*','db/*','*.html','css/*.gif','*.php','partials/*'], dest:'web/'}
+          {expand: true, cwd:'src/', src: ['fonts/*','db/*','*.html','css/*.gif','*.php','partials/**/*.html'], dest:'web/'}
         ]
       }
     },
@@ -116,5 +114,5 @@ module.exports = function(grunt){
   //Register tasks
   grunt.registerTask('default', ['clean:dev','uglify:dev','concat:devcss','copy:dev']);
   grunt.registerTask('build', ['uglify:build','concat:buildcss','cssmin:buildcss','copy:build']);
-  grunt.registerTask('web', ['uglify:web','concat:webcss','cssmin:webcss','copy:web']);
+  grunt.registerTask('web', ['clean:web','uglify:web','concat:webcss','cssmin:webcss','copy:web']);
 };
