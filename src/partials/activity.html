@@ -7,17 +7,17 @@
         style="display: block; margin: 0 auto; text-align: center;"
         type="date" ng-model="today" ng-change="newDay()">
         <br>
-        <activity-chart data="activity.data" selected="selectedEvent"></activity-chart>
+        <activity-chart data="activity.data" selected="d"></activity-chart>
         <div>
-          {{selectedEvent.event_date}}
+          {{d.event_date}}
           <br>
-          {{selectedEvent.duration}}
+          {{d.duration}}
           <br>
-          {{selectedEvent.pillar}}
+          {{d.pillar}}
           <br>
-          {{selectedEvent.notes}}
+          {{d.notes}}
           <br>
-          {{selectedEvent.quality}}
+          {{d.quality}}
         </div>
       </div>
     </div>
