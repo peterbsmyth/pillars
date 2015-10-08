@@ -9,8 +9,8 @@ module.exports = function(grunt){
     },
     concat:{
       devcss:{
-        src: ['src/css/*.css'],
-        dest: 'dev/css/main.min.css'
+        src: ['src/client/css/*.css'],
+        dest: 'dev/client/css/main.min.css'
       },
       buildcss:{
         src: ['src/css/*.css'],
@@ -45,8 +45,8 @@ module.exports = function(grunt){
           sourceMap: true,
           preserveComments: 'all'
         },
-        src: ['src/js/functions.js','src/js/**/*.js',],
-        dest: 'dev/js/script.min.js'
+        src: ['src/client/js/functions.js','src/client/js/**/*.js',],
+        dest: 'dev/client/js/script.min.js'
       },
       web: {
           options: {
@@ -61,43 +61,60 @@ module.exports = function(grunt){
         }
     },
     copy: {
-      dev: {
+      client: {
         files: [
-          {expand: true, cwd:'src/', src: ['fonts/*','db/*','*.html','css/*.gif','*.php','partials/**/*.html'], dest: 'dev/'},
-        ],
+          {expand: true, cwd:'src/client/', src: ['fonts/*','db/*','*.html','css/*.gif','*.php','views/**/*.html'], dest: 'dev/client'},
+        ]
+      },
+      server: {
+        files: [
+          {expand: true, cwd:'src/server/', src: ['*.js'], dest: 'dev/server'}
+        ]
+      },
+      main: {
+        files: [
+          {expand: true, cwd:'src/', src: 'server.js', dest: 'dev/'}
+        ]
       },
       build: {
         files: [
-          {expand: true, cwd:'src/', src: ['fonts/*','*.html','css/*.gif','*.php','partials/**/*.html'], dest:'build/'}
+          {expand: true, cwd:'src/', src: ['fonts/*','*.html','css/*.gif','*.php','views/**/*.html'], dest:'build/'}
         ]
       },
       web: {
         files: [
-          {expand: true, cwd:'src/', src: ['fonts/*','db/*','*.html','css/*.gif','*.php','partials/**/*.html'], dest:'web/'}
+          {expand: true, cwd:'src/', src: ['fonts/*','db/*','*.html','css/*.gif','*.php','views/**/*.html'], dest:'web/'}
         ]
       }
     },
     watch: {
       js: {
-        files: ['src/js/**/*.js'],
-        tasks: ['uglify:dev'],
-        options: {
-          livereload: true,
-        }
+        files: ['src/client/js/**/*.js'],
+        tasks: ['uglify:dev']
       },
       css: {
-        files: ['src/css/*.css'],
-        tasks: ['concat:devcss'],
+        files: ['src/client/css/*.css'],
+        tasks: ['concat:devcss']
+      },
+      client: {
+        files: ['fonts/*','db/*','*.html','css/*.gif','*.php','views/**/*.html'],
+        tasks: ['copy:client'],
         options: {
-          livereload: true,
+          cwd: {files: 'src/client/'}
         }
       },
-      other: {
-        files: ['fonts/*','db/*','*.html','css/*.gif','*.php','partials/**/*.html'],
-        tasks: ['copy:dev'],
+      server: {
+        files: ['*.js'],
+        tasks: ['copy:server'],
         options: {
-          cwd: {files: 'src/'},
-          livereload: true
+          cwd: {files: 'src/server/'}
+        }
+      },
+      main: {
+        files: ['server.js'],
+        tasks: ['copy:main'],
+        options: {
+          cwd: {files: 'src/'}
         }
       }
     }
@@ -112,7 +129,7 @@ module.exports = function(grunt){
   grunt.loadNpmTasks('grunt-contrib-clean');
 
   //Register tasks
-  grunt.registerTask('default', ['clean:dev','uglify:dev','concat:devcss','copy:dev']);
+  grunt.registerTask('default', ['clean:dev','uglify:dev','concat:devcss','copy:main','copy:server','copy:client']);
   grunt.registerTask('build', ['uglify:build','concat:buildcss','cssmin:buildcss','copy:build']);
   grunt.registerTask('web', ['clean:web','uglify:web','concat:webcss','cssmin:webcss','copy:web']);
 };
