@@ -4,9 +4,14 @@
   "description": "A project to track and view my daily activities, split between 7 Pillars. Each Pillar is a category identified by me as a fundamentally important area of life.",
   "main": "index.html",
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.14.1",
+    "ejs": "^2.3.4",
     "express": "^4.13.3",
     "express-session": "^1.11.3",
     "grunt": "^0.4.5",
+    "mongoose": "^4.1.10",
+    "morgan": "^1.6.1",
     "mysql": "^2.9.0",
     "passport": "^0.3.0",
     "passport-facebook": "^2.0.0"
