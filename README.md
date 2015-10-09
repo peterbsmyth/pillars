@@ -34,14 +34,12 @@ A table displaying the overall quality of each day as either a yay day, a solid 
 or a wrench to the head day as well an input form to add a new entry. Each entry
 has a date, quality, and notes field.
 
-Stephen Colbert and staff would rank each day working on The Colbert Report in this
-way and they found there were always more Yays than predicted and less Wrenches than
-predicted.
-
 ### Charts View : /charts
 
-A d3.js based stacked bar chart showing the duration of each pillar per day over
-the course of a week. Pillars are color-coded. On mouseover the chart displays which
-pillar is moused over as well as the duration.
+Many charts build using D3 on Angular. Check out the annual calendar to see
+a familiar sight :)
 
 ### Data Explorer : /explorer
+
+A data explorer and associated views of data to see progress in custom defined
+parameters.
