@@ -44,3 +44,4 @@ db/
 node_modules/
 dev/
 web/
+src/server/config/
