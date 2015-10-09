@@ -1,9 +1,9 @@
 # PILLARS
 
-A project to track and view my daily activities, split between 7 Pillars.
-Each Pillar is a category identified by me as a fundamentally important area of life.
+A project to track and view my daily activities, split between 7 Pillars.  
+Each Pillar is a category identified by me as a fundamentally important area of life.  
 
-Those Pillars are...
+Those Pillars are...  
 1. Zazen        : Meditation, Buddhism
 2. Work         : Any projects for others
 3. Social       : Friends, Family
