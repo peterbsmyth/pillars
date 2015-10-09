@@ -4,13 +4,13 @@ A project to track and view my daily activities, split between 7 Pillars.
 Each Pillar is a category identified by me as a fundamentally important area of life.  
 
 Those Pillars are...  
-1. Zazen        : Meditation, Buddhism
-2. Work         : Any projects for others
-3. Social       : Friends, Family
-4. Learn        : Any activities related to improving any of the other 6 pillars
-5. Bike         : Any activities related to cycling (mostly cycling)
-6. Eat Well     : Breakfast Lunch or Dinner with others
-7. Slack        : Anything that doesn't fit above. Aspirationally, time for exploring new activities.
+1. Zazen        : Meditation, Buddhism  
+2. Work         : Any projects for others  
+3. Social       : Friends, Family  
+4. Learn        : Any activities related to improving any of the other 6 pillars  
+5. Bike         : Any activities related to cycling (mostly cycling)  
+6. Eat Well     : Breakfast Lunch or Dinner with others  
+7. Slack        : Anything that doesn't fit above. Aspirationally, time for exploring new activities.  
 
 ### Architecture
 
@@ -43,3 +43,8 @@ a familiar sight :)
 
 A data explorer and associated views of data to see progress in custom defined
 parameters.
+
+## To Do
+- make PUT/POST calls more RESTful
+- include database schema
+- add demo account
