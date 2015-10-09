@@ -48,6 +48,17 @@ module.exports = function(grunt){
         src: ['src/client/js/functions.js','src/client/js/**/*.js',],
         dest: 'dev/client/js/script.min.js'
       },
+      tempdev: {
+        options: {
+          beautify: true,
+          mangle: false,
+          compress: false,
+          sourceMap: true,
+          preserveComments: 'all'
+        },
+        src: ['src/client/js/functions.js','src/client/js/app.js','src/client/js/day.js','src/client/js/summary.js'],
+        dest: 'dev/client/js/app.min.js'
+      },
       web: {
           options: {
             beautify: true,
@@ -90,7 +101,7 @@ module.exports = function(grunt){
     watch: {
       js: {
         files: ['src/client/js/**/*.js'],
-        tasks: ['uglify:dev']
+        tasks: ['uglify:dev','uglify:tempdev']
       },
       css: {
         files: ['src/client/css/*.css'],
@@ -129,7 +140,7 @@ module.exports = function(grunt){
   grunt.loadNpmTasks('grunt-contrib-clean');
 
   //Register tasks
-  grunt.registerTask('default', ['clean:dev','uglify:dev','concat:devcss','copy:main','copy:server','copy:client']);
+  grunt.registerTask('default', ['clean:dev','uglify:dev','uglify:tempdev','concat:devcss','copy:main','copy:server','copy:client']);
   grunt.registerTask('build', ['uglify:build','concat:buildcss','cssmin:buildcss','copy:build']);
   grunt.registerTask('web', ['clean:web','uglify:web','concat:webcss','cssmin:webcss','copy:web']);
 };

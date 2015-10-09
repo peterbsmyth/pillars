@@ -10,14 +10,14 @@ var buildTable = function(selectedDate){
   var startDay = selectedDate;
   var endDay = startDay + "T23:59:59";
 
-  $.getJSON("functions.php",{content : "pillarsLog", startDay: startDay,endDay: endDay},function(response){
+  $.getJSON(("/api/log/" + startDay + '/' + endDay),function(response){
     console.log(response);
     //empty current table.
     var $tableBody = $("#dayTable TBODY");
     $tableBody.empty();
 
     //add new table
-    response.forEach(function(item){
+    response.entries.forEach(function(item){
       var $row = $("<tr>").attr("id", item.id);  //candidate for learning ... difference between "<td>" and "td"
 
       var $edit= $("<td>").addClass("edit"); //use BootStrap pencil glyphicon
@@ -54,13 +54,13 @@ var buildSummary = function(startSummary, endSummary){
 
   //Build Data String
 
-  $.getJSON("functions.php",{content : "summary", startSummary: startSummary, endSummary: endSummary},function(response){
+  $.getJSON(("/api/summary/" + startSummary + '/' + endSummary),function(response){
     //empty current table
     var $tableBody = $("#summaryTable TBODY");
     $tableBody.empty();
 
     //add new table
-    response.forEach(function(item){
+    response.entries.forEach(function(item){
       var $row = $("<tr>").attr("id", item.id);
 
       var $edit= $("<td>").addClass("edit"); //use BootStrap pencil glyphicon
@@ -89,14 +89,15 @@ $( "#single-entry" ).on( "submit", function( event ) {
   $("#addEntryModal").modal('hide');
 
   //build data string
-  var data= $(this).serialize() + "&content=newEntry";
+  var data= $(this).serialize();
 
   $.ajax({
     type: "POST",
-    url: "functions.php",
+    url: "/api/log/",
     data: data,
     dataType: "json",
     success: function(response) {
+      response = response.entries[0];
       var $row = $("<tr>").attr("id", response.id);
 
       var $edit= $("<td>").addClass("edit"); //use BootStrap pencil glyphicon
@@ -131,14 +132,16 @@ $( "#summary-entry" ).on( "submit", function( event ) {
   $("#addSummaryModal").modal('hide');
 
   //build data string
-  var data= $(this).serialize() + "&content=newSummary";
+  var data= $(this).serialize();
 
   $.ajax({
     type: "POST",
-    url: "functions.php",
+    url: "/api/summary",
     data: data,
     dataType: "json",
     success: function(response) {
+      response = response.entries[0];
+      console.log(response);
       var $row = $("<tr>").attr("id", response.id);
 
       var $edit= $("<td>").addClass("edit"); //use BootStrap pencil glyphicon
@@ -163,6 +166,7 @@ $( "#summary-entry" ).on( "submit", function( event ) {
 
 //Edit Rows on DayTable
 $("#dayTable").on('click', ".okay", function() {
+  console.log("Editing.");
   var $editRow = $(this).closest("tr");
 
   //Toggle Edit Mode
@@ -220,21 +224,19 @@ $("#dayTable").on('click', ".okay", function() {
                "&user_date=" + datetimeI +
                "&user_duration=" + durationI +
                "&user_quality=" + qualityI +
-               "&user_notes=" + notesI +
-               "&content=updateEntry";
+               "&user_notes=" + notesI;
 
     //toggle pencil and okay icons
     //hide cancel icon
     $editRow.find("a").first().toggleClass("glyphicon-pencil glyphicon-ok");
     $editRow.find("a").last().hide();
-
-    console.log(data);
     $.ajax({
-      type: "POST",
-      url: "functions.php",
+      type: "PUT",
+      url: "/api/log/" + idI,
       data: data,
       dataType: "json",
       success: function(response) {
+        response = response.entries[0];
         //replace inputs with new tds
         $("#" + response.id).children(".pillar").replaceWith("<td class='pillar'>" + response.pillar + "</td>");
         $("#" + response.id).children(".datetime").replaceWith("<td class='datetime'>" + datetimeFormat(response.event_date) + "</td>");
@@ -310,8 +312,7 @@ $("#summaryTable").on('click', ".okay", function() {
     var notesI = encodeURIComponent($editRow.children(".notes").children().val());
 
     //build data string
-    var data = "user_id=" + idI +
-               "&user_date=" + dateI +
+    var data = "&user_date=" + dateI +
                "&user_quality=" + qualityI +
                "&user_notes=" + notesI +
                "&content=updateSummary";
@@ -322,12 +323,12 @@ $("#summaryTable").on('click', ".okay", function() {
     $editRow.find("a").last().hide();
 
     $.ajax({
-      type: "POST",
-      url: "functions.php",
+      type: "PUT",
+      url: "/api/summary/" + idI,
       data: data,
       dataType: "json",
       success: function(response) {
-        console.log(response);
+        response = response.entries[0];
         $("#" + response.id).children(".date").replaceWith("<td class='date'>" + response.event_date.toDateFormat() + "</td>");
         $("#" + response.id).children(".quality").replaceWith("<td class='quality'>" + response.quality + "</td>");
         $("#" + response.id).children(".notes").replaceWith("<td class='notes'>" + response.notes + "</td>");
