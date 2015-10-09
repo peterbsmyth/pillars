@@ -9,7 +9,7 @@ chartsApp.controller('StackedCtrl',['$scope','$http','apiService',function($scop
   var update = function(startDay,endDay){
       apiService.dates(startDay,endDay).then(function(response){
         $scope.stacked = {
-          data: response.data
+          data: response.data.entries
         };
       });
   };

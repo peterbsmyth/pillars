@@ -38,7 +38,7 @@ app.set('view engine', 'ejs'); // set up ejs for templating
 // --------- establish api router
 var apiRouter  = express.Router();
 app.use('/api',apiRouter);
-require('./server/apiRoutes.js')(apiRouter);
+require('./server/apiRoutes.js')(pool,apiRouter,passport);
 
 // --------- establish auth router
 // var authRouter  = express.Router();

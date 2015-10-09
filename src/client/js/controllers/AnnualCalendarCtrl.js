@@ -9,7 +9,7 @@ chartsApp.controller('AnnualCalendarCtrl',['$scope','$http','apiService',functio
 
   apiService.dates(lastYearJSON,todayJSON).then(function(response){
     $scope.annualCalendar = {
-      data: response.data
+      data: response.data.entries
     };
   });
 

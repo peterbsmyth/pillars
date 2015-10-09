@@ -8,7 +8,7 @@ chartsApp.controller('WeeklyActivityCtrl',['$scope','$http','apiService',functio
 
   var update = function(startDate,endDate){
     apiService.dates(startDate,endDate).then(function(response){
-      $scope.weeklyActivity = { data: response.data };
+      $scope.weeklyActivity = { data: response.data.entries };
     });
   };
 

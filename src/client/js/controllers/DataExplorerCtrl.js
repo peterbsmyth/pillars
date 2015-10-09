@@ -16,7 +16,7 @@ chartsApp.controller('DataExplorerCtrl',['$scope','$http',function($scope,$http)
       headers: {'Content-type' : 'application/x-www-form-urlencoded'}
     }).success(function(response){
       $scope.success = {
-        data: response.data
+        data: response.data.entries
       };
       $scope.stats = {
         data: response.stats.total_duration

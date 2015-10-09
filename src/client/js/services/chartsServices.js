@@ -3,31 +3,13 @@ var chartsServices = angular.module('chartsApp.services',[])
 
   function getPillars(startDay,endDay){
 
-    var url = 'functions.php';
-
-    return $http({
-      method: 'GET',
-      url: url,
-      params: {
-        "content": "pillarsLog",
-        "startDay": startDay,
-        "endDay": endDay + "T23%3A59%3A59"
-      }
-    });
+    return $http.get('/api/log/' + startDay + '/' + endDay + "T23%3A59%3A59");
   }
 
   function getCumulative(startDay,endDay){
-    var url = 'functions.php';
+    var url = 'api/log/cumulative';
 
-    return $http({
-      method: 'GET',
-      url: url,
-      params: {
-        "content": "dayCumulativeDuration",
-        "startDay": startDay,
-        "endDay": endDay + "T23%3A59%3A59"
-      }
-    });
+    return $http.get('/api/log/cumulative/' + startDay + '/' + endDay + "T23%3A59%3A59");
   }
 
   return {

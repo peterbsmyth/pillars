@@ -13,7 +13,8 @@ function($scope,$http,apiService){
   // and store response to scope
   function update(day){
     apiService.day(day).then(function(response){
-      $scope.activity = { data: response.data };
+      console.log(response);
+      $scope.activity = { data: response.data.entries };
     });
   }
 
