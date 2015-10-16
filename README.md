@@ -12,6 +12,8 @@ Those Pillars are...
 6. Eat Well     : Breakfast Lunch or Dinner with others  
 7. Slack        : Anything that doesn't fit above. Aspirationally, time for exploring new activities.  
 
+![Pillars Screenshot](http://www.peterbsmith.net/img/portfolio-09.png)
+
 ### Architecture
 
 Originally this project was built using jQuery, php, jQuery, and MySQL.
