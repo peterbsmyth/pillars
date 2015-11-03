@@ -8,12 +8,14 @@ var mongoose         = require('mongoose');
 var morgan           = require('morgan');
 var bodyParser       = require('body-parser');
 var ejs              = require('ejs');
+var Sequelize        = require('sequelize');
 
 app.use(morgan('dev'));
 app.use(bodyParser());
 
 // --------- connect to dbs
 var pool = mysql.createPool(db.sql);
+var sequelize = new Sequelize(db.sqlize.db, db.sqlize.u, db.sqlize.p, db.sqlize.o);
 mongoose.connect(db.mongoose.url);
 
 // passport
@@ -38,7 +40,7 @@ app.set('view engine', 'ejs'); // set up ejs for templating
 // --------- establish api router
 var apiRouter  = express.Router();
 app.use('/api',apiRouter);
-require('./server/apiRoutes.js')(pool,apiRouter,passport);
+require('./server/apiRoutes.js')(sequelize,pool,apiRouter,passport);
 
 // --------- establish auth router
 // var authRouter  = express.Router();

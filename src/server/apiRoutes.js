@@ -1,6 +1,6 @@
 var mysql = require('mysql');
 
-module.exports = function(pool, router, passport) {
+module.exports = function(sequelize, pool, router, passport) {
 
     // api ---------------------------------------------------------------------
     // --------- LOG ---------
@@ -165,6 +165,64 @@ module.exports = function(pool, router, passport) {
             });
           });
         }
+      });
+    });
+
+    // --------- DATA EXPLORER ---------
+    // GET /api/query
+    router.get('/query',passport.isLoggedIn,function(req,res){
+      var Entry = require('./models/Entry')(sequelize);
+
+      var prepared = {
+        where: {}
+      };
+
+      if (req.query.pillar) {
+        prepared.where.pillar = req.query.pillar;
+      }
+
+      if (req.query.minDuration && req.query.maxDuration) {
+        prepared.where.duration = {
+          $lt: req.query.maxDuration,
+          $gt: req.query.minDuration
+        };
+      } else if (req.query.minDuration && !req.query.maxDuration) {
+        prepared.where.duration = {
+          $gt: req.query.minDuration
+        };
+      } else if (!req.query.minDuration && req.query.maxDuration) {
+        prepared.where.duration = {
+          $lt: req.query.maxDuration
+        };
+      }
+
+      if (req.query.notes) {
+        prepared.where.notes = {
+          like: "%" + req.query.notes + "%"
+        };
+      }
+
+      if (req.query.quality) {
+        prepared.where.quality = req.query.quality;
+      }
+
+      if (req.query.startDate && req.query.endDate) {
+        prepared.where.date = {
+          $lte: req.query.endDate,
+          $gte: req.query.startDate
+        };
+      } else if (req.query.startDate && !req.query.endDate) {
+        prepared.where.date = {
+          $gte: req.query.startDate
+        };
+      } else if (!req.query.startDate && req.query.endDate) {
+        prepared.where.date = {
+          $lt: req.query.endDate
+        };
+      }
+
+      Entry.findAll(prepared).then(function(entry){
+        res.status(201).json(entry);
       });
     });
 };
