@@ -181,7 +181,7 @@ chartsApp.directive('annualCalendar',function(){
         var l = response.length;
         while(l--){
           //get the day of the event
-          var eventDate = response[l].event_date.substr(0,10);
+          var eventDate = response[l].date.substr(0,10);
           //if the events object doesn't have the current event's day as a key, create a key and give it a value 0
           if(!events[eventDate]){
             events[eventDate] = 0;
