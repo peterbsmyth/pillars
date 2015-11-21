@@ -52,6 +52,12 @@ chartsApp.config(function($stateProvider,$urlRouterProvider,$locationProvider){
     controller: 'DataExplorerCtrl'
   });
 
+  $stateProvider.state('dataExplorerState.line', {
+    url: '/line',
+    templateUrl: 'views/partials/data_explorer/line.html',
+    controller: 'DataExplorerCtrl'
+  });
+
   $stateProvider.state('dashboardState', {
     url: '/dashboard',
     templateUrl: 'views/index.html',
