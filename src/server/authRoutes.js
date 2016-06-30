@@ -28,4 +28,8 @@ module.exports = function(app, passport) {
         req.logout();
         res.redirect('/');
     });
+
+    app.get('*',passport.isLoggedIn,function(req,res){
+      res.render('index.ejs');
+    });
 };
