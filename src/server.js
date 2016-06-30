@@ -52,7 +52,6 @@ var apiRouter  = express.Router();
 app.use('/api',apiRouter);
 require('./server/apiRoutes.js')(sequelize,pool,apiRouter,passport);
 
-
 // --------- establish auth router
 // var authRouter  = express.Router();
 // app.use('/auth',authRouter);

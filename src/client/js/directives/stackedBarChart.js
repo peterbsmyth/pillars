@@ -44,19 +44,22 @@ chartsApp.directive('stackedBarChart',function(){
     scope.$watch('data',function(response){
       if (!response) return;
 
+      console.log("RESONSE");
+      console.log(response);
+
       //remove pre-existing axes
       d3.selectAll('.x.axis').remove();
       d3.selectAll('.g').remove();
 
       var curDate = response[0].event_date.substr(0,10);
       var count = 0;
-      var zazenHours = makeUTCDate("1990-09-13T00:00:00");
-      var workHours = makeUTCDate("1990-09-13T00:00:00");
-      var socialHours = makeUTCDate("1990-09-13T00:00:00");
-      var learnHours = makeUTCDate("1990-09-13T00:00:00");
-      var bikeHours = makeUTCDate("1990-09-13T00:00:00");
-      var eatwellHours = makeUTCDate("1990-09-13T00:00:00");
-      var slackHours = makeUTCDate("1990-09-13T00:00:00");
+      var zazenHours = new Date("1990-09-13T00:00:00");
+      var workHours = new Date("1990-09-13T00:00:00");
+      var socialHours = new Date("1990-09-13T00:00:00");
+      var learnHours = new Date("1990-09-13T00:00:00");
+      var bikeHours = new Date("1990-09-13T00:00:00");
+      var eatwellHours = new Date("1990-09-13T00:00:00");
+      var slackHours = new Date("1990-09-13T00:00:00");
       var dates = [];
       response.forEach(function(item){
         //if item is current day
@@ -104,13 +107,13 @@ chartsApp.directive('stackedBarChart',function(){
           });
           count = 1;
           curDate = item.event_date.substr(0,10);
-          zazenHours = makeUTCDate("1990-09-13T00:00:00");
-          workHours = makeUTCDate("1990-09-13T00:00:00");
-          socialHours = makeUTCDate("1990-09-13T00:00:00");
-          learnHours = makeUTCDate("1990-09-13T00:00:00");
-          bikeHours = makeUTCDate("1990-09-13T00:00:00");
-          eatwellHours = makeUTCDate("1990-09-13T00:00:00");
-          slackHours = makeUTCDate("1990-09-13T00:00:00");
+          zazenHours = new Date("1990-09-13T00:00:00");
+          workHours = new Date("1990-09-13T00:00:00");
+          socialHours = new Date("1990-09-13T00:00:00");
+          learnHours = new Date("1990-09-13T00:00:00");
+          bikeHours = new Date("1990-09-13T00:00:00");
+          eatwellHours = new Date("1990-09-13T00:00:00");
+          slackHours = new Date("1990-09-13T00:00:00");
           if(item.pillar === "ZAZEN"){
             zazenHours = zazenHours.addMinutes(durationToMinutes(item.duration));  //candidate for improvement, same as above
           }
@@ -135,6 +138,8 @@ chartsApp.directive('stackedBarChart',function(){
         }
       });
 
+      console.log("DATES@141");
+      console.log(dates);
 
       dates.push({
         date: makeUTCDate(curDate),
@@ -160,6 +165,9 @@ chartsApp.directive('stackedBarChart',function(){
           item.duration[key+"hDM"] = item.duration[key].toHoursDotMinutes();
         }
       });
+
+      console.log("DATES@169");
+      console.log(dates);
 
       //Set minimum and maximum date for input domain
       var minDate = dates[0].date;

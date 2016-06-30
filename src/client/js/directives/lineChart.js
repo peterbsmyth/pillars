@@ -40,7 +40,7 @@ chartsApp.directive('lineChart',function(){
 
       var nestedData = d3.nest()
           .key(function(d){
-            return d.event_date.substr(0,10);
+            return d.date.substr(0,10);
           })
           .rollup(function(v){
             return d3.sum(v,function(e){
@@ -52,8 +52,8 @@ chartsApp.directive('lineChart',function(){
 
       // response.forEach(function(d){
       //   // debugger;
-      //   d.event_date = d.event_date.substr(0,10);
-      //   d.event_date = parseDate(d.event_date);
+      //   d.date = d.date.substr(0,10);
+      //   d.date = parseDate(d.date);
       //   d.duration = durationToMinutes(d.duration);
       // });
 
@@ -99,7 +99,7 @@ chartsApp.directive('lineChart',function(){
           //   // .attr("font-size", "15px")
           //   // .attr("font-weight", "bold")
           //   // .attr("fill", "orange")
-          //   // .text("Pillar: " + d.pillar + " Duration: " + d.duration + " Notes: " + d.notes + " Date: " + d.event_date);
+          //   // .text("Pillar: " + d.pillar + " Duration: " + d.duration + " Notes: " + d.notes + " Date: " + d.date);
           // })
           // .on("mouseout", function(d) {
           //   d3.select(this)
