@@ -59,6 +59,6 @@ require('./server/authRoutes.js')(app,passport);
 
 
 // --------- listen for requests on port 3000
-app.listen(3010,function(){
-  console.log("Running on port 3010");
+app.listen(process.env.PORT,'10.132.212.200',function(){
+  console.log("Running on port " + process.env.PORT);
 });
