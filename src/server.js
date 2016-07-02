@@ -11,7 +11,8 @@ var ejs              = require('ejs');
 var Sequelize        = require('sequelize');
 
 app.use(morgan('dev'));
-app.use(bodyParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // --------- connect to dbs
 var pool = mysql.createPool(db.sql);
@@ -38,9 +39,6 @@ app.use(express.static(__dirname + '/client/'));
 
 
 // --------- set base view
-console.log(
-  __dirname
-)
 app.set('views', __dirname + '/server/views');
 app.set('view engine', 'ejs'); // set up ejs for templating
 // app.get('/',function(req,res){
