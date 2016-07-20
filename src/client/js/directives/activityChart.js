@@ -104,22 +104,20 @@ chartsApp.directive('activityChart',function(){
         .text(function(d) { return d.pillar; });
 
     // create an x-scale with range from 0 to width
-    var xScale = d3.time.scale()
+    var xScale = d3.scaleTime()
         .range([0,width]);
 
     // x-axis for hours of the day with format "HH (AM/PM)"
-    var hourAxis = d3.svg.axis()
-        .scale(xScale)
-        .tickFormat(d3.time.format('%I %p'));
+    var hourAxis = d3.axisBottom(xScale)
+        .tickFormat(d3.timeFormat('%I %p'));
 
     // x-axis for date with format MM/DD/YYYY
-    var dateAxis = d3.svg.axis()
-        .scale(xScale)
+    var dateAxis = d3.axisBottom(xScale)
         .tickPadding(20)
         .tickFormat(function(d){ //only 12AM gets date label
           var formatter;
           if(d.getHours() === 0){
-            formatter =  d3.time.format('%x');
+            formatter =  d3.timeFormat('%x');
           }
           else{
             return null;
