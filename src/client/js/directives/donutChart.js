@@ -7,12 +7,10 @@ chartsApp.directive('donutChart',function(){
     var svg = d3.select(element[0]).append('svg');
 
     svg
-      .attr({
-        'height': height,
-        'width': width
-      });
+      .attr('height', height)
+      .attr('width', width)
 
-    var color = d3.scale.ordinal()
+    var color = d3.scaleOrdinal()
         .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
     var colors = [
@@ -66,11 +64,11 @@ chartsApp.directive('donutChart',function(){
         .style("text-anchor", "end")
         .text(function(d) { return d.pillar; });
 
-    var arc = d3.svg.arc()
+    var arc = d3.arc()
       .innerRadius(radius * 0.5)
       .outerRadius(radius * 0.9);
 
-    var pie = d3.layout.pie().sort(null)
+    var pie = d3.pie().sort(null)
         .value(function(d){return d.duration;});
 
     var donut = svg.append('g')
@@ -135,7 +133,7 @@ chartsApp.directive('donutChart',function(){
             });
 
       // update
-      arcs.transition().duration(500).ease('linear').attrTween('d',arcTween);
+      arcs.transition().duration(500).ease(d3.easeLinear).attrTween('d',arcTween);
     });
   }
   return {
